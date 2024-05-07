@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Create an Invoice</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Create an Invoice</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-list>
+    <ion-item>
+      <ion-input label="Invoice No" placeholder="INV0001"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-textarea label="From:" placeholder="Type something here"></ion-textarea>
+    </ion-item>
+    <ion-item>
+      <ion-textarea label="Bill To:" placeholder="Type something here"></ion-textarea>
+    </ion-item>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-input label="Description" placeholder="Development @ABC"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col>2</ion-col>
+          <ion-col>2</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+</ion-content>
