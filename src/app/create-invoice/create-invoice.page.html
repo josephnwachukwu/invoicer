@@ -12,14 +12,36 @@
   </ion-header>
 
   <ion-list>
-    <ion-item>
+    <ion-item class="has-margin-5">
       <ion-input label="Invoice No" placeholder="INV0001" fill="outline"></ion-input>
     </ion-item>
-    <ion-item>
+
+    <ion-item class="has-margin-5">
       <ion-textarea label="From:" placeholder="Type something here" fill="outline"></ion-textarea>
     </ion-item>
-    <ion-item>
+
+    <ion-item class="has-margin-5">
       <ion-textarea label="Bill To:" placeholder="Type something here" fill="outline"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-input placeholder="Date" fill="outline"></ion-input>
+          </ion-col>
+          <ion-col>
+            <ion-select label="Due" placeholder="Please Select" fill="outline">
+              <ion-select-option value="">Immediately</ion-select-option>
+              <ion-select-option value="">15 Days</ion-select-option>
+              <ion-select-option value="">30 Days</ion-select-option>
+              <ion-select-option value="">45 Days</ion-select-option>
+              <ion-select-option value="">60 Days</ion-select-option>
+              <ion-select-option value="">90 Days</ion-select-option>
+            </ion-select>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-item>
     <ion-item>
       <ion-grid>
@@ -43,7 +65,7 @@
       <ion-button>+ Line Item</ion-button>
     </ion-item>
 
-    <ion-item>
+    <ion-item class="has-margin-5">
       <ion-grid>
         <ion-row>
           <ion-col size="10">
@@ -55,7 +77,7 @@
         </ion-row>
       </ion-grid>
     </ion-item>
-    <ion-item>
+    <ion-item class="has-margin-5">
       <ion-grid>
         <ion-row>
           <ion-col size="10">
@@ -67,10 +89,10 @@
         </ion-row>
       </ion-grid>
     </ion-item>
-    <ion-item>
+    <ion-item class="has-margin-5">
       <ion-textarea label="Notes:" placeholder="Type something here" fill="outline"></ion-textarea>
     </ion-item>
-    <ion-item>
+    <ion-item class="has-margin-5">
       <ion-textarea label="Terms:" placeholder="Type something here" fill="outline"></ion-textarea>
     </ion-item>
   </ion-list>
