@@ -13,30 +13,65 @@
 
   <ion-list>
     <ion-item>
-      <ion-input label="Invoice No" placeholder="INV0001"></ion-input>
+      <ion-input label="Invoice No" placeholder="INV0001" fill="outline"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-textarea label="From:" placeholder="Type something here"></ion-textarea>
+      <ion-textarea label="From:" placeholder="Type something here" fill="outline"></ion-textarea>
     </ion-item>
     <ion-item>
-      <ion-textarea label="Bill To:" placeholder="Type something here"></ion-textarea>
+      <ion-textarea label="Bill To:" placeholder="Type something here" fill="outline"></ion-textarea>
     </ion-item>
     <ion-item>
       <ion-grid>
         <ion-row>
           <ion-col size="8">
             <ion-item>
-              <ion-input placeholder="Description"></ion-input>
+              <ion-input placeholder="Description" fill="outline"></ion-input>
             </ion-item>
           </ion-col>
           <ion-col>
-            <ion-input placeholder="qty"></ion-input>
+            <ion-input type="number" placeholder="1" fill="outline"></ion-input>
           </ion-col>
           <ion-col>
-            <ion-input placeholder="amt"></ion-input>
+            <ion-input type="number" placeholder="$0" fill="outline"></ion-input>
           </ion-col>
         </ion-row>
       </ion-grid>
+    </ion-item>
+
+    <ion-item>
+      <ion-button>+ Line Item</ion-button>
+    </ion-item>
+
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="10">
+            Subtotal:
+          </ion-col>
+          <ion-col size="2">
+            $0
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="10">
+            Total / Amount Due:
+          </ion-col>
+          <ion-col size="2">
+            $0
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item>
+      <ion-textarea label="Notes:" placeholder="Type something here" fill="outline"></ion-textarea>
+    </ion-item>
+    <ion-item>
+      <ion-textarea label="Terms:" placeholder="Type something here" fill="outline"></ion-textarea>
     </ion-item>
   </ion-list>
 </ion-content>
