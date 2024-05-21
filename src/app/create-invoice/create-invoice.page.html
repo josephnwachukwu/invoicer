@@ -13,25 +13,26 @@
 
   <ion-list>
     <ion-item class="has-margin-5">
-      <ion-input label="Invoice No" placeholder="INV0001" fill="outline"></ion-input>
+      <ion-input label="Invoice No" placeholder="INV0001" fill="outline" [(ngModel)]="invoice.invoiceNo"></ion-input>
     </ion-item>
 
     <ion-item class="has-margin-5">
-      <ion-textarea label="From:" placeholder="Type something here" fill="outline"></ion-textarea>
+      <ion-textarea label="From:" [(ngModel)]="invoice.fromInfo" name="fromInfo" placeholder="name, address, email, phone number" fill="outline"></ion-textarea>
     </ion-item>
 
     <ion-item class="has-margin-5">
-      <ion-textarea label="Bill To:" placeholder="Type something here" fill="outline"></ion-textarea>
+      <ion-textarea label="Bill To:" placeholder="Type something here" fill="outline" [(ngModel)]="invoice.toInfo" name="toInfo" placeholder="name, address, email, phone number"></ion-textarea>
     </ion-item>
 
+    
     <ion-item>
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-input placeholder="Date" fill="outline"></ion-input>
+            <ion-input placeholder="Date" fill="outline" [(ngModel)]="invoice.date" name="date"></ion-input>
           </ion-col>
           <ion-col>
-            <ion-select label="Due" placeholder="Please Select" fill="outline">
+            <ion-select label="Due" placeholder="Please Select Due Date" [(ngModel)]="invoice.due" name="due" fill="outline">
               <ion-select-option value="">Immediately</ion-select-option>
               <ion-select-option value="">15 Days</ion-select-option>
               <ion-select-option value="">30 Days</ion-select-option>
@@ -43,26 +44,31 @@
         </ion-row>
       </ion-grid>
     </ion-item>
-    <ion-item>
+    <ion-item *ngFor="let lineItem of invoice.lineItems; let i = index">
       <ion-grid>
         <ion-row>
-          <ion-col size="8">
-            <ion-item>
-              <ion-input placeholder="Description" fill="outline"></ion-input>
-            </ion-item>
+          <ion-col size="6">
+            
+              <ion-input placeholder="Description" fill="outline" [(ngModel)]="lineItem.name" name="name"></ion-input>
+            
           </ion-col>
           <ion-col>
-            <ion-input type="number" placeholder="1" fill="outline"></ion-input>
+            <ion-input type="number" placeholder="1" fill="outline" [(ngModel)]="lineItem.quantity" name="quantity"></ion-input>
           </ion-col>
           <ion-col>
-            <ion-input type="number" placeholder="$0" fill="outline"></ion-input>
+            <ion-input type="number" placeholder="$0" fill="outline" [(ngModel)]="lineItem.rate" name="rate"></ion-input>
+          </ion-col>
+          <ion-col size="1">
+            <ion-button fill="solid" (click)="removeLineItem(i)">
+              <ion-icon name="close-circle-outline"></ion-icon>
+            </ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-item>
 
     <ion-item>
-      <ion-button>+ Line Item</ion-button>
+      <ion-button (click)="addLineItem()">+ Line Item</ion-button>
     </ion-item>
 
     <ion-item class="has-margin-5">
@@ -72,7 +78,7 @@
             Subtotal:
           </ion-col>
           <ion-col size="2">
-            $0
+            {{invoice.subtotal | currency: 'USD'}}
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -81,19 +87,19 @@
       <ion-grid>
         <ion-row>
           <ion-col size="10">
-            Total / Amount Due:
+            <strong>Total / Amount Due:</strong>
           </ion-col>
           <ion-col size="2">
-            $0
+            <strong>{{invoice.total | currency: 'USD'}}</strong>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-item>
     <ion-item class="has-margin-5">
-      <ion-textarea label="Notes:" placeholder="Type something here" fill="outline"></ion-textarea>
+      <ion-textarea label="Notes:" placeholder="any relevant information not already covered" fill="outline" [(ngModel)]="invoice.notes"></ion-textarea>
     </ion-item>
     <ion-item class="has-margin-5">
-      <ion-textarea label="Terms:" placeholder="Type something here" fill="outline"></ion-textarea>
+      <ion-textarea label="Terms:" placeholder="Terms and conditions - late fees, payment methods, delivery schedule" fill="outline" [(ngModel)]="invoice.terms"></ion-textarea>
     </ion-item>
   </ion-list>
 </ion-content>
