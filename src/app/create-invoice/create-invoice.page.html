@@ -44,23 +44,36 @@
         </ion-row>
       </ion-grid>
     </ion-item>
+    <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <strong>Description</strong>
+          </ion-col>
+          <ion-col>
+            <strong>Qty.</strong>
+          </ion-col>
+          <ion-col>
+            <strong>Amt.</strong>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
     <ion-item *ngFor="let lineItem of invoice.lineItems; let i = index">
       <ion-grid>
         <ion-row>
           <ion-col size="6">
-            
               <ion-input placeholder="Description" fill="outline" [(ngModel)]="lineItem.name" name="name"></ion-input>
-            
           </ion-col>
-          <ion-col>
+          <ion-col size="3">
             <ion-input type="number" placeholder="1" fill="outline" [(ngModel)]="lineItem.quantity" name="quantity"></ion-input>
           </ion-col>
-          <ion-col>
+          <ion-col size="2">
             <ion-input type="number" placeholder="$0" fill="outline" [(ngModel)]="lineItem.rate" name="rate"></ion-input>
           </ion-col>
           <ion-col size="1">
-            <ion-button fill="solid" (click)="removeLineItem(i)">
-              <ion-icon name="close-circle-outline"></ion-icon>
+            <ion-button fill="solid" size="small" (click)="removeLineItem(i)">
+              <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
             </ion-button>
           </ion-col>
         </ion-row>
