@@ -27,10 +27,10 @@
     <ion-item>
       <ion-grid>
         <ion-row>
-          <ion-col>
+          <ion-col size="8">
             <ion-input placeholder="Date" fill="outline" [(ngModel)]="invoice.date" name="date"></ion-input>
           </ion-col>
-          <ion-col>
+          <ion-col size="4">
             <ion-select label="Due" placeholder="Please Select Due Date" [(ngModel)]="invoice.due" name="due" fill="outline">
               <ion-select-option value="Immediately">Immediately</ion-select-option>
               <ion-select-option value="15 Days">15 Days</ion-select-option>
@@ -162,16 +162,21 @@
           <ion-buttons slot="start">
             <ion-button (click)="cancel()">Cancel</ion-button>
           </ion-buttons>
-          <ion-title>Welcome</ion-title>
+          <ion-title>Download or Send</ion-title>
           <!-- <ion-buttons slot="end">
             <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
           </ion-buttons> -->
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <ion-item>
-        
-        </ion-item>
+        <ion-text>
+          <h3>H3: The quick brown fox jumps over the lazy dog</h3>
+        </ion-text>
+        <p>
+          Download A local copy of your invoice or send a copy via email to a recipient
+        </p>
+        <ion-button (click)="downloadInvoice()" expand="block">Download Invoice</ion-button>
+
       </ion-content>
     </ng-template>
   </ion-modal>

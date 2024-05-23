@@ -8,12 +8,13 @@ import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
-import { MaskitoModule } from '@maskito/angular';
+import { MaskitoDirective } from '@maskito/angular';
+import { MaskitoOptions } from '@maskito/core';
 
 @Component({
   selector: 'app-create-invoice',
   templateUrl: './create-invoice.page.html',
-  styleUrls: ['./create-invoice.page.scss'],
+  styleUrls: ['./create-invoice.page.scss']
 })
 export class CreateInvoicePage implements OnInit, OnChanges {
   @ViewChild(IonModal)
@@ -94,13 +95,12 @@ export class CreateInvoicePage implements OnInit, OnChanges {
   }
 
 
-  cancel() {
+  cancel = () =>{
     this.modal.dismiss();
   }
 
-  confirm() {
+  confirm = () => {
     //this.modal.dismiss(this.name, 'confirm');
-
   }
 
   onWillDismiss(event: Event) {
@@ -108,6 +108,11 @@ export class CreateInvoicePage implements OnInit, OnChanges {
     if (ev.detail.role === 'confirm') {
       console.log('confirmed')
     }
+  }
+
+  // Send invoice to firebase for processing
+  downloadInvoice = () => {
+
   }
 
 }

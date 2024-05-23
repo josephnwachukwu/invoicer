@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { CreateInvoicePageRoutingModule } from './create-invoice-routing.module';
 
-//import { MaskitoModule } from '@maskito/angular';
+import {MaskitoDirective} from '@maskito/angular';
 
 import { CreateInvoicePage } from './create-invoice.page';
 
@@ -15,7 +15,7 @@ import { CreateInvoicePage } from './create-invoice.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    //MaskitoModule
+    MaskitoDirective,
     CreateInvoicePageRoutingModule
   ],
   declarations: [CreateInvoicePage]
