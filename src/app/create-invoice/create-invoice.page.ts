@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
+import { MaskitoModule } from '@maskito/angular';
 
 @Component({
   selector: 'app-create-invoice',
@@ -64,8 +65,6 @@ export class CreateInvoicePage implements OnInit, OnChanges {
   // Recalculate invoice numbers
   calculate = (inv:Invoice) => {
 
-    console.log('inv',inv)
-
     // Reset Values
   	inv.subtotal = 0;
   	inv.total = 0;
@@ -78,7 +77,6 @@ export class CreateInvoicePage implements OnInit, OnChanges {
 
     // First add the subtotal
     inv.total = inv.total + inv.subtotal;
-    
 
     // Calculate discount
     inv.total = inv.hasDiscount && inv.discount > 0 ? inv.total - inv.discount : inv.total;
