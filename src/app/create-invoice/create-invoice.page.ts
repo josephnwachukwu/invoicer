@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { Invoice } from '../models/invoice.model'
 import { LineItem } from '../models/lineItem.model'
 //import { AuthService } from '../../auth/auth.service'; 
@@ -6,6 +6,8 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 //import { AngularFirestore } from '@angular/fire/compat/firestore';    
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { IonModal } from '@ionic/angular';
+import { OverlayEventDetail } from '@ionic/core/components';
 
 @Component({
   selector: 'app-create-invoice',
@@ -13,6 +15,9 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./create-invoice.page.scss'],
 })
 export class CreateInvoicePage implements OnInit, OnChanges {
+  @ViewChild(IonModal)
+  modal!: IonModal;
+
   @Input() invoice!: Invoice;
 	//profile$: Observable<any>;
 	currentUser:any;
@@ -25,12 +30,12 @@ export class CreateInvoicePage implements OnInit, OnChanges {
   ngOnInit() {
     console.log('testing')
     this.invoice === undefined ? this.invoice = new Invoice() : console.log('check')
-    console.log('invoice', this.invoice)
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['invoice']) {
       this.isExistingInvoice();
+      console.log('invoice changed')
     }
   }
 
@@ -44,52 +49,67 @@ export class CreateInvoicePage implements OnInit, OnChanges {
     this.invoice === null ? this.invoice = new Invoice() : console.log('there is an existing invoice')
   }
 
+  // Add a new line Item
   addLineItem = () => {
-  	//let lineItem = new LineItem()
   	this.invoice.lineItems.push(new LineItem())
   }
 
+  // Delete Line Item only if there is more than one
   removeLineItem = (ind:number) => {
-  	// if(this.invoice.lineItems.length >= 2) {
-  	// 	this.invoice.lineItems.splice(ind,1)
-  	// }
     this.invoice.lineItems.length >= 2 ? this.invoice.lineItems.splice(ind,1) : null
+    // Recaculate Totals after adjusting Line items
+    this.calculate(this.invoice)
   }
 
-  updateLineItem(ind:number) {
-  	this.invoice.lineItems[ind].quantity = parseInt(this.invoice.lineItems[ind].quantity)
-  	this.invoice.lineItems[ind].rate = parseInt(this.invoice.lineItems[ind].rate)
-  	this.invoice.lineItems[ind].amount = parseInt(this.invoice.lineItems[ind].quantity) * parseInt(this.invoice.lineItems[ind].rate)
-  	//console.log(parseInt(this.invoice.lineItems[ind].amount))
-  	this.updateTrueTotal()
+  // Recalculate invoice numbers
+  calculate = (inv:Invoice) => {
+
+    console.log('inv',inv)
+
+    // Reset Values
+  	inv.subtotal = 0;
+  	inv.total = 0;
+
+    // Process Line items amount for subtotal
+    inv.lineItems.map((lineItem: any) => lineItem.amount = lineItem.quantity * lineItem.rate);
+
+    // Calculate subtotal based on line Items
+    inv.subtotal = inv.lineItems.reduce((total:number, lineItem:any)=> total + lineItem.amount, 0);
+
+    // First add the subtotal
+    inv.total = inv.total + inv.subtotal;
+    
+
+    // Calculate discount
+    inv.total = inv.hasDiscount && inv.discount > 0 ? inv.total - inv.discount : inv.total;
+    
+    // Calculate Tax basd on tax Perentage
+    inv.total = inv.hasTax && inv.tax > 0 ? inv.total + (inv.total * (inv.tax / 100)) : inv.total;
+    
+    // Calculate Shipping
+    inv.total = inv.hasShipping && inv.shipping > 0 ? inv.total + inv.shipping : inv.total;
+
+    // Calculate Partial Payment
+    inv.total = inv.hasPaidPartial && inv.amountPaid > 0 ? inv.total - inv.amountPaid : inv.total;
+
+    this.invoice = inv
   }
 
-  // Recalculate Everything
-  updateTrueTotal() {
-  	this.invoice.subtotal = 0
-  	this.invoice.total = 0;
 
-  	for(let i in this.invoice.lineItems) {
-  		this.invoice.subtotal += parseInt(this.invoice.lineItems[i].amount)
-  		this.invoice.total = this.invoice.subtotal
-  	}
+  cancel() {
+    this.modal.dismiss();
+  }
 
-  	if(this.invoice.hasTax && this.invoice.tax > 0) {
-  		let taxAmt = this.invoice.total * (this.invoice.tax / 100)
-  		this.invoice.total = this.invoice.total + taxAmt
-  	}
-  	if(this.invoice.hasDiscount && this.invoice.discount > 0) {
-  		this.invoice.total = this.invoice.total - this.invoice.discount
-  	}
+  confirm() {
+    //this.modal.dismiss(this.name, 'confirm');
 
-  	if(this.invoice.hasPaidPartial && this.invoice.amountPaid > 0) {
-  		this.invoice.total = this.invoice.total - this.invoice.amountPaid
-  	}
+  }
 
-  	if(this.invoice.hasShipping && this.invoice.shipping > 0) {
-  		this.invoice.total = this.invoice.total + this.invoice.amountPaid
-  	}
-
+  onWillDismiss(event: Event) {
+    const ev = event as CustomEvent<OverlayEventDetail<string>>;
+    if (ev.detail.role === 'confirm') {
+      console.log('confirmed')
+    }
   }
 
 }

@@ -31,6 +31,8 @@
     "@capacitor/status-bar": "6.0.0",
     "@google-cloud/recaptcha-enterprise": "^5.8.0",
     "@ionic/angular": "^8.0.0",
+    "@maskito/angular": "^2.3.2",
+    "@maskito/core": "^2.3.2",
     "firebase": "^10.12.1",
     "ionicons": "^7.0.0",
     "rxjs": "~7.8.0",

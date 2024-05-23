@@ -6,6 +6,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { CreateInvoicePageRoutingModule } from './create-invoice-routing.module';
 
+//import { MaskitoModule } from '@maskito/angular';
+
 import { CreateInvoicePage } from './create-invoice.page';
 
 @NgModule({
@@ -13,6 +15,7 @@ import { CreateInvoicePage } from './create-invoice.page';
     CommonModule,
     FormsModule,
     IonicModule,
+    //MaskitoModule
     CreateInvoicePageRoutingModule
   ],
   declarations: [CreateInvoicePage]
