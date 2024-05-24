@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <!-- <ion-title size="large">login</ion-title> -->
+    </ion-toolbar>
+  </ion-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+          <ion-card-header>
+            <!-- <ion-card-title>Card Title</ion-card-title> -->
+            <ion-card-subtitle>Sign In</ion-card-subtitle>
+          </ion-card-header>
+        
+          <ion-card-content>
+            <ion-item>
+              <ion-input label="Username" label-placement="floating" fill="outline" placeholder="joeystark@invoicer.me" [(ngModel)]="credientials.username"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input type="Password" label-placement="floating" label="Password" [(ngModel)]="credientials.password">
+                <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+              </ion-input>
+            </ion-item>
+            <ion-button expand="block" (click)="login(credientials)">
+              Login
+            </ion-button>
+            <p>Don't have an account? <a [routerLink]="['/register']">Click here</a>.</p>
+            <p><a [routerLink]="['/forgotpassword']">Forgot Password? </a></p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+  <ion-toast trigger="open-toast" message="{errorMessage}" [isOpen]="isToastOpen" [duration]="5000"></ion-toast>
+</ion-content>

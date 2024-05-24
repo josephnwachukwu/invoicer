@@ -150,9 +150,9 @@
     <ion-item class="has-margin-5">
       <ion-textarea label="Terms:" placeholder="Terms and conditions - late fees, payment methods, delivery schedule" fill="outline" [(ngModel)]="invoice.terms"></ion-textarea>
     </ion-item>
-    <ion-item>
-      <ion-button id="open-modal" expand="block">Download or Send Invoice</ion-button>
-    </ion-item>
+    
+    <ion-button id="open-modal" expand="block">Download or Send Invoice</ion-button>
+    
   </ion-list>
   <!-- Modal for Actions -->
   <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">

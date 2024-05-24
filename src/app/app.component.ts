@@ -6,13 +6,18 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   public appPages = [
-    { title: 'Clients', url: '/folder/clients', icon: 'mail' },
-    { title: 'Invoices', url: '/folder/invoices', icon: 'paper-plane' },
-    { title: 'Expenses', url: '/folder/expenses', icon: 'heart' },
-    { title: 'Profits and Loss', url: '/folder/archived', icon: 'archive' },
-    { title: 'Create Invoice', url: '/create-invoice', icon: 'trash' },
-    { title: 'Spam', url: '/folder/spam', icon: 'warning' },
+    { title: 'Home', url: '/home', icon: 'home' },
+    { title: 'Dashboard', url: '/dashboard', icon: 'speedometer' },
+    { title: 'Invoices', url: '/invoices', icon: 'newspaper' },
+    { title: 'Clients', url: '/clients', icon: 'storefront' },
+    { title: 'Projects', url: '/projects', icon: 'mail' },
+    { title: 'Expenses', url: '/expenses', icon: 'receipt' },
+    { title: 'Login', url: '/login', icon: 'log-in' },
+    { title: 'Register', url: '/register', icon: 'person-add' },
+    // { title: 'Profits and Loss', url: '/folder/archived', icon: 'archive' },
+    { title: 'Create Invoice', url: '/create-invoice', icon: 'add' },
+    { title: 'Profile', url: '/profile', icon: 'person' },
+    // { title: 'Spam', url: '/folder/spam', icon: 'warning' },
   ];
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
   constructor() {}
 }
