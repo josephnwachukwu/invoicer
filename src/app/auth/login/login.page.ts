@@ -28,7 +28,8 @@ export class LoginPage implements OnInit {
 
   login = (credentials: Credentials) => {
     this.authService.emailSignIn(credentials).subscribe({
-      next: () =>{
+      next: (data) =>{
+        this.notifications.notify('it made it here')
         this.router.navigate(['/dashboard'])
       },
       error: (error) => {

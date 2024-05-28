@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { DashboardPage } from './auth/dashboard/dashboard.page';
 
 const routes: Routes = [
   {
@@ -29,7 +30,7 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadChildren: () => import('./auth/dashboard/dashboard.module').then( m => m.DashboardPageModule)
+    loadComponent: () => import('./auth/dashboard/dashboard.page').then( m => m.DashboardPage)
   },
   {
     path: 'profile',

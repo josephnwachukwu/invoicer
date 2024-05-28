@@ -34,10 +34,11 @@ export class InvoicesPage implements OnInit {
   updateInvoice = (invoice: InvoiceInterface):void => {
     const id = invoice.id;
     const data = {
+      ...invoice,
       isPaid: !invoice.isPaid,
     }
     this.invoiceService.updateInvoice(id, data).subscribe({
-      next: () => {},
+      next: () => {this.notifications.notify('Invoice Updated Successfully')},
       error: (error) => {this.notifications.notify(error.code)}
   
     })

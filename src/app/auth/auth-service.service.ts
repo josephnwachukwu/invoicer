@@ -14,6 +14,7 @@ import {
 import { Subscription, Observable, from } from 'rxjs';
 import { Firestore, collection, addDoc, setDoc, collectionData, collectionGroup, DocumentReference } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
+import { NotificationService } from '../notification.service';
 
 
 export interface UserInterface {
@@ -36,6 +37,7 @@ export class AuthService {
   firestore = inject(Firestore)
   router = inject(Router)
   user$ = user(this.auth)
+  notifications = inject(NotificationService)
   currentUserSignal = signal<UserInterface | null | undefined>(undefined)
 
 
@@ -76,10 +78,9 @@ export class AuthService {
    * @param credentials email and password
   */
   emailSignIn = (credentials:any):Observable<void> => {
+    this.notifications.notify('test 1')
     const promise = signInWithEmailAndPassword(this.auth, credentials.email, credentials.password)
-     .then(data => {
-      console.log('User Signed in!')
-     })
+     .then(() => {})
      return from(promise)
   }
 
