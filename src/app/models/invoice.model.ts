@@ -1,8 +1,6 @@
 import { LineItem }  from './lineItem.model'
 
 export class Invoice {
-
-
 	lineItems: any = []
 	
 	notes: string
@@ -48,6 +46,7 @@ export class Invoice {
 	subtotal: number
 
 	total: number
+	isPaid: boolean
 
 	constructor() {
 		let lineItem = new LineItem()
@@ -83,5 +82,56 @@ export class Invoice {
 		this.total = 0.00
 
 		this.date = new Date().toDateString()
+		this.isPaid = false;
 	}
+}
+
+export interface InvoiceInterface {
+	lineItems: any
+	
+	notes: string
+	terms: string
+
+	invoiceNo: string
+
+	fromInfo: string
+	toInfo: string
+
+	hasPurchaseOrderNo: boolean
+	purchaseOrderNo: string
+
+	hasDiscount: boolean
+	discount: number
+
+	hasTax: boolean
+	tax: number
+
+	due: string
+
+	date:string
+
+	businessEmail?:string
+	clientEmail?:string
+	clientId?:string
+	client?:any;
+
+	recipientEmail?:string
+	recipientMessage?:string
+
+	location?: string
+	filename?: string
+
+	senderName?:string
+
+	hasPaidPartial: boolean
+	amountPaid: number
+
+	hasShipping: boolean
+	shipping: number
+
+	subtotal: number
+
+	total: number
+	isPaid: boolean
+	id?:any;
 }

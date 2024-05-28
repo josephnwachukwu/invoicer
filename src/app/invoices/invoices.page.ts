@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { InvoiceService } from '../invoice.service';
 import { NotificationService } from '../notification.service';
-
+import { InvoiceInterface } from '../models/invoice.model';
 @Component({
   selector: 'app-invoices',
   templateUrl: './invoices.page.html',
@@ -17,10 +17,29 @@ export class InvoicesPage implements OnInit {
     })
   }
 
+  /**
+   * 
+   * @param id 
+   */
   deleteInvoice = (id:string):void => {
     this.invoiceService.deleteInvoice(id).subscribe({
       next: () => {this.invoiceService.deleteInvoice(id)},
       error: (error) => {this.notifications.notify(error.code)}
+    })
+  }
+  /**
+   * 
+   * @param invoice 
+   */
+  updateInvoice = (invoice: InvoiceInterface):void => {
+    const id = invoice.id;
+    const data = {
+      isPaid: !invoice.isPaid,
+    }
+    this.invoiceService.updateInvoice(id, data).subscribe({
+      next: () => {},
+      error: (error) => {this.notifications.notify(error.code)}
+  
     })
   }
 }
