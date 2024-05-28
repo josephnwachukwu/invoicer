@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../auth-service.service';
+import { Router } from '@angular/router';
+import { NotificationService } from 'src/app/notification.service';
 
 export interface Credentials {
-  username:string;
+  email:string;
   password:string;
 }
 
@@ -12,19 +14,28 @@ export interface Credentials {
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  isToastOpen = false;
+  authService = inject(AuthService)
+  router = inject(Router)
+  notifications = inject(NotificationService)
   credientials: Credentials = {
-    username: '',
+    email: '',
     password: ''
   }
-  constructor(public authService: AuthService) { }
 
   ngOnInit() {
     console.log('login page')
   }
 
   login = (credentials: Credentials) => {
-    this.authService.emailSignIn(credentials)
+    this.authService.emailSignIn(credentials).subscribe({
+      next: () =>{
+        this.router.navigate(['/dashboard'])
+      },
+      error: (error) => {
+        console.error(error.code);
+        this.notifications.notify(error.code)
+      }
+    })
   }
 
 }

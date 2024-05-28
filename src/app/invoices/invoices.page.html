@@ -1,13 +1,45 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>invoices</ion-title>
+    <ion-title>Invoices</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">invoices</ion-title>
+      <ion-title size="large">Invoices</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-list>
+    @for(invoice of invoiceService.invoices(); track $index) {
+      <ion-item>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Invoice #: {{invoice.invoiceNo}}</ion-card-title>
+            <!-- <ion-card-subtitle>Card Subtitle</ion-card-subtitle> -->
+          </ion-card-header>
+        
+          <ion-card-content>
+            <ion-list>
+            @for(lineItem of invoice.lineItems; track $index) {
+              <ion-item>
+                <!-- <ion-thumbnail slot="start">
+                  <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+                </ion-thumbnail> -->
+                <ion-label>{{lineItem.name}}</ion-label>
+              </ion-item>
+            }
+            </ion-list>
+          </ion-card-content>
+        
+          <ion-button fill="clear">Mark as Paid</ion-button>
+          <ion-button fill="clear">Download</ion-button>
+          <ion-button fill="clear" (click)="deleteInvoice(invoice.id)">Delete</ion-button>
+        </ion-card>
+      </ion-item>
+    }
+    <ion-item>
+
+    </ion-item>
+  </ion-list>
 </ion-content>

@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-//import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { inject, Injectable, signal } from '@angular/core';
 import { 
   Auth, 
   signInWithEmailAndPassword, 
@@ -9,15 +8,15 @@ import {
   createUserWithEmailAndPassword,
   updateCurrentUser,
   updateProfile,
-  updatePassword
+  updatePassword,
+  user
 } from '@angular/fire/auth'
-import { Subscription } from 'rxjs';
-import { Firestore } from '@angular/fire/firestore';
+import { Subscription, Observable, from } from 'rxjs';
+import { Firestore, collection, addDoc, setDoc, collectionData, collectionGroup, DocumentReference } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { Credentials } from './login/login.page';
 
 
-export interface User {
+export interface UserInterface {
   uid?: string;
   email?: string | null;
   photoURL?: string | null;
@@ -32,39 +31,13 @@ export interface Error {
   providedIn: 'root'
 })
 export class AuthService {
-  //authState$ = authState(this.auth);
-  authStateSubscription!: Subscription;
 
-  constructor(public auth: Auth, private firestore: Firestore, private router: Router, /*private notify: NotifyService,*/) { 
-    // this.authStateSubscription = this.authState$.subscribe((aUser: User | null) => {
-    //   //handle auth state changes here. Note, that user will be null if there is no currently logged in user.
-    //   console.log(aUser);
-    // })
-  }
+  auth = inject(Auth)
+  firestore = inject(Firestore)
+  router = inject(Router)
+  user$ = user(this.auth)
+  currentUserSignal = signal<UserInterface | null | undefined>(undefined)
 
-  // Register Via Email
-  //emailSignUp(email: string, password: string) {
-    // return this.auth
-    //   .createUserWithEmailAndPassword(email, password)
-    //   .then(credential => {
-    //     this.notify.update('Welcome new user!', 'success');
-    //     return this.updateUserData(credential.user); // if using firestore
-    //   })
-    //   .catch(error => this.handleError(error));
-  //}
-
-  // emailLogin(email: string, password: string) {
-  //   this.afAuth
-  //     .signInWithEmailAndPassword(email, password)
-  //     .then(credential => {
-  //       console.log('Welcome back!', 'success');
-  //       console.log('user credentials', credential.user)
-  //       this.router.navigate(['/dashboard']);
-  //       this.user = credential.user
-
-  //     })
-  //     .catch(error => this.handleError(error));
-  // }
 
   // // Sends email allowing user to reset password
   // resetPassword(email: string) {
@@ -98,57 +71,46 @@ export class AuthService {
   //   })
   // }
 
-  /*
-
+  /** 
+   * Logs user into firebase account
+   * @param credentials email and password
   */
-  emailSignIn = (credentials:any) => {
-    signInWithEmailAndPassword(this.auth, credentials.username, credentials.password)
+  emailSignIn = (credentials:any):Observable<void> => {
+    const promise = signInWithEmailAndPassword(this.auth, credentials.email, credentials.password)
      .then(data => {
-        console.log(data.user)
-        // Redirect to dashboard
+      console.log('User Signed in!')
      })
-     .catch((error) => this.handleError(error))
+     return from(promise)
   }
 
-  /*
-
-  */
-  emailSignUp = (credentials:any) => {
-    createUserWithEmailAndPassword(this.auth, credentials.username, credentials.password)
+  /**
+   * Registers a user with a new firebase account
+   * @param credentials username email and password
+   */
+  emailSignUp = (credentials:any):Observable<void> => {
+    const promise = createUserWithEmailAndPassword(this.auth, credentials.email, credentials.password)
     .then(data => {
-      console.log(data)
+      updateProfile(data.user, {displayName: credentials.username})
     })
-    .catch((error) => this.handleError(error))
+    return from(promise)
   }
 
   /*
 
   */
-  signOut = () => {
-    signOut(this.auth)
-    .then(() => {
-      // Navigate to home page
-    })
-    .catch((error) => this.handleError(error))
+  signOut = ():Observable<void> => {
+    const promise = signOut(this.auth)
+    return from(promise)
   }
 
   /*
 
   */
-  updateUser = (user:User) => {
-    updateProfile(user, user)
+  updateUserProfile = (user:any) => {
+    updateProfile(user, {displayName: 'new user', photoURL: ''})
     .then((data) => {
-
+      //setDoc()
     })
-    .catch((error) => this.handleError(error))
   }
-
-  /*
-
-  */
- handleError = (error:Error) => {
-  console.error(error.message)
-  // Toast Service
- }
 
 }

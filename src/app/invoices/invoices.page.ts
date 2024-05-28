@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { InvoiceService } from '../invoice.service';
+import { NotificationService } from '../notification.service';
 
 @Component({
   selector: 'app-invoices',
@@ -6,10 +8,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./invoices.page.scss'],
 })
 export class InvoicesPage implements OnInit {
+  invoiceService = inject(InvoiceService)
+  notifications = inject(NotificationService)
 
-  constructor() { }
-
-  ngOnInit() {
+  ngOnInit():void {
+    this.invoiceService.getInvoices().subscribe((data) => {
+      this.invoiceService.invoices.set(data)
+    })
   }
 
+  deleteInvoice = (id:string):void => {
+    this.invoiceService.deleteInvoice(id).subscribe({
+      next: () => {this.invoiceService.deleteInvoice(id)},
+      error: (error) => {this.notifications.notify(error.code)}
+    })
+  }
 }
