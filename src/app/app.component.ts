@@ -46,7 +46,7 @@ export class AppComponent implements OnInit{
       }
       else {
         this.authService.currentUserSignal.set(null)
-        this.router.navigate(['/home'])
+        this.router.navigate(['/invoices'])
       }
       console.log(this.authService.currentUserSignal()?.email)
     })

@@ -79,8 +79,9 @@ export class AuthService {
   */
   emailSignIn = (credentials:any):Observable<void> => {
     this.notifications.notify('test 1')
+    console.log('function sercive')
     const promise = signInWithEmailAndPassword(this.auth, credentials.email, credentials.password)
-     .then(() => {})
+     .then(() => {console.log('function sercive')})
      return from(promise)
   }
 

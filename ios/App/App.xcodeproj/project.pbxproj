@@ -125,7 +125,7 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 1540;
-				ORGANIZATIONNAME = "Genisystems / HPTP Designs LLC";
+				ORGANIZATIONNAME = "Genisystems / HPTP Design LLC";
 				TargetAttributes = {
 					504EC3031FED79650016851F = {
 						CreatedOnToolsVersion = 9.2;
