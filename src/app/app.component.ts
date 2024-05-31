@@ -38,15 +38,16 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
       if(user){
+        console.log('user', user)
         this.authService.currentUserSignal.set({
           email: user.email!,
           displayName: user.displayName!,
         })
-        this.router.navigate(['/dashboard'])
+        //this.router.navigate(['/dashboard'])
       }
       else {
         this.authService.currentUserSignal.set(null)
-        this.router.navigate(['/invoices'])
+        //this.router.navigate(['/invoices'])
       }
       console.log(this.authService.currentUserSignal()?.email)
     })

@@ -39,7 +39,12 @@ export class AuthService {
   user$ = user(this.auth)
   notifications = inject(NotificationService)
   currentUserSignal = signal<UserInterface | null | undefined>(undefined)
-
+  currentUser!: any
+  constructor(){
+    this.user$.subscribe(user=>{
+      this.currentUser = user
+    })
+  }
 
   // // Sends email allowing user to reset password
   // resetPassword(email: string) {
@@ -78,10 +83,8 @@ export class AuthService {
    * @param credentials email and password
   */
   emailSignIn = (credentials:any):Observable<void> => {
-    this.notifications.notify('test 1')
-    console.log('function sercive')
     const promise = signInWithEmailAndPassword(this.auth, credentials.email, credentials.password)
-     .then(() => {console.log('function sercive')})
+     .then(() => {})
      return from(promise)
   }
 

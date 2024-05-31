@@ -4,13 +4,17 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Invoices</ion-title>
     </ion-toolbar>
   </ion-header>
+@if (authService.currentUser.uid) {
   <ion-list>
+    <ion-item>
+      {{invoiceService.invoices().length}} Invoices, Total Amount Billed: {{invoiceTotals | currency : 'USD'}}, Total Amount Paid: {{paidInvoiceTotal | currency: 'USD'}}
+    </ion-item>
     @for(invoice of invoiceService.invoices(); track $index) {
       <ion-item>
         <ion-card>
@@ -18,17 +22,16 @@
             <ion-card-title>Invoice #: {{invoice.invoiceNo}}</ion-card-title>
             <!-- <ion-card-subtitle>Card Subtitle</ion-card-subtitle> -->
           </ion-card-header>
-        
           <ion-card-content>
             <ion-list>
             @for(lineItem of invoice.lineItems; track $index) {
               <ion-item>
-                <!-- <ion-thumbnail slot="start">
-                  <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-                </ion-thumbnail> -->
                 <ion-label>{{lineItem.name}}</ion-label>
               </ion-item>
             }
+            <ion-item>
+              Total: {{invoice.total | currency: 'USD'}}
+            </ion-item>
             </ion-list>
           </ion-card-content>
           @if(invoice.isPaid) {
@@ -46,4 +49,5 @@
 
     </ion-item>
   </ion-list>
+}
 </ion-content>

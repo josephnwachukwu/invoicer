@@ -5,7 +5,7 @@ import { DashboardPage } from './auth/dashboard/dashboard.page';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'invoices',
+    redirectTo: 'home',
     pathMatch: 'full'
   },
   // {
