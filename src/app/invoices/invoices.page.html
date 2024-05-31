@@ -12,15 +12,12 @@
   </ion-header>
 @if (authService.currentUser.uid) {
   <ion-list>
-    <ion-item>
-      {{invoiceService.invoices().length}} Invoices, Total Amount Billed: {{invoiceTotals | currency : 'USD'}}, Total Amount Paid: {{paidInvoiceTotal | currency: 'USD'}}
-    </ion-item>
     @for(invoice of invoiceService.invoices(); track $index) {
       <ion-item>
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Invoice #: {{invoice.invoiceNo}}</ion-card-title>
-            <!-- <ion-card-subtitle>Card Subtitle</ion-card-subtitle> -->
+            <!-- <ion-card-title>Invoice #: {{invoice.invoiceNo}}</ion-card-title> -->
+            <ion-card-subtitle>Invoice #: {{invoice.invoiceNo}}</ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>
             <ion-list>
@@ -51,3 +48,8 @@
   </ion-list>
 }
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    {{invoiceService.invoices().length}} Invoices | Total Amount Billed: {{invoiceTotals | currency : 'USD'}} | Total Amount Paid: {{paidInvoiceTotal | currency: 'USD'}}
+  </ion-toolbar>
+</ion-footer>
