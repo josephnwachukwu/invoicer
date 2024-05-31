@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { InvoiceInterface, Invoice } from '../../models/invoice.model';
 import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../auth-service.service';
+import { RouterModule } from '@angular/router';
 import { InvoiceService } from '../../invoice.service';
 import { ClientService } from 'src/app/client.service';
 import { Router } from '@angular/router';
@@ -16,6 +17,7 @@ import * as d3 from 'd3';
   imports: [CommonModule,
     FormsModule,
     IonicModule,
+    RouterModule
   ],
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
@@ -41,6 +43,12 @@ export class DashboardPage implements OnInit, AfterViewInit {
   constructor() { }
 
   ngOnInit() {
+    console.log('dashboard')
+  }
+
+
+  ngAfterViewInit():void {
+    this.renderChart()
     this.invoiceService.getInvoices().subscribe((data) => {
       this.invoiceService.invoices.set(data);
       this.invoiceTotals = this.invoiceService.invoices().reduce((acc:number, inv:Invoice) => acc + inv.total, 0)
@@ -54,12 +62,6 @@ export class DashboardPage implements OnInit, AfterViewInit {
     this.clientService.getClients().subscribe((data) => {
       this.clientService.clients.set(data);
     })
-
-  }
-
-
-  ngAfterViewInit():void {
-    this.renderChart()
   }
 
   renderChart = () => {

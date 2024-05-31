@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { 
   Auth, 
+  authState,
   signInWithEmailAndPassword, 
   signOut, 
   sendPasswordResetEmail,  
@@ -9,7 +10,9 @@ import {
   updateCurrentUser,
   updateProfile,
   updatePassword,
-  user
+  user, 
+  UserInfo,
+  onAuthStateChanged,
 } from '@angular/fire/auth'
 import { Subscription, Observable, from } from 'rxjs';
 import { Firestore, collection, addDoc, setDoc, collectionData, collectionGroup, DocumentReference } from '@angular/fire/firestore';
@@ -38,13 +41,23 @@ export class AuthService {
   router = inject(Router)
   user$ = user(this.auth)
   notifications = inject(NotificationService)
-  currentUserSignal = signal<UserInterface | null | undefined>(undefined)
+  currentUserSignal = signal<Partial<UserInterface> | null | undefined>(undefined)
   currentUser!: any
+
   constructor(){
-    this.user$.subscribe(user=>{
-      this.currentUser = user
+    // this.user$.subscribe(user=>{
+    //   console.log('user subscription', user)
+    //   this.currentUser = user
+    // })
+    this.auth.onAuthStateChanged(user => {
+      if(user){
+        const {uid, email, displayName, photoURL} = user!
+        this.currentUserSignal.set({uid, email, photoURL})
+        this.currentUser = user
+      }
     })
   }
+
 
   // // Sends email allowing user to reset password
   // resetPassword(email: string) {

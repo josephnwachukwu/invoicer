@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit } from '@angular/core';
 import { InvoiceService } from '../invoice.service';
 import { NotificationService } from '../notification.service';
 import { InvoiceInterface, Invoice } from '../models/invoice.model';
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: './invoices.page.html',
   styleUrls: ['./invoices.page.scss'],
 })
-export class InvoicesPage implements OnInit {
+export class InvoicesPage implements OnInit, AfterViewInit {
   invoiceService = inject(InvoiceService)
   notifications = inject(NotificationService)
   authService = inject(AuthService)
@@ -18,29 +18,15 @@ export class InvoicesPage implements OnInit {
   paidInvoiceTotal = 0
 
   ngOnInit():void {
-    this.authService.user$.subscribe(user => {
-      if(user){
-        console.log('user', user)
-        this.authService.currentUserSignal.set({
-          email: user.email!,
-          displayName: user.displayName!,
-          uid: user.uid
-      })
-    }
-      else {
-        this.authService.currentUserSignal.set(null)
-        this.router.navigate(['/login'])
-        this.notifications.notify('Please login to continue')
-      }
-    })
+    console.log('invoices')
+  }
 
+  ngAfterViewInit():void {
     this.invoiceService.getInvoices().subscribe((data) => {
       this.invoiceService.invoices.set(data);
       this.invoiceTotals = this.invoiceService.invoices().reduce((acc:number, inv:Invoice) => acc + inv.total, 0)
       this.paidInvoiceTotal = this.invoiceService.invoices().filter((inv:Invoice)=>inv.isPaid).reduce((acc:number, inv:Invoice) => acc + inv.total, 0)
     })
-    
-    
   }
 
   /**
