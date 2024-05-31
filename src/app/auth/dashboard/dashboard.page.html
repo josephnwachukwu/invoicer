@@ -31,11 +31,17 @@
       <ion-col>
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Recent Invoices </ion-card-title>
+            <ion-card-title>Recent Invoices - {{invoiceService.invoices().length }} Total</ion-card-title>
           </ion-card-header>
         
           <ion-card-content>
-            Here's a small text description for the card content. Nothing more, nothing less.
+            <ion-list>
+              @for(invoice of invoiceService.invoices().slice(0,5); track $index;) {
+                <ion-item>
+                  {{invoice.invoiceNo}}
+                </ion-item>
+              }
+            </ion-list>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -55,11 +61,18 @@
       <ion-col>
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Clients</ion-card-title>
+            <ion-card-title>Clients - {{clientService.clients().length}} Total</ion-card-title>
           </ion-card-header>
         
           <ion-card-content>
-            Here's a small text description for the card content. Nothing more, nothing less.
+            <ion-list>
+              @for(client of clientService.clients().slice(0,5); track $index) {
+                <ion-item>
+                  {{client.name}}
+                </ion-item>
+              }
+            </ion-list>
+            
           </ion-card-content>
         </ion-card>
       </ion-col>

@@ -50,6 +50,11 @@ export class DashboardPage implements OnInit, AfterViewInit {
         {name: 'data 2', value: '200', color: "#FFFFFF"}
       ]
     })
+
+    this.clientService.getClients().subscribe((data) => {
+      this.clientService.clients.set(data);
+    })
+
   }
 
 
