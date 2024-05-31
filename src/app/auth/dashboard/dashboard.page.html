@@ -13,13 +13,54 @@
   <ion-grid>
     <ion-row>
       <ion-col>
+        <h1>Welcome {{authService.currentUser?.email}}</h1>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
         <ion-card>
-          hi
+          <ion-card-header>
+            <ion-card-title>At A Glace</ion-card-title>
+          </ion-card-header>
+        
+          <ion-card-content>
+            <figure id="donutChart" #donutChart></figure>
+          </ion-card-content>
         </ion-card>
       </ion-col>
       <ion-col>
         <ion-card>
-          hi
+          <ion-card-header>
+            <ion-card-title>Recent Invoices </ion-card-title>
+          </ion-card-header>
+        
+          <ion-card-content>
+            Here's a small text description for the card content. Nothing more, nothing less.
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Invoice Summary</ion-card-title>
+          </ion-card-header>
+        
+          <ion-card-content>
+            Here's a small text description for the card content. Nothing more, nothing less.
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Clients</ion-card-title>
+          </ion-card-header>
+        
+          <ion-card-content>
+            Here's a small text description for the card content. Nothing more, nothing less.
+          </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
