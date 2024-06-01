@@ -4,9 +4,9 @@ import { NotificationService } from 'src/app/notification.service';
 import { Router } from '@angular/router';
 import {  Observable } from 'rxjs';
 import { Firestore, collection, addDoc, setDoc, doc, collectionData, collectionGroup, DocumentReference, where, query, getDoc, CollectionReference, updateDoc } from '@angular/fire/firestore';
-//import states from '../../states.json'
 
 export interface UserProfile {
+  id?:string;
   uid?: string;
   displayName?: string;
   email?: string;
@@ -17,6 +17,7 @@ export interface UserProfile {
   businessState?: string;
   businessZip?: string;
   businessPhone?: string;
+  tier?: string;
 }
 
 const statesJson = [
@@ -247,18 +248,27 @@ export class ProfilePage implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.getUser().subscribe((data:UserProfile[]) => {
       this.userProfileSignal.set(data[0]);
-      this.user = data[0];
-      console.log('user',this.user)
+      this.user = {...data[0]};
+      const docRef = doc(this.firestore, 'users', this.user.id!)
+      const docSnap = getDoc(docRef).then(data => {
+        //console.log('data', data.data())
+      });
     })
   }
 
   getUser = ():Observable<UserProfile[]> => {
     const q = query(this.usersCollection, where('uid', '==', this.authService.currentUser.uid))
-    return collectionData(q, {})
+    return collectionData(q, {idField: 'id'})
   }
 
-  update = (user:UserProfile) => {
-    //updateDoc(, user)
+  update = (userdata:UserProfile) => {
+    const docRef = doc(this.firestore, "users", this.user.id!);
+    updateDoc(docRef, {...userdata}).then((data) => {
+      this.notifications.notify('Profile Updated Successfully')
+    })
+    .catch((error) =>{
+      this.notifications.notify('There was an error updaing the Profile')
+    })
   }
 
 }
