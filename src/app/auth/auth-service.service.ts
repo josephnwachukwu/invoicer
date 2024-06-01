@@ -43,6 +43,8 @@ export class AuthService {
   notifications = inject(NotificationService)
   currentUserSignal = signal<Partial<UserInterface> | null | undefined>(undefined)
   currentUser!: any
+  userCollection = collection(this.firestore, 'users')
+
 
   constructor(){
     this.auth.onAuthStateChanged(user => {
@@ -72,7 +74,9 @@ export class AuthService {
   emailSignUp = (credentials:any):Observable<void> => {
     const promise = createUserWithEmailAndPassword(this.auth, credentials.email, credentials.password)
     .then(data => {
-      updateProfile(data.user, {displayName: credentials.username})
+      console.log('new user data',data)
+      //updateProfile(data.user, {displayName: credentials.username})
+      this.createUser({...data.user, displayName: credentials.username})
     })
     return from(promise)
   }
@@ -91,7 +95,20 @@ export class AuthService {
   updateUserProfile = (user:any) => {
     updateProfile(user, {displayName: 'new user', photoURL: ''})
     .then((data) => {
-      //setDoc()
+      this.notifications.notify('Credentials Updated')
+    })
+  }
+  
+
+  createUser = (newUser:any) => {
+    const userPayload = {
+      uid: newUser.uid,
+      email: newUser.email,
+      displayName: newUser.displayName,
+      photoURL: 'https://ionicframework.com/docs/img/demos/avatar.svg'
+    }
+    const docRef = addDoc(collection(this.firestore, 'users'), {...userPayload}).then((data)=>{
+      console.log(data)
     })
   }
 

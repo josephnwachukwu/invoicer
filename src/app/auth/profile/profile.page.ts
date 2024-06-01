@@ -4,224 +4,16 @@ import { NotificationService } from 'src/app/notification.service';
 import { Router } from '@angular/router';
 import {  Observable } from 'rxjs';
 import { Firestore, collection, addDoc, setDoc, doc, collectionData, collectionGroup, DocumentReference, where, query, getDoc, CollectionReference, updateDoc } from '@angular/fire/firestore';
+import { ref, Storage, uploadBytesResumable } from '@angular/fire/storage';
+import { UserProfile } from './userProfile.interface';
+//import * as statesJson from '../../../assets/states.json';
+import { UtilsService } from 'src/app/utils.service';
 
-export interface UserProfile {
-  id?:string;
-  uid?: string;
-  displayName?: string;
-  email?: string;
-  businessName?: string;
-  businessAddress1?: string;
-  businessAddress2?: string;
-  businessCity?: string;
-  businessState?: string;
-  businessZip?: string;
-  businessPhone?: string;
-  tier?: string;
+export interface state {
+  code:string,
+  name:string,
 }
 
-const statesJson = [
-  {
-    "name": "Alabama",
-    "code": "AL"
-  },
-  {
-    "name": "Alaska",
-    "code": "AK"
-  },
-  {
-    "name": "Arizona",
-    "code": "AZ"
-  },
-  {
-    "name": "Arkansas",
-    "code": "AR"
-  },
-  {
-    "name": "California",
-    "code": "CA"
-  },
-  {
-    "name": "Colorado",
-    "code": "CO"
-  },
-  {
-    "name": "Connecticut",
-    "code": "CT"
-  },
-  {
-    "name": "Delaware",
-    "code": "DE"
-  },
-  {
-    "name": "Florida",
-    "code": "FL"
-  },
-  {
-    "name": "Georgia",
-    "code": "GA"
-  },
-  {
-    "name": "Hawaii",
-    "code": "HI"
-  },
-  {
-    "name": "Idaho",
-    "code": "ID"
-  },
-  {
-    "name": "Illinois",
-    "code": "IL"
-  },
-  {
-    "name": "Indiana",
-    "code": "IN"
-  },
-  {
-    "name": "Iowa",
-    "code": "IA"
-  },
-  {
-    "name": "Kansas",
-    "code": "KS"
-  },
-  {
-    "name": "Kentucky",
-    "code": "KY"
-  },
-  {
-    "name": "Louisiana",
-    "code": "LA"
-  },
-  {
-    "name": "Maine",
-    "code": "ME"
-  },
-  {
-    "name": "Maryland",
-    "code": "MD"
-  },
-  {
-    "name": "Massachusetts",
-    "code": "MA"
-  },
-  {
-    "name": "Michigan",
-    "code": "MI"
-  },
-  {
-    "name": "Minnesota",
-    "code": "MN"
-  },
-  {
-    "name": "Mississippi",
-    "code": "MS"
-  },
-  {
-    "name": "Missouri",
-    "code": "MO"
-  },
-  {
-    "name": "Montana",
-    "code": "MT"
-  },
-  {
-    "name": "Nebraska",
-    "code": "NE"
-  },
-  {
-    "name": "Nevada",
-    "code": "NV"
-  },
-  {
-    "name": "New Hampshire",
-    "code": "NH"
-  },
-  {
-    "name": "New Jersey",
-    "code": "NJ"
-  },
-  {
-    "name": "New Mexico",
-    "code": "NM"
-  },
-  {
-    "name": "New York",
-    "code": "NY"
-  },
-  {
-    "name": "North Carolina",
-    "code": "NC"
-  },
-  {
-    "name": "North Dakota",
-    "code": "ND"
-  },
-  {
-    "name": "Ohio",
-    "code": "OH"
-  },
-  {
-    "name": "Oklahoma",
-    "code": "OK"
-  },
-  {
-    "name": "Oregon",
-    "code": "OR"
-  },
-  {
-    "name": "Pennsylvania",
-    "code": "PA"
-  },
-  {
-    "name": "Rhode Island",
-    "code": "RI"
-  },
-  {
-    "name": "South Carolina",
-    "code": "SC"
-  },
-  {
-    "name": "South Dakota",
-    "code": "SD"
-  },
-  {
-    "name": "Tennessee",
-    "code": "TN"
-  },
-  {
-    "name": "Texas",
-    "code": "TX"
-  },
-  {
-    "name": "Utah",
-    "code": "UT"
-  },
-  {
-    "name": "Vermont",
-    "code": "VT"
-  },
-  {
-    "name": "Virginia",
-    "code": "VA"
-  },
-  {
-    "name": "Washington",
-    "code": "WA"
-  },
-  {
-    "name": "West Virginia",
-    "code": "WV"
-  },
-  {
-    "name": "Wisconsin",
-    "code": "WI"
-  },
-  {
-    "name": "Wyoming",
-    "code": "WY"
-  }
-]
 
 @Component({
   selector: 'app-profile',
@@ -233,13 +25,14 @@ export class ProfilePage implements OnInit, AfterViewInit {
   notifications = inject(NotificationService);
   router = inject(Router);
   firestore = inject(Firestore);
+  storage = inject(Storage)
+  utils = inject(UtilsService)
   usersCollection = collection(this.firestore, 'users');
   users$!: Observable<UserProfile[]>;
   userProfileSignal = signal<UserProfile>({});
   user!:UserProfile;
-  states = statesJson;
-
-  constructor() { }
+  states:state[] = this.utils.statesJson;
+  
 
   ngOnInit() {
     console.log('user profile')
@@ -270,5 +63,19 @@ export class ProfilePage implements OnInit, AfterViewInit {
       this.notifications.notify('There was an error updaing the Profile')
     })
   }
+
+  uploadFile = (input: HTMLInputElement) => {
+    if (!input.files) return
+
+    const files: FileList = input.files;
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files.item(i);
+        if (file) {
+          const storageRef = ref(this.storage, file.name)
+            uploadBytesResumable(storageRef, file);
+        }
+    }
+}
 
 }

@@ -26,10 +26,18 @@
       <ion-col>
         <ion-item>
           <ion-avatar slot="start">
-            <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+            <img alt="Profile Picture" src="{{user.photoURL}}" />
           </ion-avatar>
           <ion-label>{{user.displayName}}</ion-label>
+          <label for="fileUpload">Edit Picture</label>
+        <input id="fileUpload" type="file" #upload accept=".jpg,.jpeg,.png">
+        <ion-button (click)="uploadFile(upload)">Upload Picture</ion-button>
         </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-text color="tertiary">
+          <h3>Tier: {{user.tier}}</h3>
+        </ion-text>
       </ion-col>
     </ion-row>
 
