@@ -45,10 +45,6 @@ export class AuthService {
   currentUser!: any
 
   constructor(){
-    // this.user$.subscribe(user=>{
-    //   console.log('user subscription', user)
-    //   this.currentUser = user
-    // })
     this.auth.onAuthStateChanged(user => {
       if(user){
         const {uid, email, displayName, photoURL} = user!
@@ -58,38 +54,6 @@ export class AuthService {
     })
   }
 
-
-  // // Sends email allowing user to reset password
-  // resetPassword(email: string) {
-  //   const fbAuth = this.afAuth;
-
-  //   return fbAuth
-  //     .sendPasswordResetEmail(email)
-  //     .then(() => this.notify.update('Password update email sent', 'info'))
-  //     .catch(error => this.handleError(error));
-  // }
-
-  // // If error, console log and notify user
-  // private handleError(error: Error) {
-  //   console.error(error);
-  //   this.notify.update(error.message, 'error');
-  // }
-
-  // // Sets user data to firestore after succesful login
-  // private updateUserData(user) {
-
-  //   const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
-  //   return userRef.set(user);
-  // }
-
-  // updateUser(user) {
-  //   const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
-
-  //   return userRef.set(user)
-  //   .then(()=>{
-  //     this.notify.update('User Updated Successfully', 'success');
-  //   })
-  // }
 
   /** 
    * Logs user into firebase account
@@ -114,7 +78,7 @@ export class AuthService {
   }
 
   /*
-
+   * Signs User out of Firebase
   */
   signOut = ():Observable<void> => {
     const promise = signOut(this.auth)
@@ -122,7 +86,7 @@ export class AuthService {
   }
 
   /*
-
+   * Updates the User Profile
   */
   updateUserProfile = (user:any) => {
     updateProfile(user, {displayName: 'new user', photoURL: ''})

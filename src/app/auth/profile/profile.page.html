@@ -10,4 +10,100 @@
       <ion-title size="large">profile</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  @if(user){
+  <ion-grid>
+
+    <ion-row>
+      <ion-col>
+        <ion-text>
+          <h2>Personal Information</h2>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-input label="Name" labelPlacement="stacked" fill="outline" placeholder="Enter text" [(ngModel)]="user.displayName"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-input label="Email" labelPlacement="stacked" fill="outline" placeholder="Enter text" [(ngModel)]="user.email" [disabled]="true"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-text>
+          <h2>Business Information</h2>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-input label="Business Name" labelPlacement="stacked" fill="outline" placeholder="Enter text" [(ngModel)]="user.businessName"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-input label="Business Phone Number" labelPlacement="stacked" fill="outline" placeholder="Enter text" [(ngModel)]="user.businessPhone"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-input label="Address 1" fill="outline" labelPlacement="stacked" placeholder="Enter text" [(ngModel)]="user.businessAddress1"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-input label="Address 2" fill="outline" labelPlacement="stacked" placeholder="Enter text" [(ngModel)]="user.businessAddress2"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-input label="City" fill="outline" labelPlacement="stacked" placeholder="Enter text" [(ngModel)]="user.businessCity"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-select  label="State" fill="outline" labelPlacement="stacked"  placeholder="Select State" [(ngModel)]="user.businessState">
+            @for(state of states; track $index) {
+              <ion-select-option [value]="state.code"> {{state.name}}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-input label="Zip" fill="outline" labelPlacement="stacked" placeholder="Enter text" [(ngModel)]="user.businessZip"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <!-- <ion-item>
+          <ion-input label="State" fill="outline" placeholder="Enter text" [(ngModel)]="user.businessState"></ion-input>
+        </ion-item> -->
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  }
+
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" (click)="update(user)">Update Profile</ion-button>
+  </ion-toolbar>
+</ion-footer>

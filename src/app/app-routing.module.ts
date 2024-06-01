@@ -8,10 +8,6 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
-  // {
-  //   path: 'folder/:id',
-  //   loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
-  // },
   {
     path: 'create-invoice',
     loadChildren: () => import('./create-invoice/create-invoice.module').then( m => m.CreateInvoicePageModule)
