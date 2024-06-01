@@ -9,6 +9,7 @@ import { CreateInvoicePageRoutingModule } from './create-invoice-routing.module'
 import {MaskitoDirective} from '@maskito/angular';
 
 import { CreateInvoicePage } from './create-invoice.page';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { CreateInvoicePage } from './create-invoice.page';
     FormsModule,
     IonicModule,
     MaskitoDirective,
+    HttpClientModule,
     CreateInvoicePageRoutingModule
   ],
   declarations: [CreateInvoicePage]

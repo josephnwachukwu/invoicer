@@ -31,8 +31,10 @@
             <ion-button expand="block" (click)="login(credientials)">
               Login
             </ion-button>
-            <p>Don't have an account? <a [routerLink]="['/register']">Click here</a>.</p>
-            <p><a [routerLink]="['/forgotpassword']">Forgot Password? </a></p>
+            <ion-text class="ion-text-center">
+              <p>Don't have an account? <a [routerLink]="['/register']">Click here</a>.</p>
+              <p><a [routerLink]="['/forgotpassword']">Forgot Password? </a></p>
+            </ion-text>
           </ion-card-content>
         </ion-card>
       </ion-col>

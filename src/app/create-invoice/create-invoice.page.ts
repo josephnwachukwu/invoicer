@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnChanges, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { Invoice } from '../models/invoice.model'
 import { LineItem } from '../models/lineItem.model'
 //import { AuthService } from '../../auth/auth.service'; 
@@ -10,6 +10,8 @@ import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { MaskitoDirective } from '@maskito/angular';
 import { MaskitoOptions } from '@maskito/core';
+import { HttpClient } from '@angular/common/http';
+import { InvoiceService } from '../invoice.service';
 
 @Component({
   selector: 'app-create-invoice',
@@ -25,6 +27,8 @@ export class CreateInvoicePage implements OnInit, OnChanges {
 	currentUser:any;
 	//clientId:string;
 	currentClient:any;
+  http = inject(HttpClient)
+  invoiceService = inject(InvoiceService)
   constructor(/* public afauth: AngularFireAuth, public firestore: AngularFirestore,*/ private route: ActivatedRoute) {
     //console.log('user data from create', this.auth.userDataJson)
      }
@@ -112,7 +116,30 @@ export class CreateInvoicePage implements OnInit, OnChanges {
 
   // Send invoice to firebase for processing
   downloadInvoice = () => {
+    // Blob type is required
+    const httpOptions = {
+      responseType: 'blob' as 'json'
+    };
 
+    // save the invoice
+    this.invoiceService.createInvoice(this.invoice).then((docRef:any) => {
+      console.log('data', docRef.id)
+
+      const stamp = Date.now().toString();
+      var fileName = "invoice-" + stamp + ".pdf";
+      var a = document.createElement("a");
+      document.body.appendChild(a);
+
+      // Headless invoice creation then place in link and invoke click
+      this.http.get('https://us-central1-invoicer-6022f.cloudfunctions.net/app/download?url=https://invoicer-6022f.firebaseapp.com/view/' + docRef.id, httpOptions).subscribe((data:any) => {
+        const file = new Blob([data], { type: 'application/pdf' });
+        const downloadURL = URL.createObjectURL(file);
+        a.href = downloadURL;
+        a.download = fileName;
+        a.click();
+      });
+
+    });
   }
 
 }
