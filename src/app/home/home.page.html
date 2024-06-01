@@ -10,4 +10,26 @@
       <ion-title size="large">home</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-text>
+          <h1>Invoices Made Easy!</h1>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-img
+          src="assets/img/man.svg"
+          alt="home img"
+        ></ion-img>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" [routerLink]="['/login']">Get Started</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
