@@ -75,7 +75,6 @@ export class AuthService {
     const promise = createUserWithEmailAndPassword(this.auth, credentials.email, credentials.password)
     .then(data => {
       console.log('new user data',data)
-      //updateProfile(data.user, {displayName: credentials.username})
       this.createUser({...data.user, displayName: credentials.username})
     })
     return from(promise)

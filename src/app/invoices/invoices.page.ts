@@ -1,9 +1,11 @@
-import { Component, inject, OnInit, AfterViewInit } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit, signal } from '@angular/core';
 import { InvoiceService } from '../invoice.service';
 import { NotificationService } from '../notification.service';
 import { InvoiceInterface, Invoice } from '../models/invoice.model';
 import { AuthService } from '../auth/auth-service.service';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
+
 @Component({
   selector: 'app-invoices',
   templateUrl: './invoices.page.html',
@@ -15,7 +17,44 @@ export class InvoicesPage implements OnInit, AfterViewInit {
   authService = inject(AuthService)
   invoiceTotals!:number;
   router = inject(Router)
+  alertController = inject(AlertController)
   paidInvoiceTotal = 0
+  alertButtons = () => [
+    {
+      text: 'Cancel',
+      role: 'cancel',
+      handler: () => {
+        console.log('Alert canceled');
+      },
+    },
+    {
+      text: 'OK',
+      role: 'confirm',
+      handler: (data:any) => {
+        this.deleteInvoice(data.id)
+      },
+    },
+  ];
+  alertInputs = (client:string) => [
+    {
+      value: client,
+      name: 'id',
+      cssClass: 'invisible',
+      disabled: true
+    }
+  ]
+
+  async presentAlert(invoiceID:string) {
+    const alert = await this.alertController.create({
+      header: 'Are you sure?',
+      message: 'Deleting an Invoice is permanent and cannot be reversed',
+      buttons: this.alertButtons(),
+      inputs: this.alertInputs(invoiceID)
+    });
+
+    await alert.present();
+  }
+  
 
   ngOnInit():void {
     console.log('invoices')
@@ -52,7 +91,6 @@ export class InvoicesPage implements OnInit, AfterViewInit {
     this.invoiceService.updateInvoice(id, data).subscribe({
       next: () => {this.notifications.notify('Invoice Updated Successfully')},
       error: (error) => {this.notifications.notify(error.code)}
-  
     })
   }
 }

@@ -38,7 +38,7 @@
             <ion-button fill="clear" (click)="updateInvoice(invoice)">Mark as Paid</ion-button>
           }
           <ion-button fill="clear">Download</ion-button>
-          <ion-button fill="clear" (click)="deleteInvoice(invoice.id)">Delete</ion-button>
+          <ion-button fill="clear" color="danger" (click)="presentAlert(invoice.id)">Delete</ion-button>
         </ion-card>
       </ion-item>
     }
@@ -47,6 +47,11 @@
     </ion-item>
   </ion-list>
 }
+
+<ion-alert
+  header="Alert!"
+></ion-alert>
+
 </ion-content>
 <ion-footer>
   <ion-toolbar>

@@ -7,7 +7,96 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">clients</ion-title>
+      <ion-title size="large">Clients</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-list>
+    @for(client of clientService.clients(); track $index) {
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{client.name}}</ion-card-title>
+        </ion-card-header>
+      
+        <ion-card-content>
+          <p>
+            {{client.address1 + ' ' + client.address2}} <br />
+            {{client.city + ', ' + client.state + ', ' + client.zipcode }} <br />
+            {{client.contactName}} <br />
+            {{client.email}} {{client.phoneNumber || ''}}
+          </p>
+        </ion-card-content>
+      
+        <ion-button fill="clear">Edit</ion-button>
+        <ion-button color="danger" fill="clear" (click)="presentAlert(client.id);">Delete</ion-button>
+      </ion-card>
+    }
+
+      <ion-button id="add-modal" color="success" expand="block">Add new client</ion-button>
+
+  </ion-list>
+
+  <ion-modal trigger="add-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Cancel</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list>
+          <ion-item>
+            <ion-input label="Client or Business Name" labelPlacement="fixed" placeholder="ABC Company" [(ngModel)]="client.name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input label="Address 1" labelPlacement="fixed" placeholder="124 West Bubble" [(ngModel)]="client.address1"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input label="Address 2" labelPlacement="fixed" placeholder="Suite 510" [(ngModel)]="client.address2"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input label="City" labelPlacement="fixed" placeholder="Sommerville" [(ngModel)]="client.city"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input label="State" labelPlacement="fixed" placeholder="NY" [(ngModel)]="client.state"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input label="Zip Code" labelPlacement="fixed" placeholder="12345" [(ngModel)]="client.zipcode"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input label="Email" labelPlacement="fixed" placeholder="email@company.com" [(ngModel)]="client.email"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input label="Phone Number" labelPlacement="fixed" placeholder="email@company.com" [(ngModel)]="client.phoneNumber"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input label="Company Contact" labelPlacement="fixed" placeholder="accountspayable@company.com" [(ngModel)]="client.contactName"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-button expand="fill" (click)="addClient(client)">Add Client</ion-button>
+          </ion-item>
+        </ion-list>
+        
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-alert
+  header="Alert!"
+></ion-alert>
+
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-text>
+      Clients: {{this.clientService.clients().length}}
+    </ion-text>
+  </ion-toolbar>
+</ion-footer>
+
+
+
+  
+

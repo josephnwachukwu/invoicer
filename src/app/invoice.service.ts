@@ -45,7 +45,7 @@ export class InvoiceService {
     if(user && user.uid) {
       const payload = {
         ...invoice,
-        uid: user.uid || 'tempUser',
+        uid: user.uid,
         lineItems: itemList
       }
       return addDoc(collection(this.fireStore, 'invoices'), {...payload})

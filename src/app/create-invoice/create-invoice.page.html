@@ -151,7 +151,7 @@
       <ion-textarea label="Terms:" placeholder="Terms and conditions - late fees, payment methods, delivery schedule" fill="outline" [(ngModel)]="invoice.terms"></ion-textarea>
     </ion-item>
     
-    <ion-button id="open-modal" expand="block">Download or Send Invoice</ion-button>
+    <ion-button id="open-modal" expand="block">Generate Invoice</ion-button>
     
   </ion-list>
   <!-- Modal for Actions -->
@@ -162,21 +162,37 @@
           <ion-buttons slot="start">
             <ion-button (click)="cancel()">Cancel</ion-button>
           </ion-buttons>
-          <ion-title>Download or Send</ion-title>
-          <!-- <ion-buttons slot="end">
-            <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
-          </ion-buttons> -->
+          <ion-text class="ion-text-center">
+            <ion-title>Download or Send</ion-title>
+          </ion-text>
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <ion-text>
-          <h3>H3: The quick brown fox jumps over the lazy dog</h3>
+        <ion-text class="ion-text-center">
+          <h3>Generate Your Invoice</h3>
         </ion-text>
-        <p>
-          Download A local copy of your invoice or send a copy via email to a recipient
-        </p>
-        <ion-button (click)="downloadInvoice()" expand="block">Download Invoice</ion-button>
+        <ion-img
+          src="assets/img/lists.svg"
+          alt="Download Invoice Image"
+        ></ion-img>
+        <ion-text class="ion-text-center">
+          <p>
+            Generate your invoice and send it out to your client for payment.
+          </p>
+        </ion-text>
+        
+        @if(!this.processingInvoice()) {
+          <ion-button (click)="downloadInvoice()" expand="block">Download Invoice</ion-button>
+        }
+        @else {
+          <ion-button expand="block" [disabled]="true"><ion-spinner name="crescent"></ion-spinner> Processing, Please Wait...</ion-button>
+        }
 
+        @if(this.pendingMessage()){
+          <ion-text>
+            {{this.message}}
+          </ion-text>
+        }
       </ion-content>
     </ng-template>
   </ion-modal>

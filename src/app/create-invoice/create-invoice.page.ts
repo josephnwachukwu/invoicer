@@ -1,17 +1,12 @@
-import { Component, OnInit, Input, AfterViewInit, OnChanges, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnChanges, SimpleChanges, ViewChild, inject, signal } from '@angular/core';
 import { Invoice } from '../models/invoice.model'
-import { LineItem } from '../models/lineItem.model'
-//import { AuthService } from '../../auth/auth.service'; 
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-//import { AngularFirestore } from '@angular/fire/compat/firestore';    
-import { Observable } from 'rxjs';
+import { LineItem } from '../models/lineItem.model'  
 import { ActivatedRoute } from '@angular/router';
 import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
-import { MaskitoDirective } from '@maskito/angular';
-import { MaskitoOptions } from '@maskito/core';
 import { HttpClient } from '@angular/common/http';
 import { InvoiceService } from '../invoice.service';
+import { NotificationService } from '../notification.service';
 
 @Component({
   selector: 'app-create-invoice',
@@ -23,16 +18,15 @@ export class CreateInvoicePage implements OnInit, OnChanges {
   modal!: IonModal;
 
   @Input() invoice!: Invoice;
-	//profile$: Observable<any>;
 	currentUser:any;
-	//clientId:string;
 	currentClient:any;
   http = inject(HttpClient)
   invoiceService = inject(InvoiceService)
-  constructor(/* public afauth: AngularFireAuth, public firestore: AngularFirestore,*/ private route: ActivatedRoute) {
-    //console.log('user data from create', this.auth.userDataJson)
-     }
-
+  processingInvoice = signal<boolean>(false)
+  notifications = inject(NotificationService)
+  message = 'Please wait for the invoice to open or check your downloads folder'
+  pendingMessage = signal<boolean>(false)
+  
   ngOnInit() {
     console.log('testing')
     this.invoice === undefined ? this.invoice = new Invoice() : console.log('check')
@@ -116,6 +110,7 @@ export class CreateInvoicePage implements OnInit, OnChanges {
 
   // Send invoice to firebase for processing
   downloadInvoice = () => {
+    this.processingInvoice.set(true)
     // Blob type is required
     const httpOptions = {
       responseType: 'blob' as 'json'
@@ -137,8 +132,11 @@ export class CreateInvoicePage implements OnInit, OnChanges {
         a.href = downloadURL;
         a.download = fileName;
         a.click();
-      });
+      }) ;
 
+    }).then(()=>{
+      this.notifications.notify('Invoice processed successfully')
+      this.processingInvoice.set(false)
     });
   }
 

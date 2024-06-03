@@ -4,9 +4,8 @@ import { NotificationService } from 'src/app/notification.service';
 import { Router } from '@angular/router';
 import {  Observable } from 'rxjs';
 import { Firestore, collection, addDoc, setDoc, doc, collectionData, collectionGroup, DocumentReference, where, query, getDoc, CollectionReference, updateDoc } from '@angular/fire/firestore';
-import { ref, Storage, uploadBytesResumable } from '@angular/fire/storage';
+import { getDownloadURL, ref, Storage, uploadBytesResumable } from '@angular/fire/storage';
 import { UserProfile } from './userProfile.interface';
-//import * as statesJson from '../../../assets/states.json';
 import { UtilsService } from 'src/app/utils.service';
 
 export interface state {
@@ -68,12 +67,18 @@ export class ProfilePage implements OnInit, AfterViewInit {
     if (!input.files) return
 
     const files: FileList = input.files;
-
     for (let i = 0; i < files.length; i++) {
         const file = files.item(i);
         if (file) {
           const storageRef = ref(this.storage, file.name)
-            uploadBytesResumable(storageRef, file);
+           uploadBytesResumable(storageRef, file)
+           .then((data)=>{
+            getDownloadURL(ref(this.storage,data.metadata.name))
+            .then((url) =>{
+              this.user.photoURL = url;
+              this.update(this.user)
+            })
+           });
         }
     }
 }
