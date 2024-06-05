@@ -31,30 +31,32 @@ export class DashboardPage implements OnInit, AfterViewInit {
   invoiceTotals!:number;
   router = inject(Router)
   paidInvoiceTotal = 0
+  chartDataLoaded = false
 
   cfg = {
     type: 'doughnut',
     data: {
       datasets: [{
-        data: [{id: 'Sales', nested: {value: 1500}}, {id: 'Purchases', nested: {value: 500}}]
+        //data: [{id: 'Sales', nested: {value: 1500}}, {id: 'Purchases', nested: {value: 500}}]
+        data: []
       }],
       labels: [
-        'Green',
-        'Blue',
-        'Grey'
+        'Invoiced',
+        'Received',
+        'Outstanding'
     ]
     },
     options: {
       plugins: {
         title: {
             display: true,
-            text: 'Custom Chart Title'
+            text: 'Invoice Summary'
         },
         legend: {
           display: true,
           labels: {
-              color: 'rgb(255, 99, 132)'
-          }
+              color: 'rgb(124, 124, 124)',
+          },
       }
     },
       parsing: {
@@ -77,10 +79,20 @@ export class DashboardPage implements OnInit, AfterViewInit {
       this.invoiceService.invoices.set(data);
       this.invoiceTotals = this.invoiceService.invoices().reduce((acc:number, inv:Invoice) => acc + inv.total, 0)
       this.paidInvoiceTotal = this.invoiceService.invoices().filter((inv:Invoice)=>inv.isPaid).reduce((acc:number, inv:Invoice) => acc + inv.total, 0)
-      this.pieChartData = [
-        {name: 'Paid Invoices', value: this.paidInvoiceTotal, color: "#665faac"},
-        {name: 'data 2', value: '200', color: "#FFFFFF"}
+      const dataArray:any = {
+        data: [
+          {id: 'Paid Invoices', nested: {value: this.paidInvoiceTotal}},
+          {id: 'Unpaid Invoices', nested: {value: this.invoiceTotals - this.paidInvoiceTotal}}
+        ]
+      }
+      const labels:any[] = [
+        `Invoiced: $ ${this.invoiceTotals.toFixed(2)}`,
+        `Received: $ ${this.paidInvoiceTotal.toFixed(2)}`,
+        `Outstanding: $ ${(this.invoiceTotals - this.paidInvoiceTotal).toFixed(2)}`
       ]
+      this.cfg.data.labels = labels
+      this.cfg.data.datasets.push(dataArray);
+      this.chartDataLoaded = true;
     })
 
     this.clientService.getClients().subscribe((data) => {

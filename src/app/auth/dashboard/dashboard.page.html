@@ -24,7 +24,15 @@
           </ion-card-header>
         
           <ion-card-content>
-            <canvas baseChart [data]="cfg.data" [options]="cfg.options" [type]="'doughnut'"> </canvas>
+            @if(chartDataLoaded){
+              <canvas baseChart [data]="cfg.data" [options]="cfg.options" [type]="'doughnut'"> </canvas>
+            }
+            @else {
+              <ion-text>
+                Loading, Please wait....
+              </ion-text>
+            }
+            
           </ion-card-content>
         </ion-card>
       </ion-col>
