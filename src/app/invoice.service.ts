@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { AuthService } from './auth/auth-service.service';
-import  { Firestore, collection, collectionData, query, where, deleteDoc, doc, setDoc, addDoc } from '@angular/fire/firestore';
+import  { Firestore, collection, collectionData, query, where, deleteDoc, doc, setDoc, addDoc, docData } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { Invoice } from './models/invoice.model';
 
@@ -34,7 +34,7 @@ export class InvoiceService {
     return from(promise)
   }
 
-  updateInvoice = (invoiceId:string, data: {}): Observable<void> => {
+  updateInvoice = (invoiceId:string, data: Invoice): Observable<void> => {
     const docref = doc(this.fireStore, 'invoices/' + invoiceId)
     const promise = setDoc(docref, data)
     return from(promise)
@@ -60,5 +60,21 @@ export class InvoiceService {
       return addDoc(collection(this.fireStore, 'invoices'), {...payload})
     }
   }
+
+  /**
+   * Gets a Specific Invoice by Id
+   * @param id 
+   * @returns an Observable with Invoice data
+   */
+  getClientById = (id:any):Observable<Invoice> => {
+    const invoiceRef = doc(this.fireStore, `invoices/${id}`)
+    const promise = docData(invoiceRef, {idField: 'id'})
+    return promise as Observable<Invoice>
+  }
+
+  saveInvoice = (invoice:Invoice) => {
+
+  }
+
 
 }

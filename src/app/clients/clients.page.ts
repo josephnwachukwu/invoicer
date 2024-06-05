@@ -6,6 +6,7 @@ import { Client } from '../client.interface';
 import { AuthService } from '../auth/auth-service.service';
 import { IonModal } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import { UtilsService, SelectState } from '../shared/services/utils.service';
 
 @Component({
   selector: 'app-clients',
@@ -19,6 +20,8 @@ export class ClientsPage implements OnInit, AfterViewInit {
   notifications = inject(NotificationService)
   authService = inject(AuthService)
   alertController = inject(AlertController)
+  utils = inject(UtilsService)
+  states:SelectState[] = this.utils.statesJson
 
   client:Client = {}
   alertButtons = () => [

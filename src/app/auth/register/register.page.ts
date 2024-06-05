@@ -14,11 +14,12 @@ export class RegisterPage implements OnInit {
   authService = inject(AuthService)
   router = inject(Router)
   notificationService = inject(NotificationService)
-  credientials: UserRegistration = {
+  credentials: UserRegistration = {
     username: '',
     email: '',
     password: ''
   }
+  agreeToTos = false
 
   ngOnInit() {
     console.log('register page')
@@ -34,5 +35,8 @@ export class RegisterPage implements OnInit {
       console.error(error.code)
       this.notificationService.notify(error.code)
   }})
+  }
+  formValid = () => {
+    return (this.credentials.email !== '' && this.credentials.password !== '' && this.credentials.username !== '' && this.agreeToTos) ? true : false
   }
 }

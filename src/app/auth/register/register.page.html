@@ -22,18 +22,22 @@
           </ion-card-header>
         
           <ion-card-content>
-            <ion-item>
-              <ion-input label="Username" label-placement="floating" fill="outline" placeholder="joeystark" [(ngModel)]="credientials.username"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input label="Email" label-placement="floating" fill="outline" placeholder="joeystark@invoicer.me" [(ngModel)]="credientials.email"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input type="Password" label-placement="floating" label="Password" [(ngModel)]="credientials.password">
+
+              <ion-input label="Name" labelPlacement="stacked" fill="outline" placeholder="Joey Stark" [(ngModel)]="credentials.username"></ion-input>
+              <br />
+              <br />
+              <ion-input type="email" label="Email" labelPlacement="stacked" fill="outline" placeholder="joeystark@invoicer.me" [(ngModel)]="credentials.email"></ion-input>
+              <br />
+              <br />
+              <ion-input type="Password" labelPlacement="stacked" fill="outline" label="Password" [(ngModel)]="credentials.password">
                 <ion-input-password-toggle slot="end"></ion-input-password-toggle>
               </ion-input>
-            </ion-item>
-            <ion-button expand="block" (click)="register(credientials)">
+              <br />
+              <br />
+              <ion-checkbox name='agreeToTos' labelPlacement="end" [(ngModel)]="agreeToTos">I agree to the <a [routerLink]="['tos']" >Terms and Conditions</a></ion-checkbox>
+              <br />
+              <br />
+            <ion-button expand="block" (click)="register(credentials)" [disabled]='!formValid()'>
               Register
             </ion-button>
             <ion-text class="ion-text-center">

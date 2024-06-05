@@ -20,16 +20,20 @@
           </ion-card-header>
         
           <ion-card-content>
-            <ion-item>
-              <ion-input label="Username" label-placement="floating" fill="outline" placeholder="joeystark@invoicer.me" [(ngModel)]="credientials.email"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input type="password" label-placement="floating" label="Password" [(ngModel)]="credientials.password">
+
+              <ion-input label="Username" labelPlacement="stacked" fill="outline" placeholder="joeystark@invoicer.me" [(ngModel)]="credientials.email"></ion-input>
+
+              <br/>
+              <br/>
+
+              <ion-input color="tertiary" type="password" labelPlacement="stacked" label="Password" fill="outline" [(ngModel)]="credientials.password">
                 <ion-input-password-toggle slot="end"></ion-input-password-toggle>
               </ion-input>
-            </ion-item>
-            <ion-button expand="block" (click)="login(credientials)">
-              Login
+
+            <br/>
+            <br/>
+            <ion-button color="tertiary" expand="block" (click)="login(credientials)">
+              Sign In
             </ion-button>
             <ion-text class="ion-text-center">
               <p>Don't have an account? <a [routerLink]="['/register']">Click here</a>.</p>

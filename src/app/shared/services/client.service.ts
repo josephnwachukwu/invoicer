@@ -61,7 +61,7 @@ export class ClientService {
    * @param id 
    * @returns an Observable with client data
    */
-  getClientById = (id:string):Observable<Client> => {
+  getClientById = (id:any):Observable<Client> => {
     const clientRef = doc(this.fireStore, `clients/${id}`)
     const promise = docData(clientRef, {idField: 'id'})
     return promise as Observable<Client>

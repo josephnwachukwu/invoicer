@@ -71,9 +71,11 @@
             <ion-input type="number" placeholder="$0" fill="outline" [(ngModel)]="lineItem.rate" (ngModelChange)="calculate(invoice)" name="rate"></ion-input>
           </ion-col>
           <ion-col size="1">
-            <ion-button fill="solid" size="small" (click)="removeLineItem(i)">
-              <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
-            </ion-button>
+            @if(invoice.lineItems.length > 1) {
+              <ion-button fill="solid" size="small" (click)="removeLineItem(i)">
+                <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            }
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -158,41 +160,103 @@
   <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
     <ng-template>
       <ion-header>
-        <ion-toolbar>
+        <ion-toolbar color="tertiary">
           <ion-buttons slot="start">
             <ion-button (click)="cancel()">Cancel</ion-button>
           </ion-buttons>
           <ion-text class="ion-text-center">
-            <ion-title>Download or Send</ion-title>
+            <ion-title>Actions</ion-title>
           </ion-text>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="ion-padding">
+      <ion-content class="ion-padding" class="ion-text-center">
         <ion-text class="ion-text-center">
           <h3>Generate Your Invoice</h3>
         </ion-text>
-        <ion-img
+        <ion-thumbnail class="ion-text-center">
+          <img src="assets/img/lists.svg"
+          alt="Download Invoice Image"/>
+        </ion-thumbnail>
+        <!-- <ion-img
           src="assets/img/lists.svg"
           alt="Download Invoice Image"
-        ></ion-img>
+        ></ion-img> -->
         <ion-text class="ion-text-center">
           <p>
             Generate your invoice and send it out to your client for payment.
           </p>
         </ion-text>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Download Invoice</ion-card-title>
+          </ion-card-header>
         
-        @if(!this.processingInvoice()) {
-          <ion-button (click)="downloadInvoice()" expand="block">Download Invoice</ion-button>
-        }
-        @else {
-          <ion-button expand="block" [disabled]="true"><ion-spinner name="crescent"></ion-spinner> Processing, Please Wait...</ion-button>
-        }
+          <ion-card-content>
+            Download a local copy of your Invoice in PDF format.
+          </ion-card-content>
+        
+          @if(!this.processingInvoice()) {
+            <ion-button (click)="downloadInvoice()" color="tertiary" expand="block" fill="outline">Download Invoice</ion-button>
+          }
+          @else {
+            <ion-button expand="block" [disabled]="true" color="tertiary" fill="outline"><ion-spinner name="crescent"></ion-spinner> Processing, Please Wait...</ion-button>
+          }
+  
+          @if(this.pendingMessage()){
+            <ion-text>
+              {{this.message}}
+            </ion-text>
+          }
+          
+        </ion-card>
 
-        @if(this.pendingMessage()){
-          <ion-text>
-            {{this.message}}
-          </ion-text>
-        }
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Save Invoice</ion-card-title>
+          </ion-card-header>
+        
+          <ion-card-content>
+            Save a draft of your Invoice
+          </ion-card-content>
+        
+          @if(!this.processingInvoice()) {
+            <ion-button (click)="saveInvoice(invoice)" color="tertiary" expand="block" fill="outline">Download Invoice</ion-button>
+          }
+          @else {
+            <ion-button expand="block" [disabled]="true" color="tertiary" fill="outline"><ion-spinner name="crescent"></ion-spinner> Processing, Please Wait...</ion-button>
+          }
+  
+          @if(this.pendingMessage()){
+            <ion-text>
+              {{this.message}}
+            </ion-text>
+          }
+          
+        </ion-card>
+        
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Email Invoice</ion-card-title>
+          </ion-card-header>
+        
+          <ion-card-content>
+            Email a Copy of your Invoice Directly <ion-chip color="success">Premium</ion-chip>
+          </ion-card-content>
+        
+          @if(!this.processingInvoice()) {
+            <ion-button (click)="emailInvoice()" color="tertiary" expand="block" fill="outline" [disabled]="true">Email Invoice</ion-button>
+          }
+          @else {
+            <ion-button expand="block" [disabled]="true" color="tertiary" fill="outline"><ion-spinner name="crescent"></ion-spinner> Processing, Please Wait...</ion-button>
+          }
+  
+          @if(this.pendingMessage()){
+            <ion-text>
+              {{this.message}}
+            </ion-text>
+          }
+          
+        </ion-card>
       </ion-content>
     </ng-template>
   </ion-modal>

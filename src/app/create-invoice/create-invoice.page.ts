@@ -6,7 +6,10 @@ import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { HttpClient } from '@angular/common/http';
 import { InvoiceService } from '../invoice.service';
+import { Firestore } from '@angular/fire/firestore';
 import { NotificationService } from '../shared/services/notification.service';
+import { ClientService } from '../shared/services/client.service';
+import { zip } from 'rxjs';
 
 @Component({
   selector: 'app-create-invoice',
@@ -17,19 +20,51 @@ export class CreateInvoicePage implements OnInit, OnChanges {
   @ViewChild(IonModal)
   modal!: IonModal;
 
-  @Input() invoice!: Invoice;
+  invoice!: Invoice;
 	currentUser:any;
-	currentClient:any;
+	currentClient = '';
   http = inject(HttpClient)
   invoiceService = inject(InvoiceService)
+  route = inject(ActivatedRoute)
   processingInvoice = signal<boolean>(false)
   notifications = inject(NotificationService)
+  fireStore = inject(Firestore)
+  clientService = inject(ClientService)
   message = 'Please wait for the invoice to open or check your downloads folder'
   pendingMessage = signal<boolean>(false)
+  isEdit = false;
   
   ngOnInit() {
-    console.log('testing')
     this.invoice === undefined ? this.invoice = new Invoice() : console.log('check')
+    this.route.queryParamMap.subscribe(params => {
+      if(params.get('clientId') !== null) {
+        const clientId = params.get('clientId')
+        this.clientService.getClientById(clientId).subscribe({
+          next: ({email, address1, address2, city, state, zipcode, phoneNumber, contactName, name}) => { 
+            this.invoice.toInfo = `${name}\n${address1} ${address2}\n${city}, ${state}, ${zipcode}\n${phoneNumber}`
+          },
+          error: (error) => { 
+            console.error(error.code); 
+            this.notifications.notify(error.code)
+          }
+        })
+      }
+
+      if(params.get('invoiceId') !== null) {
+        const invoiceId = params.get('invoiceId')
+        this.invoiceService.getClientById(invoiceId).subscribe({
+          next: (data) => {
+            this.invoice = {...data}
+            this.isEdit = true
+          },
+          error: (error) => { 
+            console.error(error.code); 
+            this.notifications.notify(error.code)
+          }
+        })
+      }
+      
+    })
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -140,4 +175,15 @@ export class CreateInvoicePage implements OnInit, OnChanges {
     });
   }
 
+  saveInvoice = (inv:Invoice) => {
+
+  }
+
+  updateInvoice = (inv:Invoice) => {
+
+  }
+
+  emailInvoice = () => {
+    
+  }
 }
