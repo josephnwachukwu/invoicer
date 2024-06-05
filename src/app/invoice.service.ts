@@ -18,7 +18,8 @@ export class InvoiceService {
    * @returns 
    */
   getInvoices = (): Observable<any[]> => {
-    const q = query(this.invoiceCollection, where("uid", '==', this.authService.currentUser.uid))
+    const user = this.authService.currentUser;
+    const q = query(this.invoiceCollection, where("uid", '==', user.uid))
     return collectionData(q, { idField: 'id' })
   } 
 

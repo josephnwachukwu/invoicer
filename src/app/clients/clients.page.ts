@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, AfterViewInit, ViewChild } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { ClientService } from '../client.service';
-import { NotificationService } from '../notification.service';
+import { ClientService } from '../shared/services/client.service';
+import { NotificationService } from '../shared/services/notification.service';
 import { Client } from '../client.interface';
 import { AuthService } from '../auth/auth-service.service';
 import { IonModal } from '@ionic/angular';
@@ -87,7 +87,10 @@ export class ClientsPage implements OnInit, AfterViewInit {
   }
 
   updateClient = (client:Client) => {
-
+    this.clientService.update(client).subscribe({
+      next: () => this.notifications.notify('Client Updated Sucesfully'),
+      error: (error) => this.notifications.notify(error.code)
+    })
   }
 
   cancel = () => {

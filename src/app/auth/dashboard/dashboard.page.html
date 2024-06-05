@@ -24,7 +24,7 @@
           </ion-card-header>
         
           <ion-card-content>
-            <figure id="donutChart" #donutChart></figure>
+            <canvas baseChart [data]="cfg.data" [options]="cfg.options" [type]="'doughnut'"> </canvas>
           </ion-card-content>
         </ion-card>
       </ion-col>

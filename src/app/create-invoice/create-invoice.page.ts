@@ -6,7 +6,7 @@ import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { HttpClient } from '@angular/common/http';
 import { InvoiceService } from '../invoice.service';
-import { NotificationService } from '../notification.service';
+import { NotificationService } from '../shared/services/notification.service';
 
 @Component({
   selector: 'app-create-invoice',

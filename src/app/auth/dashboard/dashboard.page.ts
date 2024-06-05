@@ -5,11 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { InvoiceInterface, Invoice } from '../../models/invoice.model';
 import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../auth-service.service';
-import { RouterModule } from '@angular/router';
+import { RouterModule,Router } from '@angular/router';
 import { InvoiceService } from '../../invoice.service';
-import { ClientService } from 'src/app/client.service';
-import { Router } from '@angular/router';
-import * as d3 from 'd3';
+import { ClientService } from 'src/app/shared/services/client.service';
+import { BaseChartDirective } from 'ng2-charts';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +17,8 @@ import * as d3 from 'd3';
   imports: [CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule
+    RouterModule,
+    BaseChartDirective
   ],
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
@@ -31,12 +32,36 @@ export class DashboardPage implements OnInit, AfterViewInit {
   router = inject(Router)
   paidInvoiceTotal = 0
 
-  //d3 settings
-  width:number = 256
-  height:number =  256
-  private svg: any;
-  private colors: any;
-  private radius = Math.min(this.width, this.height);
+  cfg = {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: [{id: 'Sales', nested: {value: 1500}}, {id: 'Purchases', nested: {value: 500}}]
+      }],
+      labels: [
+        'Green',
+        'Blue',
+        'Grey'
+    ]
+    },
+    options: {
+      plugins: {
+        title: {
+            display: true,
+            text: 'Custom Chart Title'
+        },
+        legend: {
+          display: true,
+          labels: {
+              color: 'rgb(255, 99, 132)'
+          }
+      }
+    },
+      parsing: {
+        key: 'nested.value'
+      }
+    }
+  }
 
   pieChartData:any[] = [];
 
@@ -48,7 +73,6 @@ export class DashboardPage implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit():void {
-    this.renderChart()
     this.invoiceService.getInvoices().subscribe((data) => {
       this.invoiceService.invoices.set(data);
       this.invoiceTotals = this.invoiceService.invoices().reduce((acc:number, inv:Invoice) => acc + inv.total, 0)
@@ -64,40 +88,5 @@ export class DashboardPage implements OnInit, AfterViewInit {
     })
   }
 
-  renderChart = () => {
-    const container = this.donutChartContainer.nativeElement;
-    const width = 256;
-    const height = 256;
-    //d3.select("svg").remove(); // Clear previous chart
-    
-    const svg = d3.select(container).append('svg')
-      .attr('width', width)
-      .attr('height', height)
-      .append('g')
-      .attr('transform', `translate(${width / 2},${height / 2})`);
-    
-    const radius = Math.min(width, height) / 2;
-    
-    // Create color scale based on data's color property
-    const color = d3.scaleOrdinal()
-      .domain(this.pieChartData.map(d => d.color))
-      .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), this.pieChartData.length).reverse());
-    
-    const arc = d3.arc()
-      .innerRadius(radius * 0.6)
-      .outerRadius(radius);
-    
-    const pie = d3.pie<any>()
-      .value(d => d.value)
-      .sort(null);
-    const pieData = pie(this.pieChartData);
-    
-    svg.selectAll('path')
-      .data(pieData)
-      .enter()
-      .append('path')
-      // .attr('d', arc)
-      // .attr("fill" , d => d.data.color);
-  }
 
 }

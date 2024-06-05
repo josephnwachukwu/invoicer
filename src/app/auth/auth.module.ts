@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-//import { LoginPageModule } from './login/login.module';
-//import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AuthService } from './auth-service.service';
 
 
@@ -9,8 +7,6 @@ import { AuthService } from './auth-service.service';
   declarations: [],
   imports: [
     CommonModule,
-    //LoginPageModule,
-    //AngularFireAuthModule
   ],
   providers: [
     AuthService

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { AuthService } from './auth/auth-service.service';
-import { NotificationService } from './notification.service';
+import { NotificationService } from './shared/services/notification.service';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',

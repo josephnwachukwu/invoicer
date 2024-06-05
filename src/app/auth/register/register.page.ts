@@ -1,13 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../auth-service.service';
 import { Router } from '@angular/router';
-import { NotificationService } from 'src/app/notification.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { UserRegistration } from '../shared/interfaces/userRegistration.interface';
 
-export interface Credentials {
-  username:string;
-  email:string;
-  password:string;
-}
 
 @Component({
   selector: 'app-register',
@@ -18,7 +14,7 @@ export class RegisterPage implements OnInit {
   authService = inject(AuthService)
   router = inject(Router)
   notificationService = inject(NotificationService)
-  credientials: Credentials = {
+  credientials: UserRegistration = {
     username: '',
     email: '',
     password: ''
@@ -28,7 +24,7 @@ export class RegisterPage implements OnInit {
     console.log('register page')
   }
 
-  register = (credentials: Credentials) => {
+  register = (credentials: UserRegistration) => {
     this.authService.emailSignUp(credentials)
     .subscribe({
       next: ()=>{

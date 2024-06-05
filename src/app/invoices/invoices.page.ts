@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, AfterViewInit, signal } from '@angular/core';
 import { InvoiceService } from '../invoice.service';
-import { NotificationService } from '../notification.service';
+import { NotificationService } from '../shared/services/notification.service';
 import { InvoiceInterface, Invoice } from '../models/invoice.model';
 import { AuthService } from '../auth/auth-service.service';
 import { Router } from '@angular/router';

@@ -1,17 +1,12 @@
 import { Component, OnInit, inject, AfterViewInit, signal } from '@angular/core';
 import { AuthService } from '../auth-service.service';
-import { NotificationService } from 'src/app/notification.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { Router } from '@angular/router';
-import {  Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Firestore, collection, addDoc, setDoc, doc, collectionData, collectionGroup, DocumentReference, where, query, getDoc, CollectionReference, updateDoc } from '@angular/fire/firestore';
 import { getDownloadURL, ref, Storage, uploadBytesResumable } from '@angular/fire/storage';
-import { UserProfile } from './userProfile.interface';
-import { UtilsService } from 'src/app/utils.service';
-
-export interface state {
-  code:string,
-  name:string,
-}
+import { UserProfile } from '../shared/interfaces/userProfile.interface';
+import { UtilsService, SelectState } from 'src/app/shared/services/utils.service';
 
 
 @Component({
@@ -30,7 +25,7 @@ export class ProfilePage implements OnInit, AfterViewInit {
   users$!: Observable<UserProfile[]>;
   userProfileSignal = signal<UserProfile>({});
   user!:UserProfile;
-  states:state[] = this.utils.statesJson;
+  states:SelectState[] = this.utils.statesJson;
   
 
   ngOnInit() {
@@ -42,9 +37,7 @@ export class ProfilePage implements OnInit, AfterViewInit {
       this.userProfileSignal.set(data[0]);
       this.user = {...data[0]};
       const docRef = doc(this.firestore, 'users', this.user.id!)
-      const docSnap = getDoc(docRef).then(data => {
-        //console.log('data', data.data())
-      });
+      const docSnap = getDoc(docRef)
     })
   }
 

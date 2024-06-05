@@ -22,6 +22,7 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 import { AuthModule } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 import { LoginPageModule } from './auth/login/login.module';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 @NgModule({
   declarations: [AppComponent],
@@ -45,6 +46,7 @@ import { LoginPageModule } from './auth/login/login.module';
     provideStorage(() => getStorage()),
     ScreenTrackingService, 
     UserTrackingService, 
+    provideCharts(withDefaultRegisterables()),
     // provideAppCheck(() => {
     //   // TODO get a reCAPTCHA Enterprise here https://console.cloud.google.com/security/recaptcha?project=_
     //   const provider = new ReCaptchaEnterpriseProvider('6LeVVeIpAAAAAJqkSoJ-lA7LM_zfLuDtNAFbiJ1R');

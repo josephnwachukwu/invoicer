@@ -17,19 +17,8 @@ import {
 import { Subscription, Observable, from } from 'rxjs';
 import { Firestore, collection, addDoc, setDoc, collectionData, collectionGroup, DocumentReference } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { NotificationService } from '../notification.service';
-
-
-export interface UserInterface {
-  uid?: string;
-  email?: string | null;
-  photoURL?: string | null;
-  displayName?: string;
-}
-
-export interface Error {
-  message?:string
-}
+import { NotificationService } from '../shared/services/notification.service';
+import { UserInterface } from './shared/interfaces/firebaseUser.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +44,10 @@ export class AuthService {
       }
     })
   }
+
+  // async getCurrentUser = () => {
+  //   const currentUser =
+  // }
 
 
   /** 
