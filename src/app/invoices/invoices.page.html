@@ -2,6 +2,9 @@
   <ion-toolbar>
     <ion-title>Invoices</ion-title>
   </ion-toolbar>
+  <ion-toolbar color="tertiary">
+    <ion-searchbar [(ngModel)]="searchTerm"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
@@ -13,7 +16,7 @@
 @if (authService.currentUser.uid) {
   <ion-list>
     @for(invoice of invoiceService.invoices(); track $index) {
-      <ion-item>
+      <!-- <ion-item> -->
         <ion-card>
           <ion-card-header>
             <!-- <ion-card-title>Invoice #: {{invoice.invoiceNo}}</ion-card-title> -->
@@ -40,11 +43,11 @@
           <ion-button fill="clear">Download</ion-button>
           <ion-button fill="clear" color="danger" (click)="presentAlert(invoice.id)">Delete</ion-button>
         </ion-card>
-      </ion-item>
+      <!-- </ion-item> -->
     }
-    <ion-item>
+    <!-- <ion-item>
 
-    </ion-item>
+    </ion-item> -->
   </ion-list>
 }
 
@@ -54,7 +57,7 @@
 
 </ion-content>
 <ion-footer>
-  <ion-toolbar>
+  <ion-toolbar color="tertiary">
     {{invoiceService.invoices().length}} Invoices | Total Amount Billed: {{invoiceTotals | currency : 'USD'}} | Total Amount Paid: {{paidInvoiceTotal | currency: 'USD'}}
   </ion-toolbar>
 </ion-footer>

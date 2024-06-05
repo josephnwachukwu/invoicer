@@ -19,6 +19,7 @@ export class InvoicesPage implements OnInit, AfterViewInit {
   router = inject(Router)
   alertController = inject(AlertController)
   paidInvoiceTotal = 0
+  searchTerm:string = '';
   alertButtons = () => [
     {
       text: 'Cancel',
