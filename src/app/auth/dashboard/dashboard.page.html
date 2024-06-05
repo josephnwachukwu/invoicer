@@ -17,7 +17,7 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col>
+      <ion-col size-sm="12" size-lg="6">
         <ion-card>
           <ion-card-header>
             <ion-card-title>At A Glance</ion-card-title>
@@ -25,7 +25,24 @@
         
           <ion-card-content>
             @if(chartDataLoaded){
-              <canvas baseChart [data]="cfg.data" [options]="cfg.options" [type]="'doughnut'"> </canvas>
+              <ion-grid>
+                <ion-row>
+                  <ion-col size-lg="6" size-sm="12" class="ion-align-items-center">
+                    <div class="chart-container">
+                      <canvas baseChart [data]="cfg.data" [options]="cfg.options" [type]="'doughnut'" class="invoice-chart"> </canvas>
+                    </div>
+                    
+                  </ion-col>
+                  <ion-col size-lg="6" size-sm="12">
+                    <ul class="chart-details">
+                      <li>Invoiced: <strong>{{invoiceTotals | currency: 'USD'}}</strong></li>
+                      <li>Received: <strong>{{paidInvoiceTotal | currency: 'USD'}}</strong></li>
+                      <li>OutStanding: <strong>{{(invoiceTotals - paidInvoiceTotal) | currency: 'USD'}}</strong></li>
+                    </ul>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+              
             }
             @else {
               <ion-text>
@@ -36,7 +53,7 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
-      <ion-col>
+      <ion-col size-sm="12" size-lg="6">
         <ion-card>
           <ion-card-header>
             <ion-card-title>Recent Invoices</ion-card-title>
@@ -57,10 +74,10 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col>
+      <ion-col size-sm="12" size-lg="6">
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Invoice Summary</ion-card-title>
+            <ion-card-title>Action Items</ion-card-title>
           </ion-card-header>
         
           <ion-card-content>
@@ -68,7 +85,7 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
-      <ion-col>
+      <ion-col size-sm="12" size-lg="6">
         <ion-card>
           <ion-card-header>
             <ion-card-title>Clients</ion-card-title>

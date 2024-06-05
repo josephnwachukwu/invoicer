@@ -53,7 +53,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
             text: 'Invoice Summary'
         },
         legend: {
-          display: true,
+          display: false,
           labels: {
               color: 'rgb(124, 124, 124)',
           },
