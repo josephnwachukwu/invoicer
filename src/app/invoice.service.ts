@@ -66,14 +66,15 @@ export class InvoiceService {
    * @param id 
    * @returns an Observable with Invoice data
    */
-  getClientById = (id:any):Observable<Invoice> => {
+  getInvoiceById = (id:any):Observable<Invoice> => {
     const invoiceRef = doc(this.fireStore, `invoices/${id}`)
     const promise = docData(invoiceRef, {idField: 'id'})
     return promise as Observable<Invoice>
   }
 
   saveInvoice = (invoice:Invoice) => {
-
+    const promise = addDoc(this.invoiceCollection, {...invoice})
+    return from(promise)
   }
 
 

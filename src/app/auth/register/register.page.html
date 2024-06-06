@@ -7,7 +7,6 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <!-- <ion-title size="large">register</ion-title> -->
     </ion-toolbar>
   </ion-header>
 
@@ -15,31 +14,31 @@
     <ion-row>
       <ion-col>
         <ion-card>
-          <img alt="Silhouette of mountains" src="assets/img/drawing-2-core.svg" />
+          <img alt="Register Image" src="assets/img/drawing-2-core.svg" />
           <ion-card-header>
-            <!-- <ion-card-title>Card Title</ion-card-title> -->
             <ion-card-subtitle>Register</ion-card-subtitle>
           </ion-card-header>
         
           <ion-card-content>
-
-              <ion-input label="Name" labelPlacement="stacked" fill="outline" placeholder="Joey Stark" [(ngModel)]="credentials.username"></ion-input>
+            <form [formGroup]="registerForm">
+              <ion-input color="tertiary" label="Name" labelPlacement="stacked" fill="outline" placeholder="Joey Stark" formControlName="username"></ion-input>
               <br />
               <br />
-              <ion-input type="email" label="Email" labelPlacement="stacked" fill="outline" placeholder="joeystark@invoicer.me" [(ngModel)]="credentials.email"></ion-input>
+              <ion-input color="tertiary" type="email" label="Email" labelPlacement="stacked" fill="outline" placeholder="joeystark@invoicer.me" formControlName="email"></ion-input>
               <br />
               <br />
-              <ion-input type="Password" labelPlacement="stacked" fill="outline" label="Password" [(ngModel)]="credentials.password">
+              <ion-input color="tertiary" type="password" labelPlacement="stacked" fill="outline" label="Password" formControlName="password">
                 <ion-input-password-toggle slot="end"></ion-input-password-toggle>
               </ion-input>
               <br />
               <br />
-              <ion-checkbox name='agreeToTos' labelPlacement="end" [(ngModel)]="agreeToTos">I agree to the <a [routerLink]="['tos']" >Terms and Conditions</a></ion-checkbox>
+              <ion-checkbox color="tertiary" name='agreeToTos' labelPlacement="end" formControlName="agreeToTos">I agree to the <a [routerLink]="['tos']" >Terms and Conditions</a></ion-checkbox>
               <br />
               <br />
-            <ion-button expand="block" (click)="register(credentials)" [disabled]='!formValid()'>
+            <ion-button color="tertiary" expand="block" (click)="register()" [disabled]='!registerForm.valid'>
               Register
             </ion-button>
+            </form>
             <ion-text class="ion-text-center">
               <p>Already have an account? <a [routerLink]="['/login']">Click here</a>.</p>
               <p><a [routerLink]="['/forgotpassword']">Forgot Password? </a></p>

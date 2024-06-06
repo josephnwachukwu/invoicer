@@ -1,8 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, Validators} from '@angular/forms';
 import { AuthService } from '../auth-service.service';
 import { Router } from '@angular/router';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { UserLogin } from '../shared/interfaces/userLogin.interface';
+
 
 @Component({
   selector: 'app-login',
@@ -13,17 +15,19 @@ export class LoginPage implements OnInit {
   authService = inject(AuthService)
   router = inject(Router)
   notifications = inject(NotificationService)
-  credientials: UserLogin = {
-    email: '',
-    password: ''
-  }
+  formBuilder = inject(FormBuilder)
+
+  loginForm = this.formBuilder.group({
+    email: ['', Validators.required],
+    password: ['', Validators.required],
+  })
 
   ngOnInit() {
     console.log('login page')
   }
 
-  login = (credentials: UserLogin) => {
-    this.authService.emailSignIn(credentials).subscribe({
+  login = () => {
+    this.authService.emailSignIn(this.loginForm.value).subscribe({
       next: (data) =>{
         this.router.navigate(['/dashboard'])
       },

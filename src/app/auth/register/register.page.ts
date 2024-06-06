@@ -1,9 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, Validators} from '@angular/forms';
 import { AuthService } from '../auth-service.service';
 import { Router } from '@angular/router';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { UserRegistration } from '../shared/interfaces/userRegistration.interface';
-
 
 @Component({
   selector: 'app-register',
@@ -13,20 +12,22 @@ import { UserRegistration } from '../shared/interfaces/userRegistration.interfac
 export class RegisterPage implements OnInit {
   authService = inject(AuthService)
   router = inject(Router)
+  formBuilder = inject(FormBuilder)
   notificationService = inject(NotificationService)
-  credentials: UserRegistration = {
-    username: '',
-    email: '',
-    password: ''
-  }
-  agreeToTos = false
+
+  registerForm = this.formBuilder.group({
+    username: ['', Validators.required],
+    email: ['', Validators.required],
+    password: ['', Validators.required],
+    agreeToTos: [false, Validators.requiredTrue]
+  })
 
   ngOnInit() {
     console.log('register page')
   }
 
-  register = (credentials: UserRegistration) => {
-    this.authService.emailSignUp(credentials)
+  register = () => {
+    this.authService.emailSignUp(this.registerForm.value)
     .subscribe({
       next: ()=>{
       this.router.navigate(['/dashboard'])
@@ -35,8 +36,5 @@ export class RegisterPage implements OnInit {
       console.error(error.code)
       this.notificationService.notify(error.code)
   }})
-  }
-  formValid = () => {
-    return (this.credentials.email !== '' && this.credentials.password !== '' && this.credentials.username !== '' && this.agreeToTos) ? true : false
   }
 }

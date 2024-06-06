@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, AfterViewInit, OnChanges, SimpleChanges, ViewChild, inject, signal } from '@angular/core';
 import { Invoice } from '../models/invoice.model'
 import { LineItem } from '../models/lineItem.model'  
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +9,7 @@ import { InvoiceService } from '../invoice.service';
 import { Firestore } from '@angular/fire/firestore';
 import { NotificationService } from '../shared/services/notification.service';
 import { ClientService } from '../shared/services/client.service';
-import { zip } from 'rxjs';
+import { zip, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-invoice',
@@ -30,6 +30,7 @@ export class CreateInvoicePage implements OnInit, OnChanges {
   notifications = inject(NotificationService)
   fireStore = inject(Firestore)
   clientService = inject(ClientService)
+  router = inject(Router)
   message = 'Please wait for the invoice to open or check your downloads folder'
   pendingMessage = signal<boolean>(false)
   isEdit = false;
@@ -52,7 +53,7 @@ export class CreateInvoicePage implements OnInit, OnChanges {
 
       if(params.get('invoiceId') !== null) {
         const invoiceId = params.get('invoiceId')
-        this.invoiceService.getClientById(invoiceId).subscribe({
+        this.invoiceService.getInvoiceById(invoiceId).subscribe({
           next: (data) => {
             this.invoice = {...data}
             this.isEdit = true
@@ -176,14 +177,29 @@ export class CreateInvoicePage implements OnInit, OnChanges {
   }
 
   saveInvoice = (inv:Invoice) => {
-
+    this.invoiceService.saveInvoice(inv).subscribe({
+      next: (data) => {
+        this.notifications.notify('Invoice save sucessfully');
+        this.router.navigate(['invoices'])
+      },
+      error: (error) => {
+        this.notifications.notify(error.code)
+      }
+    })
   }
 
   updateInvoice = (inv:Invoice) => {
-
+    this.invoiceService.updateInvoice(inv.id!, inv).subscribe({
+      next: (data) => {
+        this.notifications.notify("Invoice updated successfully")
+      },
+      error: (error) => {
+        this.notifications.notify(error.code)
+      }
+    })
   }
 
   emailInvoice = () => {
-    
+
   }
 }

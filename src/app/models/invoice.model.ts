@@ -1,7 +1,8 @@
 import { LineItem }  from './lineItem.model'
 
 export class Invoice {
-	lineItems: any = []
+	id?:string;
+	lineItems: LineItem[] = []
 	
 	notes: string
 	terms: string

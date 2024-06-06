@@ -14,7 +14,7 @@ import {
   UserInfo,
   onAuthStateChanged,
 } from '@angular/fire/auth'
-import { Subscription, Observable, from } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { Firestore, collection, addDoc, setDoc, collectionData, collectionGroup, DocumentReference } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { NotificationService } from '../shared/services/notification.service';
