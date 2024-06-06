@@ -47,36 +47,37 @@
       </ion-header>
       <ion-content class="ion-padding">
         <ion-list>
-          
-            <ion-input label="Client or Business Name" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="ABC Company" [(ngModel)]="client.name"></ion-input>
+          <form [formGroup]="clientForm">
+            <ion-input label="Client or Business Name" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="ABC Company" formControlName="name"></ion-input>
             <br/>
           
-            <ion-input label="Address 1" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="124 West Bubble" [(ngModel)]="client.address1"></ion-input>
+            <ion-input label="Address 1" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="124 West Bubble" formControlName="address1"></ion-input>
             <br/>
           
-            <ion-input label="Address 2" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="Suite 510" [(ngModel)]="client.address2"></ion-input>
+            <ion-input label="Address 2" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="Suite 510" formControlName="address2"></ion-input>
             <br/>
           
-            <ion-input label="City" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="Sommerville" [(ngModel)]="client.city"></ion-input>
+            <ion-input label="City" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="Sommerville" formControlName="city"></ion-input>
             <br/>
-            <ion-select label="State" fill="outline" color="tertiary" labelPlacement="stacked"  placeholder="Select State" [(ngModel)]="client.state">
+            <ion-select label="State" fill="outline" color="tertiary" labelPlacement="stacked"  placeholder="Select State" formControlName="state">
               @for(state of states; track $index) {
                 <ion-select-option [value]="state.code"> {{state.name}}</ion-select-option>
               }
             </ion-select>
             <br/>
-            <ion-input label="Zip Code" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="12345" [(ngModel)]="client.zipcode"></ion-input>
+            <ion-input label="Zip Code" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="12345" formControlName="zipcode"></ion-input>
             <br/>
           
-            <ion-input label="Email" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="email@company.com" [(ngModel)]="client.email"></ion-input>
+            <ion-input type="email" label="Email" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="email@company.com" formControlName="email"></ion-input>
             <br/>
           
-            <ion-input label="Phone Number" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="718 555 1212" [(ngModel)]="client.phoneNumber"></ion-input>
+            <ion-input label="Phone Number" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="718 555 1212" formControlName="phoneNumber"></ion-input>
             <br/>
           
-            <ion-input label="Contact" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="Manager Name" [(ngModel)]="client.contactName"></ion-input>
+            <ion-input label="Contact" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="Manager Name" formControlName="contactName"></ion-input>
             <br/>
-            <ion-button expand="block" color="tertiary" (click)="addClient(client)">Add Client</ion-button>
+            <ion-button expand="block" color="tertiary" (click)="addClient(clientForm.value)" [disabled]="!clientForm.valid">Add Client</ion-button>
+          </form>
         </ion-list>
         
       </ion-content>

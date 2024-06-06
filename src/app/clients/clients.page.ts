@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, AfterViewInit, ViewChild } from '@angular/core';
+import { FormBuilder, Validators} from '@angular/forms';
 import { Firestore } from '@angular/fire/firestore';
 import { ClientService } from '../shared/services/client.service';
 import { NotificationService } from '../shared/services/notification.service';
@@ -16,6 +17,7 @@ import { UtilsService, SelectState } from '../shared/services/utils.service';
 export class ClientsPage implements OnInit, AfterViewInit {
   @ViewChild(IonModal) modal!: IonModal;
   firestore = inject(Firestore)
+  formBuilder = inject(FormBuilder)
   clientService = inject(ClientService)
   notifications = inject(NotificationService)
   authService = inject(AuthService)
@@ -23,6 +25,16 @@ export class ClientsPage implements OnInit, AfterViewInit {
   utils = inject(UtilsService)
   states:SelectState[] = this.utils.statesJson
 
+  clientForm = this.formBuilder.group({
+    name: ['', Validators.required],
+    address1: ['', Validators.required],
+    address2: [''],
+    city: ['', Validators.required],
+    state: ['', Validators.required],
+    zipcode: ['', Validators.required],
+    phoneNumber: [''],
+    contactName: ['Accounts Payable', Validators.required],
+  })
   client:Client = {}
   alertButtons = () => [
     {
@@ -70,7 +82,7 @@ export class ClientsPage implements OnInit, AfterViewInit {
     })
   }
 
-  addClient = (client:Client) => {
+  addClient = (client:any) => {
     this.clientService.add({ ...client, uid:  this.authService.currentUserSignal()!.uid}).subscribe({
       next: (data) => {
         this.notifications.notify('Client added sucessfully!')
