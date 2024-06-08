@@ -3,6 +3,7 @@ import { FormBuilder, Validators} from '@angular/forms';
 import { AuthService } from '../auth-service.service';
 import { Router } from '@angular/router';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { UserRegistrationInterface } from '../shared/interfaces/userRegistration.interface';
 
 @Component({
   selector: 'app-register',
@@ -27,7 +28,7 @@ export class RegisterPage implements OnInit {
   }
 
   register = () => {
-    this.authService.emailSignUp(this.registerForm.value)
+    this.authService.emailSignUp(this.registerForm.value as UserRegistrationInterface)
     .subscribe({
       next: ()=>{
       this.router.navigate(['/dashboard'])

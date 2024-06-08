@@ -49,6 +49,11 @@ export class Invoice {
 	total: number
 	isPaid: boolean
 
+	currentTheme?:string
+	hasBusinessLogo:boolean
+	logoLocation?:string
+
+
 	constructor() {
 		let lineItem = new LineItem()
 		
@@ -84,6 +89,7 @@ export class Invoice {
 
 		this.date = new Date().toDateString()
 		this.isPaid = false;
+		this.hasBusinessLogo = false;
 	}
 }
 
@@ -135,4 +141,8 @@ export interface InvoiceInterface {
 	total: number
 	isPaid: boolean
 	id?:any;
+
+	currentTheme:string
+	hasBusinessLogo:boolean
+	logoLocation:string
 }

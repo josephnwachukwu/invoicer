@@ -19,7 +19,8 @@ import { Firestore, collection, addDoc, setDoc, collectionData, collectionGroup,
 import { Router } from '@angular/router';
 import { NotificationService } from '../shared/services/notification.service';
 import { UserInterface } from './shared/interfaces/firebaseUser.interface';
-
+import { UserLoginInterface } from './shared/interfaces/userLogin.interface';
+import { UserRegistrationInterface } from './shared/interfaces/userRegistration.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -54,7 +55,7 @@ export class AuthService {
    * Logs user into firebase account
    * @param credentials email and password
   */
-  emailSignIn = (credentials:any):Observable<void> => {
+  emailSignIn = (credentials:UserLoginInterface):Observable<void> => {
     const promise = signInWithEmailAndPassword(this.auth, credentials.email, credentials.password)
      .then(() => {})
      return from(promise)
@@ -64,7 +65,7 @@ export class AuthService {
    * Registers a user with a new firebase account
    * @param credentials username email and password
    */
-  emailSignUp = (credentials:any):Observable<void> => {
+  emailSignUp = (credentials:UserRegistrationInterface):Observable<void> => {
     const promise = createUserWithEmailAndPassword(this.auth, credentials.email, credentials.password)
     .then(data => {
       console.log('new user data',data)

@@ -3,7 +3,7 @@ import { FormBuilder, Validators} from '@angular/forms';
 import { AuthService } from '../auth-service.service';
 import { Router } from '@angular/router';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { UserLogin } from '../shared/interfaces/userLogin.interface';
+import { UserLoginInterface } from '../shared/interfaces/userLogin.interface';
 
 
 @Component({
@@ -27,7 +27,7 @@ export class LoginPage implements OnInit {
   }
 
   login = () => {
-    this.authService.emailSignIn(this.loginForm.value).subscribe({
+    this.authService.emailSignIn(this.loginForm.value as UserLoginInterface).subscribe({
       next: (data) =>{
         this.router.navigate(['/dashboard'])
       },
