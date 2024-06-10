@@ -17,6 +17,15 @@ export class CreateExpenseReportPage implements OnInit, AfterViewInit {
   expensesService = inject(ExpensesService)
   private notifications = inject(NotificationService)
   expenseReport:ExpenseReport = {};
+
+  dateFormat = {
+    showTimeLabel: false,
+    date: {
+      weekday: 'short',
+      month: 'long',
+      day: '2-digit',
+    }
+  }
   constructor() { }
 
   ngOnInit() {
@@ -25,7 +34,7 @@ export class CreateExpenseReportPage implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.expenseReport = {...defaultExpenseReport, lineItems:[{...defaultLineItem}], employeeName: this.authService.currentUserSignal()!.displayName, uid: this.authService.currentUser.uid}
+    this.expenseReport = {...defaultExpenseReport, lineItems:[{...defaultLineItem}], /*employeeName: this.authService.currentUserSignal()!.displayName,*/ uid: this.authService.currentUser.uid}
   }
 
   addLineItem = () => this.expenseReport.lineItems?.push({...defaultLineItem})

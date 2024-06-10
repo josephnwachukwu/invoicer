@@ -51,7 +51,7 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-input label="Date" label-placement="stacked" color="tertiary" fill="outline" placeholder="Jan 11 2024" [(ngModel)]="lineItem.date"></ion-input>
+          <ion-datetime-button datetime="datetime"></ion-datetime-button>
         </ion-col>
         <ion-col>
           <ion-input label="Merchant Name" label-placement="stacked" color="tertiary" fill="outline" placeholder="ex. Hyatt Hotel" [(ngModel)]="lineItem.vendor"></ion-input>
@@ -117,6 +117,24 @@
         </ion-accordion-group>
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col>Subtotal:</ion-col>
+      <ion-col>{{expenseReport.subTotal | currency: 'USD'}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>Advance Amount Recieved:</ion-col>
+      <ion-col class="has-text-right">{{expenseReport.advanceAmount | currency: 'USD'}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-text><strong>Total:</strong></ion-text>
+      </ion-col>
+      <ion-col class="has-text-right">
+        <ion-text>
+          <strong>{{expenseReport.totalAmount | currency: 'USD'}}</strong>
+        </ion-text>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>
 
@@ -148,3 +166,9 @@
     <ion-button id="open-modal" (click)="showActions()">Actions</ion-button>
   </ion-toolbar>
 </ion-footer>
+
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime id="datetime" [formatOptions]="dateFormat"></ion-datetime>
+  </ng-template>
+</ion-modal>

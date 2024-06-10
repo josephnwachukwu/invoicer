@@ -15,6 +15,7 @@ export interface ExpenseReport {
     totalAmount?: number;
     reimbursableAmount?: number;
     advanceAmount?: number;
+    subTotal?: number;
     status?: StatusEnum;
     company?: Company;
     address?: string; // temporary 
@@ -39,6 +40,7 @@ export const defaultExpenseReport:ExpenseReport = {
     totalAmount: 0,
     reimbursableAmount: 0,
     advanceAmount: 0,
+    subTotal: 0,
     status: StatusEnum.DRAFT,
     hasEmployeeId: false,
     hasManager: false,
