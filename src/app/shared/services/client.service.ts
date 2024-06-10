@@ -40,9 +40,8 @@ export class ClientService {
    * @returns 
    */
   delete = (id:string):Observable<any> => {
-    const docref = doc(this.fireStore, 'clients/' + id)
-    const promise = deleteDoc(docref)
-    return from(promise)
+    const docref = doc(this.fireStore, `clients/${id}`)
+    return from(deleteDoc(docref))
   }
 
   /**
@@ -61,7 +60,7 @@ export class ClientService {
    * @param id 
    * @returns an Observable with client data
    */
-  getClientById = (id:any):Observable<Client> => {
+  getClientById = (id:string):Observable<Client> => {
     const clientRef = doc(this.fireStore, `clients/${id}`)
     const promise = docData(clientRef, {idField: 'id'})
     return promise as Observable<Client>

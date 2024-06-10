@@ -15,12 +15,13 @@ import {
   onAuthStateChanged,
 } from '@angular/fire/auth'
 import { Observable, from } from 'rxjs';
-import { Firestore, collection, addDoc, setDoc, collectionData, collectionGroup, DocumentReference } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, setDoc, collectionData, collectionGroup, DocumentReference, query, where, doc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { NotificationService } from '../shared/services/notification.service';
 import { UserInterface } from './shared/interfaces/firebaseUser.interface';
 import { UserLoginInterface } from './shared/interfaces/userLogin.interface';
 import { UserRegistrationInterface } from './shared/interfaces/userRegistration.interface';
+import { UserProfile } from './shared/interfaces/userProfile.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -33,15 +34,18 @@ export class AuthService {
   notifications = inject(NotificationService)
   currentUserSignal = signal<Partial<UserInterface> | null | undefined>(undefined)
   currentUser!: any
-  userCollection = collection(this.firestore, 'users')
+  usersCollection = collection(this.firestore, 'users')
 
 
   constructor(){
     this.auth.onAuthStateChanged(user => {
       if(user){
         const {uid, email, displayName, photoURL} = user!
-        this.currentUserSignal.set({uid, email, photoURL})
+        //this.currentUserSignal.set({uid, email, photoURL})
         this.currentUser = user
+        this.getUser().subscribe((data:UserProfile[]) => {
+         this.currentUserSignal.set({...data[0]})
+        })
       }
     })
   }
@@ -103,6 +107,11 @@ export class AuthService {
     const docRef = addDoc(collection(this.firestore, 'users'), {...userPayload}).then((data)=>{
       console.log(data)
     })
+  }
+
+  getUser = ():Observable<UserProfile[]> => {
+    const q = query(this.usersCollection, where('uid', '==', this.currentUser.uid))
+    return collectionData(q, {idField: 'id'})
   }
 
 }

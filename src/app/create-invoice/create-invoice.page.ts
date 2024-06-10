@@ -40,7 +40,7 @@ export class CreateInvoicePage implements OnInit, OnChanges {
     this.route.queryParamMap.subscribe(params => {
       if(params.get('clientId') !== null) {
         const clientId = params.get('clientId')
-        this.clientService.getClientById(clientId).subscribe({
+        this.clientService.getClientById(clientId!).subscribe({
           next: ({email, address1, address2, city, state, zipcode, phoneNumber, contactName, name}) => { 
             this.invoice.toInfo = `${name}\n${address1} ${address2}\n${city}, ${state}, ${zipcode}\n${phoneNumber}`
           },

@@ -71,10 +71,15 @@ const routes: Routes = [
     loadChildren: () => import('./auth/forgotpassword/forgotpassword.module').then( m => m.ForgotpasswordPageModule)
   },
   {
+    path: 'create-expense-report',
+    loadChildren: () => import('./create-expense-report/create-expense-report.module').then( m => m.CreateExpenseReportPageModule),
+    ...canActivate(redirectUnauthorizeToLogin)
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full'
-  }
+  },
 ];
 
 @NgModule({

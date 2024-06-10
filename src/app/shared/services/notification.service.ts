@@ -5,8 +5,8 @@ import { ToastController } from '@ionic/angular';
   providedIn: 'root'
 })
 export class NotificationService {
-  toastController = inject(ToastController)
-  message = signal<string | null>(null)
+  private toastController = inject(ToastController)
+  private message = signal<string | null>(null)
 
   async notify (message:string) {
     this.message.set(message)
