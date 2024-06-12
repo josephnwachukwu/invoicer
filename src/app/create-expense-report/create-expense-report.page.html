@@ -51,7 +51,7 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-datetime-button datetime="datetime"></ion-datetime-button>
+          <ion-datetime-button datetime="{{'datetime'+$index }}"></ion-datetime-button>
         </ion-col>
         <ion-col>
           <ion-input label="Merchant Name" label-placement="stacked" color="tertiary" fill="outline" placeholder="ex. Hyatt Hotel" [(ngModel)]="lineItem.vendor"></ion-input>
@@ -166,9 +166,10 @@
     <ion-button id="open-modal" (click)="showActions()">Actions</ion-button>
   </ion-toolbar>
 </ion-footer>
-
-<ion-modal [keepContentsMounted]="true">
-  <ng-template>
-    <ion-datetime id="datetime" [formatOptions]="dateFormat"></ion-datetime>
-  </ng-template>
-</ion-modal>
+@for (lineItem of expenseReport.lineItems; track $index) {
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="{{'datetime'+$index}}" [formatOptions]="dateFormat" presentation="date"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+}

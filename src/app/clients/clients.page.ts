@@ -8,6 +8,7 @@ import { AuthService } from '../auth/auth-service.service';
 import { IonModal } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { UtilsService, SelectState } from '../shared/services/utils.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-clients',
@@ -23,7 +24,8 @@ export class ClientsPage implements OnInit, AfterViewInit {
   authService = inject(AuthService)
   alertController = inject(AlertController)
   utils = inject(UtilsService)
-  states:SelectState[] = this.utils.statesJson
+  states:SelectState[] = this.utils.statesJson;
+  clientsList = Observable<Client[]>
 
   clientForm = this.formBuilder.group({
     name: ['', Validators.required],
@@ -77,9 +79,7 @@ export class ClientsPage implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.clientService.getClients().subscribe((data) => {
-      this.clientService.clients.set(data);
-    })
+   this.clientService.getClients()
   }
 
   addClient = (client:any) => {
