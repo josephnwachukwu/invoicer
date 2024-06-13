@@ -22,12 +22,15 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-input label="Name" label-placement="stacked" color="tertiary" fill="outline" placeholder="Joey Stark" [(ngModel)]="expenseReport.employeeName"></ion-input>
+        <ion-input label="Employee Name" label-placement="stacked" color="tertiary" fill="outline" placeholder="Joey Stark" [(ngModel)]="expenseReport.employeeName"></ion-input>
+      </ion-col>
+      <ion-col>
+        <ion-input label="Reason" label-placement="stacked" color="tertiary" fill="outline" placeholder="Sprint PI Planning" [(ngModel)]="expenseReport.reason"></ion-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-input label="Expense Report Name" label-placement="stacked" color="tertiary" fill="outline" placeholder="Expenses for June 2024" [(ngModel)]="expenseReport.name"></ion-input>
+        <ion-datetime-button datetime="datetime-main"></ion-datetime-button>
       </ion-col>
       <ion-col>
         <ion-input label="Expense Report Number" label-placement="stacked" color="tertiary" fill="outline" placeholder="Exp0001" [(ngModel)]="expenseReport.reportNo"></ion-input>
@@ -35,18 +38,18 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-textarea label="Address" label-placement="stacked" color="tertiary" fill="outline" [(ngModel)]="expenseReport.address"></ion-textarea>
+        <ion-textarea label="Report Description" label-placement="stacked" color="tertiary" fill="outline" [(ngModel)]="expenseReport.description"></ion-textarea>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        
+        <ion-text> Items:</ion-text>
       </ion-col>
     </ion-row>
     @for(lineItem of expenseReport.lineItems; track $index) {
       <ion-row class="line-item">
-        <ion-col size="6">
-          <ion-input label="Item Description" label-placement="stacked" color="tertiary" fill="outline" placeholder="ex. Flight to Chicago" [(ngModel)]="lineItem.name"></ion-input>
+        <ion-col>
+          <ion-input label="Item Description" label-placement="stacked" color="tertiary" fill="outline" placeholder="ex. Flight to Chicago" [(ngModel)]="lineItem.notes"></ion-input>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -59,10 +62,14 @@
       </ion-row>
       <ion-row class="line-item-end">
         <ion-col>
-          <ion-select label="category" label-placement="stacked" fill="outline" placeholder="select category" [(ngModel)]="lineItem.category"></ion-select>
+          <ion-select label="Category" label-placement="stacked" fill="outline" placeholder="Select Category" [(ngModel)]="lineItem.category">
+          @for(category of categoriesList; track $index) {
+            <ion-select-option [value]="category.value">{{category.name}}</ion-select-option>
+          } 
+          </ion-select>
         </ion-col>
         <ion-col>
-          <ion-input label="Amount Paid" label-placement="stacked" color="tertiary" fill="outline" placeholder="$1,240.00" [(ngModel)]="lineItem.total"></ion-input>
+          <ion-input label="Amount Paid" type="number" label-placement="stacked" color="tertiary" fill="outline" placeholder="$1,240.00" (keyup)="calculate(expenseReport)" [(ngModel)]="lineItem.total"></ion-input>
         </ion-col>
       </ion-row>
     }
@@ -82,26 +89,26 @@
             <div class="ion-padding" slot="content">
               <ion-row>
                 <ion-col size="6">
-                  <ion-toggle>Employee ID</ion-toggle><br /><br />
+                  <ion-toggle [(ngModel)]="expenseReport.hasEmployeeId">Employee ID</ion-toggle><br /><br />
                 </ion-col>
                 <ion-col size="6" >
-                  <ion-input color="tertiary" fill="outline" placeholder="ex. EMP-20240609-001"></ion-input>
+                  <ion-input color="tertiary" fill="outline" placeholder="ex. EMP-20240609-001" [(ngModel)]="expenseReport.employeeId"></ion-input>
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col size="6">
-                  <ion-toggle>Department</ion-toggle><br /><br />
+                  <ion-toggle [(ngModel)]="expenseReport.hasDepartment">Department</ion-toggle><br /><br />
                 </ion-col>
                 <ion-col size="6" >
-                  <ion-input color="tertiary" fill="outline" placeholder="ex. Marketing"></ion-input>
+                  <ion-input color="tertiary" fill="outline" placeholder="ex. Marketing" [(ngModel)]="expenseReport.department"></ion-input>
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col size="6">
-                  <ion-toggle>Employee ID</ion-toggle><br /><br />
+                  <ion-toggle [(ngModel)]="expenseReport.hasAdvanceAmt" (ngModelChange)="calculate(expenseReport)">Advance Amt. Paid</ion-toggle><br /><br />
                 </ion-col>
                 <ion-col size="6" >
-                  <ion-input color="tertiary" fill="outline" placeholder="Jan 11 2024"></ion-input>
+                  <ion-input color="tertiary" type="number" fill="outline" placeholder="Jan 11 2024" [(ngModel)]="expenseReport.advanceAmount" (keyup)="calculate(expenseReport)"></ion-input>
                 </ion-col>
               </ion-row>
               <ion-row>
@@ -163,13 +170,19 @@
 
 <ion-footer>
   <ion-toolbar color="tertiary">
-    <ion-button id="open-modal" (click)="showActions()">Actions</ion-button>
+    <ion-button id="open-modal" expand="block" (click)="showActions()">Actions</ion-button>
   </ion-toolbar>
 </ion-footer>
 @for (lineItem of expenseReport.lineItems; track $index) {
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime id="{{'datetime'+$index}}" [formatOptions]="dateFormat" presentation="date"></ion-datetime>
+      <ion-datetime id="{{'datetime'+$index}}" [formatOptions]="dateFormat" presentation="date" [(ngModel)]="lineItem.date" [showDefaultButtons]="true"></ion-datetime>
     </ng-template>
   </ion-modal>
 }
+
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime [showDefaultButtons]="true" [(ngModel)]="expenseReport.date" id="datetime-main" [formatOptions]="dateFormat" presentation="date"></ion-datetime>
+  </ng-template>
+</ion-modal>

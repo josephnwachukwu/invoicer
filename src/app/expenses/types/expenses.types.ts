@@ -14,7 +14,6 @@ export interface ExpenseReport {
     reportNo?: ReportNo;
     totalAmount?: number;
     reimbursableAmount?: number;
-    advanceAmount?: number;
     subTotal?: number;
     status?: StatusEnum;
     company?: Company;
@@ -22,11 +21,15 @@ export interface ExpenseReport {
 
     hasEmployeeId?: Boolean;
     employeeId?: string;
+
     hasManager?: Boolean;
     managerName?: string;
+
     hasDepartment?: Boolean;
     department?: string;
 
+    hasAdvanceAmt?: Boolean;
+    advanceAmount?: number;
 }
 export enum StatusEnum {
     APPROVED = 'Approved',
@@ -44,7 +47,8 @@ export const defaultExpenseReport:ExpenseReport = {
     status: StatusEnum.DRAFT,
     hasEmployeeId: false,
     hasManager: false,
-    hasDepartment: false
+    hasDepartment: false,
+    hasAdvanceAmt: false
 }
 
 export interface LineItem {
@@ -52,19 +56,19 @@ export interface LineItem {
     category?: string;
     vendor?: string;
     account?: string;
-    subtotal: number;
-    tax: number;
-    total: number;
-    notes: string;
+    subtotal?: number;
+    tax?: number;
+    total?: number;
+    notes?: string;
     date?: string;
 }
 
 export const defaultLineItem:LineItem  = {
     name: '',
-    subtotal: 0,
-    tax: 0,
     total: 0,
-    notes: ''
+    notes: '',
+    category: undefined,
+    vendor: undefined
 }
 
 
