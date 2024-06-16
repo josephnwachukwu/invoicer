@@ -1,5 +1,5 @@
 /**
- * Expense Interfaces
+ * Expense Interfaces Types and Default Values
  */
 
 export interface ExpenseReport {
@@ -19,6 +19,9 @@ export interface ExpenseReport {
     company?: Company;
     address?: string; // temporary 
 
+    durationFrom?: string;
+    duractionTo?: string;
+
     hasEmployeeId?: Boolean;
     employeeId?: string;
 
@@ -30,13 +33,26 @@ export interface ExpenseReport {
 
     hasAdvanceAmt?: Boolean;
     advanceAmount?: number;
+
+    hasCompanyLogo?: Boolean;
+    companyLogoURL?: string;
+
+    hasEin?: Boolean;
+    ein?: number;
+
+    theme?: string;
 }
+
 export enum StatusEnum {
     APPROVED = 'Approved',
     REJECTED = 'Rejected',
     PENDING = 'Pending',
     DRAFT = 'Draft',
     RECONCILED = 'Reconciled'
+}
+
+export enum ThemesEnum {
+    DEFAULT = 'default'
 }
 
 export const defaultExpenseReport:ExpenseReport = {
@@ -48,7 +64,12 @@ export const defaultExpenseReport:ExpenseReport = {
     hasEmployeeId: false,
     hasManager: false,
     hasDepartment: false,
-    hasAdvanceAmt: false
+    hasAdvanceAmt: false,
+    hasCompanyLogo: false,
+    hasEin: false,
+    companyLogoURL: '',
+    theme: 'default', // Set to default theme
+    date: new Date().toISOString() // Get Current Date
 }
 
 export interface LineItem {

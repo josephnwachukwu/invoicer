@@ -35,7 +35,7 @@ export class AuthService {
   currentUserSignal = signal<Partial<UserInterface> | null | undefined>(undefined)
   currentUser!: any
   usersCollection = collection(this.firestore, 'users')
-
+  isPremiumMember!:boolean
 
   constructor(){
     this.auth.onAuthStateChanged(user => {
@@ -45,6 +45,7 @@ export class AuthService {
         this.currentUser = user
         this.getUser().subscribe((data:UserProfile[]) => {
          this.currentUserSignal.set({...data[0]})
+         this.isPremiumMember = (data[0].tier === 'premium') ? true : false
         })
       }
     })

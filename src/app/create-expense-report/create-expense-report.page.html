@@ -113,10 +113,49 @@
               </ion-row>
               <ion-row>
                 <ion-col size="6">
-                  <ion-toggle>Manager</ion-toggle><br /><br />
+                  <ion-toggle [(ngModel)]="expenseReport.hasManager">Manager / Receiving Party</ion-toggle>
                 </ion-col>
                 <ion-col size="6" >
-                  <ion-input color="tertiary" fill="outline" placeholder="Jane Stark"></ion-input>
+                  <ion-input color="tertiary" fill="outline" placeholder="Accounts Payable" [(ngModel)]="expenseReport.managerName"></ion-input>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="6">
+                  <ion-toggle [(ngModel)]="expenseReport.hasEin">Employer Identification Number (EIN)</ion-toggle>
+                </ion-col>
+                <ion-col size="6" >
+                  <ion-input color="tertiary" fill="outline" placeholder="12-3456789" [(ngModel)]="expenseReport.ein"></ion-input>
+                </ion-col>
+              </ion-row>
+              <!-- <ion-row>
+                <ion-col size="6">
+                  <ion-toggle [(ngModel)]="expenseReport.hasManager">Employer Identification Number (EIN)</ion-toggle>
+                </ion-col>
+                <ion-col size="6" >
+                  <ion-input color="tertiary" fill="outline" placeholder="12-3456789" [(ngModel)]="expenseReport.managerName"></ion-input>
+                </ion-col>
+              </ion-row> -->
+              <ion-row>
+                <ion-col size="6">
+                  <ion-toggle [(ngModel)]="expenseReport.hasCompanyLogo" [disabled]="!authService.isPremiumMember">Company Logo <ion-badge color="secondary">Premium</ion-badge></ion-toggle>
+                </ion-col>
+                <ion-col size="6" >
+                  <ion-text>This can be configured in your user Profile</ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="6">
+                  <ion-text>Theme <ion-badge color="secondary">Premium</ion-badge></ion-text>
+                </ion-col>
+                <ion-col size="6">
+                  <ion-radio-group value="strawberries" [(ngModel)]="expenseReport.theme" [disabled]="!authService.isPremiumMember">
+                    <ion-radio [disabled]="true" value="default">Default</ion-radio><br />
+                    <ion-radio [disabled]="!authService.isPremiumMember" >Blue</ion-radio><br />
+                    <ion-radio [disabled]="!authService.isPremiumMember" >Yellow</ion-radio><br />
+                    <ion-radio [disabled]="!authService.isPremiumMember" >Green</ion-radio>
+                    <ion-radio [disabled]="!authService.isPremiumMember" >Red</ion-radio>
+                    <ion-radio [disabled]="!authService.isPremiumMember">Purple</ion-radio>
+                  </ion-radio-group>
                 </ion-col>
               </ion-row>
             </div>
@@ -160,9 +199,52 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <ion-item>
-        <ion-button (click)="saveReport()">Generate Expense Report</ion-button>
-      </ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Save Expense Report</ion-card-title>
+              </ion-card-header>
+            
+              <ion-card-content>
+                Save a draft of your expense report to finish it at a later time.
+              </ion-card-content>
+              <ion-button (click)="saveReport()" expand="block">Save Expense Report</ion-button>
+            </ion-card>
+            
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Download Expense Report</ion-card-title>
+              </ion-card-header>
+            
+              <ion-card-content>
+                Download a local copy of your expense report to your device.
+              </ion-card-content>
+              <ion-button (click)="downloadExpenseReport(expenseReport)" expand="block">Download Expense Report</ion-button>
+            </ion-card>
+            
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Email Expense Report <ion-badge color="secondary">Premium</ion-badge> </ion-card-title>
+              </ion-card-header>
+            
+              <ion-card-content>
+                Email a copy of this Expense Report Directly to an approval Party
+              </ion-card-content>
+              <ion-button (click)="emailExpenseReport(expenseReport)" expand="block" [disabled]="true">Email Expense Report</ion-button>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
   </ng-template>
 </ion-modal>

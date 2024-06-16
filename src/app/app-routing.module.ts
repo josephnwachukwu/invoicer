@@ -80,6 +80,10 @@ const routes: Routes = [
     redirectTo: '',
     pathMatch: 'full'
   },
+  {
+    path: 'pricing',
+    loadChildren: () => import('./pricing/pricing.module').then( m => m.PricingPageModule)
+  },
 ];
 
 @NgModule({

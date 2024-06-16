@@ -11,5 +11,16 @@ export interface UserProfile {
     businessState?: string;
     businessZip?: string;
     businessPhone?: string;
-    tier?: string;
+    tier?: 'basic' | 'premium'
+    hasCompanyLogo?: boolean;
+    companyLogoUrl?: string;
+    hasTutorialsEnabled?: boolean;
+    businessType?: string;
+  }
+
+  export const defaultUserProfile = {
+    tier: 'basic',
+    hasTutorialsEnabled: true,
+    businessType: 'Indepent Contractor',
+    
   }

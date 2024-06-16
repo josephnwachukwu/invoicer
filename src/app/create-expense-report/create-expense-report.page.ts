@@ -66,4 +66,12 @@ export class CreateExpenseReportPage implements OnInit, AfterViewInit {
     exp.totalAmount = exp.hasAdvanceAmt && exp.advanceAmount! > 0 ? exp.subTotal - exp.advanceAmount! : exp.subTotal
     console.log('calculate', exp.hasAdvanceAmt && exp.advanceAmount! > 0 ? Number(exp.subTotal) - Number(exp.advanceAmount) : Number(exp.subTotal))
   }
+
+  downloadExpenseReport = (expenseReport:ExpenseReport) => {
+    this.expensesService.downloadExpenseReport(expenseReport)
+  }
+
+  emailExpenseReport = (texpenseReport: ExpenseReport) => {
+    
+  }
 }

@@ -19,9 +19,10 @@ export class AppComponent implements OnInit{
     { title: 'Dashboard', url: '/dashboard', icon: 'speedometer' },
     { title: 'Invoices', url: '/invoices', icon: 'newspaper' },
     { title: 'Clients', url: '/clients', icon: 'storefront' },
-    { title: 'Projects', url: '/projects', icon: 'mail' },
+    // { title: 'Projects', url: '/projects', icon: 'mail' },
     { title: 'Expenses', url: '/expenses', icon: 'receipt' },
     { title: 'New Invoice', url: '/create-invoice', icon: 'add' },
+    { title: 'New Expense Report', url: '/create-expense-report', icon: 'add' },
     { title: 'Profile', url: '/profile', icon: 'person' },
   ];
 
@@ -29,7 +30,8 @@ export class AppComponent implements OnInit{
     { title: 'Home', url: '/home', icon: 'home' },
     { title: 'Login', url: '/login', icon: 'log-in' },
     { title: 'Register', url: '/register', icon: 'person-add' },
-    { title: 'New Invoice', url: '/create-invoice', icon: 'add' },
+    // { title: 'New Invoice', url: '/create-invoice', icon: 'add' },
+    { title: 'Pricing', url: '/pricing'}
     
   ]
 
