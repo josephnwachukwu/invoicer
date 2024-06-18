@@ -6,6 +6,7 @@ import { ExpensesService } from '../expenses/expenses.service';
 import { Firestore } from '@angular/fire/firestore';
 import { IonModal } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { UtilsService } from '../shared/services/utils.service';
 @Component({
   selector: 'app-create-expense-report',
   templateUrl: './create-expense-report.page.html',
@@ -18,6 +19,7 @@ export class CreateExpenseReportPage implements OnInit, AfterViewInit {
   expensesService = inject(ExpensesService)
   router = inject(Router)
   private notifications = inject(NotificationService)
+  utils = inject(UtilsService)
   expenseReport:ExpenseReport = {};
   categoriesList = categoriesList
 
@@ -62,7 +64,7 @@ export class CreateExpenseReportPage implements OnInit, AfterViewInit {
 
   calculate = (exp:ExpenseReport) => {
     exp.totalAmount = 0
-    exp.subTotal = exp.lineItems!.reduce((total:number, lineItem:any) =>  total + lineItem.total, 0);
+    exp.subTotal = exp.lineItems!.reduce((total:number, lineItem:any) =>  total + this.utils.parseNumber(lineItem.total), 0);
     exp.totalAmount = exp.hasAdvanceAmt && exp.advanceAmount! > 0 ? exp.subTotal - exp.advanceAmount! : exp.subTotal
     console.log('calculate', exp.hasAdvanceAmt && exp.advanceAmount! > 0 ? Number(exp.subTotal) - Number(exp.advanceAmount) : Number(exp.subTotal))
   }
@@ -72,6 +74,6 @@ export class CreateExpenseReportPage implements OnInit, AfterViewInit {
   }
 
   emailExpenseReport = (texpenseReport: ExpenseReport) => {
-    
+
   }
 }

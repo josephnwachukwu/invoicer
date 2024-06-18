@@ -61,7 +61,7 @@ export class ExpensesService {
       document.body.appendChild(a);
 
       // Headless invoice creation then place in link and invoke click
-      this.http.get('https://us-central1-invoicer-6022f.cloudfunctions.net/app/downloadexpense?url=https://invoicer-6022f.firebaseapp.com/view-expense/' + docRef.id, httpOptions).subscribe((data:any) => {
+      this.http.get('https://us-central1-invoicer-6022f.cloudfunctions.net/app/saveandupload?url=https://invoicer-6022f.firebaseapp.com/view-expense/' + docRef.id, httpOptions).subscribe((data:any) => {
         const file = new Blob([data], { type: 'application/pdf' });
         const downloadURL = URL.createObjectURL(file);
         a.href = downloadURL;

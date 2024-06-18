@@ -212,4 +212,12 @@ export class UtilsService {
     }
   ]
 
+  parseNumber = (val:string):number => {
+    if(val !== null) {
+      val = val.toString().replace(/\,/g,''); // 1125, but a string, so convert it to number
+    } 
+    const newVal = Number(parseFloat(val).toFixed(2));
+    return newVal
+  }
+
 }
