@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, AfterViewInit, OnChanges, SimpleChanges, ViewChild, inject, signal } from '@angular/core';
-import { Invoice } from '../models/invoice.model'
+import { defaultInvoice, InvoiceInterface, defaultLineItem } from '../invoices/types/invoices.types';
 import { LineItem } from '../models/lineItem.model'  
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal } from '@ionic/angular';
@@ -20,7 +20,7 @@ export class CreateInvoicePage implements OnInit, OnChanges {
   @ViewChild(IonModal)
   modal!: IonModal;
 
-  invoice!: Invoice;
+  invoice!: InvoiceInterface;
 	currentUser:any;
 	currentClient = '';
   http = inject(HttpClient)
@@ -36,7 +36,7 @@ export class CreateInvoicePage implements OnInit, OnChanges {
   isEdit = false;
   
   ngOnInit() {
-    this.invoice === undefined ? this.invoice = new Invoice() : console.log('check')
+    this.invoice === undefined ? this.invoice = {...defaultInvoice, lineItems: {...defaultLineItem}} : console.log('check')
     this.route.queryParamMap.subscribe(params => {
       if(params.get('clientId') !== null) {
         const clientId = params.get('clientId')
@@ -82,12 +82,12 @@ export class CreateInvoicePage implements OnInit, OnChanges {
     // } else {
     //   this.message = 'Input is not null';
     // }
-    this.invoice === null ? this.invoice = new Invoice() : console.log('there is an existing invoice')
+    this.invoice === null ? this.invoice = {...defaultInvoice, lineItems: {...defaultLineItem}} : console.log('there is an existing invoice')
   }
 
   // Add a new line Item
   addLineItem = () => {
-  	this.invoice.lineItems.push(new LineItem())
+  	this.invoice.lineItems.push({...defaultLineItem})
   }
 
   // Delete Line Item only if there is more than one
@@ -98,7 +98,7 @@ export class CreateInvoicePage implements OnInit, OnChanges {
   }
 
   // Recalculate invoice numbers
-  calculate = (inv:Invoice) => {
+  calculate = (inv:InvoiceInterface) => {
 
     // Reset Values
   	inv.subtotal = 0;
@@ -111,19 +111,19 @@ export class CreateInvoicePage implements OnInit, OnChanges {
     inv.subtotal = inv.lineItems.reduce((total:number, lineItem:any)=> total + lineItem.amount, 0);
 
     // First add the subtotal
-    inv.total = inv.total + inv.subtotal;
+    inv.total = inv.total + inv.subtotal!;
 
     // Calculate discount
-    inv.total = inv.hasDiscount && inv.discount > 0 ? inv.total - inv.discount : inv.total;
+    inv.total = inv.hasDiscount && inv.discount! > 0 ? inv.total - inv.discount! : inv.total;
     
     // Calculate Tax basd on tax Perentage
-    inv.total = inv.hasTax && inv.tax > 0 ? inv.total + (inv.total * (inv.tax / 100)) : inv.total;
+    inv.total = inv.hasTax && inv.tax! > 0 ? inv.total + (inv.total * (inv.tax! / 100)) : inv.total;
     
     // Calculate Shipping
-    inv.total = inv.hasShipping && inv.shipping > 0 ? inv.total + inv.shipping : inv.total;
+    inv.total = inv.hasShipping && inv.shipping! > 0 ? inv.total + inv.shipping! : inv.total;
 
     // Calculate Partial Payment
-    inv.total = inv.hasPaidPartial && inv.amountPaid > 0 ? inv.total - inv.amountPaid : inv.total;
+    inv.total = inv.hasPaidPartial && inv.amountPaid! > 0 ? inv.total - inv.amountPaid! : inv.total;
 
     this.invoice = inv
   }
@@ -176,7 +176,7 @@ export class CreateInvoicePage implements OnInit, OnChanges {
     });
   }
 
-  saveInvoice = (inv:Invoice) => {
+  saveInvoice = (inv:InvoiceInterface) => {
     this.invoiceService.saveInvoice(inv).subscribe({
       next: (data) => {
         this.notifications.notify('Invoice save sucessfully');
@@ -188,7 +188,7 @@ export class CreateInvoicePage implements OnInit, OnChanges {
     })
   }
 
-  updateInvoice = (inv:Invoice) => {
+  updateInvoice = (inv:InvoiceInterface) => {
     this.invoiceService.updateInvoice(inv.id!, inv).subscribe({
       next: (data) => {
         this.notifications.notify("Invoice updated successfully")

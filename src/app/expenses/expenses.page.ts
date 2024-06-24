@@ -27,5 +27,12 @@ export class ExpensesPage implements OnInit, AfterViewInit {
     })
   }
 
+  delete = (id:any) => {
+    this.expensesService.delete(id).subscribe({
+      next: () => this.notifications.notify('Deleted Successfully'),
+      error: (e) => this.notifications.notify(e.code)
+    })
+  }
+
 }
 

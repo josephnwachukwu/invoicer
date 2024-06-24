@@ -12,8 +12,10 @@ export const environment = {
 	  storageBucket: "invoicer-6022f.appspot.com",
 	  messagingSenderId: "423715641676",
 	  appId: "1:423715641676:web:b424e1671413e2644d17e9",
-	  measurementId: "G-N9Q1D1V2YF"
+	  measurementId: "G-N9Q1D1V2YF",
+	  firestoreEmulatorHost: 'localhost:8080',
 	},
+	useEmulators: true,
 	recaptcha: {
 		siteKey: '6LdXiBEoAAAAAEbiPCVmOtL4WgdxWEG654XCt-Js',
 	},

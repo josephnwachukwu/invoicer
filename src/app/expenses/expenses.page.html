@@ -16,17 +16,34 @@
     
       <ion-card>
         <ion-card-header>
-          <ion-card-title>{{expenseReport.name}}</ion-card-title>
-          <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+          <ion-card-title>{{expenseReport.reason}}</ion-card-title>
+          <ion-card-subtitle>{{expenseReport.reportNo}}</ion-card-subtitle>
         </ion-card-header>
       
         <ion-card-content>
-          Here's a small text description for the card content. Nothing more, nothing less.
+         @for(lineItem of expenseReport.lineItems; track $index){
+          <p>{{lineItem.notes}}</p>
+         }
+         <hr>
+         @if(expenseReport.downloadUrl && expenseReport.downloadUrl !== '') {
+          <a href="{{expenseReport.downloadUrl}}">Download PDF</a>
+        }
         </ion-card-content>
+        <!-- <ion-button fill="clear" color="primary">View</ion-button> -->
+        <ion-button fill="clear" color="danger" (click)="delete(expenseReport.id)">Delete Report</ion-button>
       </ion-card>
-    
   }
-  <ion-button [routerLink]="['/create-expense-report']" color="tertiary" expand="block">New Expense Report</ion-button>
+  <ion-item><ion-button [routerLink]="['/create-expense-report']" color="tertiary" expand="block">New Expense Report</ion-button></ion-item>
   </ion-list>
-  test test test
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-text>Showing {{ expensesService.expensesList().length}} of {{ expensesService.expensesList().length}} Expense Reports</ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

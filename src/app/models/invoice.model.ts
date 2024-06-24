@@ -32,6 +32,7 @@ export class Invoice {
 
 	recipientEmail?:string
 	recipientMessage?:string
+	recipientName?:string
 
 	location?: string
 	filename?: string
@@ -93,56 +94,3 @@ export class Invoice {
 	}
 }
 
-export interface InvoiceInterface {
-	lineItems: any
-	
-	notes: string
-	terms: string
-
-	invoiceNo: string
-
-	fromInfo: string
-	toInfo: string
-
-	hasPurchaseOrderNo: boolean
-	purchaseOrderNo: string
-
-	hasDiscount: boolean
-	discount: number
-
-	hasTax: boolean
-	tax: number
-
-	due: string
-
-	date:string
-
-	businessEmail?:string
-	clientEmail?:string
-	clientId?:string
-	client?:any;
-
-	recipientEmail?:string
-	recipientMessage?:string
-
-	location?: string
-	filename?: string
-
-	senderName?:string
-
-	hasPaidPartial: boolean
-	amountPaid: number
-
-	hasShipping: boolean
-	shipping: number
-
-	subtotal: number
-
-	total: number
-	isPaid: boolean
-	id?:any;
-
-	currentTheme:string
-	hasBusinessLogo:boolean
-	logoLocation:string
-}

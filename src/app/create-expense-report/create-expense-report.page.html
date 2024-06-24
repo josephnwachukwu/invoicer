@@ -210,7 +210,7 @@
               <ion-card-content>
                 Save a draft of your expense report to finish it at a later time.
               </ion-card-content>
-              <ion-button (click)="saveReport()" expand="block">Save Expense Report</ion-button>
+              <ion-button (click)="saveReport('save')" expand="block">Save Expense Report</ion-button>
             </ion-card>
             
           </ion-col>
@@ -225,7 +225,7 @@
               <ion-card-content>
                 Download a local copy of your expense report to your device.
               </ion-card-content>
-              <ion-button (click)="downloadExpenseReport(expenseReport)" expand="block">Download Expense Report</ion-button>
+              <ion-button (click)="saveReport('download')" expand="block">Download Expense Report</ion-button>
             </ion-card>
             
           </ion-col>
@@ -240,7 +240,7 @@
               <ion-card-content>
                 Email a copy of this Expense Report Directly to an approval Party
               </ion-card-content>
-              <ion-button (click)="emailExpenseReport(expenseReport)" expand="block" [disabled]="true">Email Expense Report</ion-button>
+              <ion-button (click)="saveReport('email')" expand="block" [disabled]="false">Email Expense Report</ion-button>
             </ion-card>
           </ion-col>
         </ion-row>

@@ -44,8 +44,8 @@ export class CreateExpenseReportPage implements OnInit, AfterViewInit {
 
   addLineItem = () => this.expenseReport.lineItems?.push({...defaultLineItem})
 
-  saveReport = () => {
-    this.expensesService.add(this.expenseReport).subscribe({
+  saveReport = (action:string) => {
+    this.expensesService.add({...this.expenseReport, currentAction: action}).subscribe({
       next: () => {
         this.notifications.notify('Expense Created Successfully!')
         this.modal.dismiss(null, 'done');
@@ -54,6 +54,7 @@ export class CreateExpenseReportPage implements OnInit, AfterViewInit {
       error: (e) => this.notifications.notify(e.code)
     })
   }
+
   showActions = () => {
 
   }
@@ -69,11 +70,11 @@ export class CreateExpenseReportPage implements OnInit, AfterViewInit {
     console.log('calculate', exp.hasAdvanceAmt && exp.advanceAmount! > 0 ? Number(exp.subTotal) - Number(exp.advanceAmount) : Number(exp.subTotal))
   }
 
-  downloadExpenseReport = (expenseReport:ExpenseReport) => {
-    this.expensesService.downloadExpenseReport(expenseReport)
-  }
+  // downloadExpenseReport = (expenseReport:ExpenseReport) => {
+  //   this.expensesService.downloadExpenseReport(expenseReport)
+  // }
 
-  emailExpenseReport = (texpenseReport: ExpenseReport) => {
+  // emailExpenseReport = (texpenseReport: ExpenseReport) => {
 
-  }
+  // }
 }

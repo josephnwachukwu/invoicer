@@ -20,13 +20,14 @@ export interface ExpenseReport {
     address?: string; // temporary 
 
     durationFrom?: string;
-    duractionTo?: string;
+    durationTo?: string;
 
     hasEmployeeId?: Boolean;
     employeeId?: string;
 
     hasManager?: Boolean;
     managerName?: string;
+    managerEmail?: string;
 
     hasDepartment?: Boolean;
     department?: string;
@@ -41,6 +42,8 @@ export interface ExpenseReport {
     ein?: number;
 
     theme?: string;
+    downloadUrl?:string;
+    currentAction?:string
 }
 
 export enum StatusEnum {
@@ -68,8 +71,12 @@ export const defaultExpenseReport:ExpenseReport = {
     hasCompanyLogo: false,
     hasEin: false,
     companyLogoURL: '',
+    managerName: '',
+    managerEmail: '',
     theme: 'default', // Set to default theme
-    date: new Date().toISOString() // Get Current Date
+    date: new Date().toISOString(), // Get Current Date
+    currentAction: 'none',
+    downloadUrl: ''
 }
 
 export interface LineItem {

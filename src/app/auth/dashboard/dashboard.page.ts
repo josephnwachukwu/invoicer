@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { InvoiceInterface, Invoice } from '../../models/invoice.model';
+import { InvoiceInterface } from '../../invoices/types/invoices.types';
 import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../auth-service.service';
 import { RouterModule,Router } from '@angular/router';
@@ -77,8 +77,8 @@ export class DashboardPage implements OnInit, AfterViewInit {
   ngAfterViewInit():void {
     this.invoiceService.getInvoices().subscribe((data) => {
       this.invoiceService.invoices.set(data);
-      this.invoiceTotals = this.invoiceService.invoices().reduce((acc:number, inv:Invoice) => acc + inv.total, 0)
-      this.paidInvoiceTotal = this.invoiceService.invoices().filter((inv:Invoice)=>inv.isPaid).reduce((acc:number, inv:Invoice) => acc + inv.total, 0)
+      this.invoiceTotals = this.invoiceService.invoices().reduce((acc:number, inv:InvoiceInterface) => acc + inv.total!, 0)
+      this.paidInvoiceTotal = this.invoiceService.invoices().filter((inv:InvoiceInterface)=>inv.isPaid).reduce((acc:number, inv:InvoiceInterface) => acc + inv.total!, 0)
       const dataArray:any = {
         data: [
           {id: 'Paid Invoices', nested: {value: this.paidInvoiceTotal}},

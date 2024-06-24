@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, AfterViewInit, signal } from '@angular/core';
 import { InvoiceService } from '../invoice.service';
 import { NotificationService } from '../shared/services/notification.service';
-import { InvoiceInterface, Invoice } from '../models/invoice.model';
+import { InvoiceInterface } from './types/invoices.types';
+
 import { AuthService } from '../auth/auth-service.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
@@ -64,8 +65,8 @@ export class InvoicesPage implements OnInit, AfterViewInit {
   ngAfterViewInit():void {
     this.invoiceService.getInvoices().subscribe((data) => {
       this.invoiceService.invoices.set(data);
-      this.invoiceTotals = this.invoiceService.invoices().reduce((acc:number, inv:Invoice) => acc + inv.total, 0)
-      this.paidInvoiceTotal = this.invoiceService.invoices().filter((inv:Invoice)=>inv.isPaid).reduce((acc:number, inv:Invoice) => acc + inv.total, 0)
+      this.invoiceTotals = this.invoiceService.invoices().reduce((acc:number, inv:InvoiceInterface) => acc + inv.total!, 0)
+      this.paidInvoiceTotal = this.invoiceService.invoices().filter((inv:InvoiceInterface)=>inv.isPaid).reduce((acc:number, inv:InvoiceInterface) => acc + inv.total!, 0)
     })
   }
 

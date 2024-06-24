@@ -51,9 +51,6 @@ export class AuthService {
     })
   }
 
-  // async getCurrentUser = () => {
-  //   const currentUser =
-  // }
 
 
   /** 

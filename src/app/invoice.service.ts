@@ -3,6 +3,7 @@ import { AuthService } from './auth/auth-service.service';
 import  { Firestore, collection, collectionData, query, where, deleteDoc, doc, setDoc, addDoc, docData } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { Invoice } from './models/invoice.model';
+import { InvoiceInterface } from './invoices/types/invoices.types';
 
 @Injectable({
   providedIn: 'root'
@@ -34,13 +35,13 @@ export class InvoiceService {
     return from(promise)
   }
 
-  updateInvoice = (invoiceId:string, data: Invoice): Observable<void> => {
+  updateInvoice = (invoiceId:string, data: InvoiceInterface): Observable<void> => {
     const docref = doc(this.fireStore, 'invoices/' + invoiceId)
     const promise = setDoc(docref, data)
     return from(promise)
   }
 
-  createInvoice = (invoice:Invoice) => {
+  createInvoice = (invoice:InvoiceInterface) => {
     const user = this.authService.currentUser;
     const itemList = invoice.lineItems.map((obj:any)=> {return Object.assign({}, obj)})
     if(user && user.uid) {
@@ -72,7 +73,7 @@ export class InvoiceService {
     return promise as Observable<Invoice>
   }
 
-  saveInvoice = (invoice:Invoice) => {
+  saveInvoice = (invoice:InvoiceInterface) => {
     const promise = addDoc(this.invoiceCollection, {...invoice})
     return from(promise)
   }

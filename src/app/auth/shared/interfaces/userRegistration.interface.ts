@@ -1,6 +1,6 @@
 export interface UserRegistrationInterface {
-    username:string;
-    email:string;
-    password:string;
-    agreeToTos:boolean
-  }
+  username:string;
+  email:string;
+  password:string;
+  agreeToTos:boolean;
+}

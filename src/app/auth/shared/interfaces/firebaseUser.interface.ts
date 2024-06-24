@@ -3,4 +3,4 @@ export interface UserInterface {
     email?: string | null;
     photoURL?: string | null;
     displayName?: string;
-  }
+}
