@@ -3,7 +3,7 @@ import { AuthService } from '../auth/auth-service.service';
 import { NotificationService } from '../shared/services/notification.service'
 import { ExpenseReport, defaultExpenseReport, defaultLineItem, categoriesList } from '../expenses/types/expenses.types';
 import { ExpensesService } from '../expenses/expenses.service';
-import { Firestore } from '@angular/fire/firestore';
+import { doc, Firestore, onSnapshot } from '@angular/fire/firestore';
 import { IonModal } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { UtilsService } from '../shared/services/utils.service';
@@ -21,7 +21,8 @@ export class CreateExpenseReportPage implements OnInit, AfterViewInit {
   private notifications = inject(NotificationService)
   utils = inject(UtilsService)
   expenseReport:ExpenseReport = {};
-  categoriesList = categoriesList
+  categoriesList = categoriesList;
+  generatingExpense = false;
 
   dateFormat = {
     showTimeLabel: false,
@@ -45,13 +46,33 @@ export class CreateExpenseReportPage implements OnInit, AfterViewInit {
   addLineItem = () => this.expenseReport.lineItems?.push({...defaultLineItem})
 
   saveReport = (action:string) => {
+    this.generatingExpense = true;
     this.expensesService.add({...this.expenseReport, currentAction: action}).subscribe({
-      next: () => {
-        this.notifications.notify('Expense Created Successfully!')
-        this.modal.dismiss(null, 'done');
-        this.router.navigate(['/expenses'])
+      next: (data) => {
+        console.log('data', data.id)
+        if(data.id) {
+          console.log(`the id of the document is ${data.id}`)
+          const unsub = onSnapshot(
+            doc(this.fireStore, "expenses", data.id), 
+            { includeMetadataChanges: true }, 
+            (doc) => {
+              const expenseReportData = doc.data()
+              console.log(`doc looking for changes`, expenseReportData)
+              if(expenseReportData!['downloadUrl'] !== "") {
+                console.log(`download url present`)
+                this.notifications.notify('Expense Created Successfully!')
+                this.generatingExpense = false;
+                this.modal.dismiss(null, 'done');
+                this.router.navigate(['/expenses'])
+              }
+            });
+        }
+        
       },
-      error: (e) => this.notifications.notify(e.code)
+      error: (e) => {
+        this.notifications.notify(e.code)
+        this.generatingExpense = false;
+      }
     })
   }
 

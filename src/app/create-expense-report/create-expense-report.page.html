@@ -10,7 +10,7 @@
       <ion-title size="medium">New Expense Report </ion-title>
     </ion-toolbar>
   </ion-header>
-  
+
   <ion-grid>
     <ion-row>
       <ion-col>
@@ -22,10 +22,24 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-input label="Employee Name" label-placement="stacked" color="tertiary" fill="outline" placeholder="Joey Stark" [(ngModel)]="expenseReport.employeeName"></ion-input>
+        <ion-input
+          label="Employee Name"
+          label-placement="stacked"
+          color="tertiary"
+          fill="outline"
+          placeholder="Joey Stark"
+          [(ngModel)]="expenseReport.employeeName"
+        ></ion-input>
       </ion-col>
       <ion-col>
-        <ion-input label="Reason" label-placement="stacked" color="tertiary" fill="outline" placeholder="Sprint PI Planning" [(ngModel)]="expenseReport.reason"></ion-input>
+        <ion-input
+          label="Reason"
+          label-placement="stacked"
+          color="tertiary"
+          fill="outline"
+          placeholder="Sprint PI Planning"
+          [(ngModel)]="expenseReport.reason"
+        ></ion-input>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -33,12 +47,25 @@
         <ion-datetime-button datetime="datetime-main"></ion-datetime-button>
       </ion-col>
       <ion-col>
-        <ion-input label="Expense Report Number" label-placement="stacked" color="tertiary" fill="outline" placeholder="Exp0001" [(ngModel)]="expenseReport.reportNo"></ion-input>
+        <ion-input
+          label="Expense Report Number"
+          label-placement="stacked"
+          color="tertiary"
+          fill="outline"
+          placeholder="Exp0001"
+          [(ngModel)]="expenseReport.reportNo"
+        ></ion-input>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-textarea label="Report Description" label-placement="stacked" color="tertiary" fill="outline" [(ngModel)]="expenseReport.description"></ion-textarea>
+        <ion-textarea
+          label="Report Description"
+          label-placement="stacked"
+          color="tertiary"
+          fill="outline"
+          [(ngModel)]="expenseReport.description"
+        ></ion-textarea>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -47,35 +74,74 @@
       </ion-col>
     </ion-row>
     @for(lineItem of expenseReport.lineItems; track $index) {
-      <ion-row class="line-item">
-        <ion-col>
-          <ion-input label="Item Description" label-placement="stacked" color="tertiary" fill="outline" placeholder="ex. Flight to Chicago" [(ngModel)]="lineItem.notes"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-datetime-button datetime="{{'datetime'+$index }}"></ion-datetime-button>
-        </ion-col>
-        <ion-col>
-          <ion-input label="Merchant Name" label-placement="stacked" color="tertiary" fill="outline" placeholder="ex. Hyatt Hotel" [(ngModel)]="lineItem.vendor"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row class="line-item-end">
-        <ion-col>
-          <ion-select label="Category" label-placement="stacked" fill="outline" placeholder="Select Category" [(ngModel)]="lineItem.category">
+    <ion-row class="line-item">
+      <ion-col>
+        <ion-input
+          label="Item Description"
+          label-placement="stacked"
+          color="tertiary"
+          fill="outline"
+          placeholder="ex. Flight to Chicago"
+          [(ngModel)]="lineItem.notes"
+        ></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-datetime-button
+          datetime="{{'datetime'+$index }}"
+        ></ion-datetime-button>
+      </ion-col>
+      <ion-col>
+        <ion-input
+          label="Merchant Name"
+          label-placement="stacked"
+          color="tertiary"
+          fill="outline"
+          placeholder="ex. Hyatt Hotel"
+          [(ngModel)]="lineItem.vendor"
+        ></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row class="line-item-end">
+      <ion-col>
+        <ion-select
+          label="Category"
+          label-placement="stacked"
+          fill="outline"
+          placeholder="Select Category"
+          [(ngModel)]="lineItem.category"
+        >
           @for(category of categoriesList; track $index) {
-            <ion-select-option [value]="category.value">{{category.name}}</ion-select-option>
-          } 
-          </ion-select>
-        </ion-col>
-        <ion-col>
-          <ion-input label="Amount Paid" type="number" label-placement="stacked" color="tertiary" fill="outline" placeholder="$1,240.00" (keyup)="calculate(expenseReport)" [(ngModel)]="lineItem.total"></ion-input>
-        </ion-col>
-      </ion-row>
+          <ion-select-option [value]="category.value"
+            >{{category.name}}</ion-select-option
+          >
+          }
+        </ion-select>
+      </ion-col>
+      <ion-col>
+        <ion-input
+          label="Amount Paid"
+          type="number"
+          label-placement="stacked"
+          color="tertiary"
+          fill="outline"
+          placeholder="$1,240.00"
+          (keyup)="calculate(expenseReport)"
+          [(ngModel)]="lineItem.total"
+        ></ion-input>
+      </ion-col>
+    </ion-row>
     }
     <ion-row>
       <ion-col>
-        <ion-button color="tertiary" label-placement="stacked" expand="block" (click)="addLineItem()">+ New Line Item</ion-button>
+        <ion-button
+          color="tertiary"
+          label-placement="stacked"
+          expand="block"
+          (click)="addLineItem()"
+          >+ New Line Item</ion-button
+        >
       </ion-col>
     </ion-row>
 
@@ -89,42 +155,81 @@
             <div class="ion-padding" slot="content">
               <ion-row>
                 <ion-col size="6">
-                  <ion-toggle [(ngModel)]="expenseReport.hasEmployeeId">Employee ID</ion-toggle><br /><br />
+                  <ion-toggle [(ngModel)]="expenseReport.hasEmployeeId"
+                    >Employee ID</ion-toggle
+                  ><br /><br />
                 </ion-col>
-                <ion-col size="6" >
-                  <ion-input color="tertiary" fill="outline" placeholder="ex. EMP-20240609-001" [(ngModel)]="expenseReport.employeeId"></ion-input>
+                <ion-col size="6">
+                  <ion-input
+                    color="tertiary"
+                    fill="outline"
+                    placeholder="ex. EMP-20240609-001"
+                    [(ngModel)]="expenseReport.employeeId"
+                  ></ion-input>
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col size="6">
-                  <ion-toggle [(ngModel)]="expenseReport.hasDepartment">Department</ion-toggle><br /><br />
+                  <ion-toggle [(ngModel)]="expenseReport.hasDepartment"
+                    >Department</ion-toggle
+                  ><br /><br />
                 </ion-col>
-                <ion-col size="6" >
-                  <ion-input color="tertiary" fill="outline" placeholder="ex. Marketing" [(ngModel)]="expenseReport.department"></ion-input>
+                <ion-col size="6">
+                  <ion-input
+                    color="tertiary"
+                    fill="outline"
+                    placeholder="ex. Marketing"
+                    [(ngModel)]="expenseReport.department"
+                  ></ion-input>
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col size="6">
-                  <ion-toggle [(ngModel)]="expenseReport.hasAdvanceAmt" (ngModelChange)="calculate(expenseReport)">Advance Amt. Paid</ion-toggle><br /><br />
+                  <ion-toggle
+                    [(ngModel)]="expenseReport.hasAdvanceAmt"
+                    (ngModelChange)="calculate(expenseReport)"
+                    >Advance Amt. Paid</ion-toggle
+                  ><br /><br />
                 </ion-col>
-                <ion-col size="6" >
-                  <ion-input color="tertiary" type="number" fill="outline" placeholder="Jan 11 2024" [(ngModel)]="expenseReport.advanceAmount" (keyup)="calculate(expenseReport)"></ion-input>
+                <ion-col size="6">
+                  <ion-input
+                    color="tertiary"
+                    type="number"
+                    fill="outline"
+                    placeholder="Jan 11 2024"
+                    [(ngModel)]="expenseReport.advanceAmount"
+                    (keyup)="calculate(expenseReport)"
+                  ></ion-input>
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col size="6">
-                  <ion-toggle [(ngModel)]="expenseReport.hasManager">Manager / Receiving Party</ion-toggle>
+                  <ion-toggle [(ngModel)]="expenseReport.hasManager"
+                    >Manager / Receiving Party</ion-toggle
+                  >
                 </ion-col>
-                <ion-col size="6" >
-                  <ion-input color="tertiary" fill="outline" placeholder="Accounts Payable" [(ngModel)]="expenseReport.managerName"></ion-input>
+                <ion-col size="6">
+                  <ion-input
+                    color="tertiary"
+                    fill="outline"
+                    placeholder="Accounts Payable"
+                    [(ngModel)]="expenseReport.managerName"
+                  ></ion-input>
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col size="6">
-                  <ion-toggle [(ngModel)]="expenseReport.hasEin">Employer Identification Number (EIN)</ion-toggle>
+                  <ion-toggle [(ngModel)]="expenseReport.hasEin"
+                    >Employer Identification Number (EIN)</ion-toggle
+                  >
                 </ion-col>
-                <ion-col size="6" >
-                  <ion-input color="tertiary" fill="outline" placeholder="12-3456789" [(ngModel)]="expenseReport.ein"></ion-input>
+                <ion-col size="6">
+                  <ion-input
+                    color="tertiary"
+                    fill="outline"
+                    placeholder="12-3456789"
+                    [(ngModel)]="expenseReport.ein"
+                  ></ion-input>
                 </ion-col>
               </ion-row>
               <!-- <ion-row>
@@ -137,24 +242,50 @@
               </ion-row> -->
               <ion-row>
                 <ion-col size="6">
-                  <ion-toggle [(ngModel)]="expenseReport.hasCompanyLogo" [disabled]="!authService.isPremiumMember">Company Logo <ion-badge color="secondary">Premium</ion-badge></ion-toggle>
+                  <ion-toggle
+                    [(ngModel)]="expenseReport.hasCompanyLogo"
+                    [disabled]="!authService.isPremiumMember"
+                    >Company Logo
+                    <ion-badge color="secondary">Premium</ion-badge></ion-toggle
+                  >
                 </ion-col>
-                <ion-col size="6" >
-                  <ion-text>This can be configured in your user Profile</ion-text>
+                <ion-col size="6">
+                  <ion-text
+                    >This can be configured in your user Profile</ion-text
+                  >
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col size="6">
-                  <ion-text>Theme <ion-badge color="secondary">Premium</ion-badge></ion-text>
+                  <ion-text
+                    >Theme
+                    <ion-badge color="secondary">Premium</ion-badge></ion-text
+                  >
                 </ion-col>
                 <ion-col size="6">
-                  <ion-radio-group value="strawberries" [(ngModel)]="expenseReport.theme" [disabled]="!authService.isPremiumMember">
-                    <ion-radio [disabled]="true" value="default">Default</ion-radio><br />
-                    <ion-radio [disabled]="!authService.isPremiumMember" >Blue</ion-radio><br />
-                    <ion-radio [disabled]="!authService.isPremiumMember" >Yellow</ion-radio><br />
-                    <ion-radio [disabled]="!authService.isPremiumMember" >Green</ion-radio>
-                    <ion-radio [disabled]="!authService.isPremiumMember" >Red</ion-radio>
-                    <ion-radio [disabled]="!authService.isPremiumMember">Purple</ion-radio>
+                  <ion-radio-group
+                    value="strawberries"
+                    [(ngModel)]="expenseReport.theme"
+                    [disabled]="!authService.isPremiumMember"
+                  >
+                    <ion-radio [disabled]="true" value="default"
+                      >Default</ion-radio
+                    ><br />
+                    <ion-radio [disabled]="!authService.isPremiumMember"
+                      >Blue</ion-radio
+                    ><br />
+                    <ion-radio [disabled]="!authService.isPremiumMember"
+                      >Yellow</ion-radio
+                    ><br />
+                    <ion-radio [disabled]="!authService.isPremiumMember"
+                      >Green</ion-radio
+                    >
+                    <ion-radio [disabled]="!authService.isPremiumMember"
+                      >Red</ion-radio
+                    >
+                    <ion-radio [disabled]="!authService.isPremiumMember"
+                      >Purple</ion-radio
+                    >
                   </ion-radio-group>
                 </ion-col>
               </ion-row>
@@ -169,7 +300,9 @@
     </ion-row>
     <ion-row>
       <ion-col>Advance Amount Recieved:</ion-col>
-      <ion-col class="has-text-right">{{expenseReport.advanceAmount | currency: 'USD'}}</ion-col>
+      <ion-col class="has-text-right"
+        >{{expenseReport.advanceAmount | currency: 'USD'}}</ion-col
+      >
     </ion-row>
     <ion-row>
       <ion-col>
@@ -183,7 +316,6 @@
     </ion-row>
   </ion-grid>
 </ion-content>
-
 
 <ion-modal trigger="open-modal">
   <ng-template>
@@ -206,13 +338,15 @@
               <ion-card-header>
                 <ion-card-title>Save Expense Report</ion-card-title>
               </ion-card-header>
-            
+
               <ion-card-content>
-                Save a draft of your expense report to finish it at a later time.
+                Save a draft of your expense report to finish it at a later
+                time.
               </ion-card-content>
-              <ion-button (click)="saveReport('save')" expand="block">Save Expense Report</ion-button>
+              <ion-button (click)="saveReport('save')" expand="block"
+                >Save Expense Report</ion-button
+              >
             </ion-card>
-            
           </ion-col>
         </ion-row>
         <ion-row>
@@ -221,26 +355,42 @@
               <ion-card-header>
                 <ion-card-title>Download Expense Report</ion-card-title>
               </ion-card-header>
-            
+
               <ion-card-content>
                 Download a local copy of your expense report to your device.
               </ion-card-content>
-              <ion-button (click)="saveReport('download')" expand="block">Download Expense Report</ion-button>
+              @if(!generatingExpense){
+              <ion-button (click)="saveReport('download')" expand="block"
+                >Download Expense Report</ion-button
+              >
+              } @else {
+              <ion-button [disabled]="true" expand="block"
+                >Generating Expense Report</ion-button
+              >
+              }
             </ion-card>
-            
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
             <ion-card>
               <ion-card-header>
-                <ion-card-title>Email Expense Report <ion-badge color="secondary">Premium</ion-badge> </ion-card-title>
+                <ion-card-title
+                  >Email Expense Report
+                  <ion-badge color="secondary">Premium</ion-badge>
+                </ion-card-title>
               </ion-card-header>
-            
+
               <ion-card-content>
-                Email a copy of this Expense Report Directly to an approval Party
+                Email a copy of this Expense Report Directly to an approval
+                Party
               </ion-card-content>
-              <ion-button (click)="saveReport('email')" expand="block" [disabled]="false">Email Expense Report</ion-button>
+              <ion-button
+                (click)="saveReport('email')"
+                expand="block"
+                [disabled]="false"
+                >Email Expense Report</ion-button
+              >
             </ion-card>
           </ion-col>
         </ion-row>
@@ -249,22 +399,35 @@
   </ng-template>
 </ion-modal>
 
-
 <ion-footer>
   <ion-toolbar color="tertiary">
-    <ion-button id="open-modal" expand="block" (click)="showActions()">Actions</ion-button>
+    <ion-button id="open-modal" expand="block" (click)="showActions()"
+      >Actions</ion-button
+    >
   </ion-toolbar>
 </ion-footer>
 @for (lineItem of expenseReport.lineItems; track $index) {
-  <ion-modal [keepContentsMounted]="true">
-    <ng-template>
-      <ion-datetime id="{{'datetime'+$index}}" [formatOptions]="dateFormat" presentation="date" [(ngModel)]="lineItem.date" [showDefaultButtons]="true"></ion-datetime>
-    </ng-template>
-  </ion-modal>
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime
+      id="{{'datetime'+$index}}"
+      [formatOptions]="dateFormat"
+      presentation="date"
+      [(ngModel)]="lineItem.date"
+      [showDefaultButtons]="true"
+    ></ion-datetime>
+  </ng-template>
+</ion-modal>
 }
 
 <ion-modal [keepContentsMounted]="true">
   <ng-template>
-    <ion-datetime [showDefaultButtons]="true" [(ngModel)]="expenseReport.date" id="datetime-main" [formatOptions]="dateFormat" presentation="date"></ion-datetime>
+    <ion-datetime
+      [showDefaultButtons]="true"
+      [(ngModel)]="expenseReport.date"
+      id="datetime-main"
+      [formatOptions]="dateFormat"
+      presentation="date"
+    ></ion-datetime>
   </ng-template>
 </ion-modal>
