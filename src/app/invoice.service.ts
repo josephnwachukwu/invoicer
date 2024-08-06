@@ -73,9 +73,8 @@ export class InvoiceService {
     return promise as Observable<Invoice>
   }
 
-  saveInvoice = (invoice:InvoiceInterface) => {
-    const promise = addDoc(this.invoiceCollection, {...invoice})
-    return from(promise)
+  saveInvoice = (invoice:InvoiceInterface): Observable<any> => {
+    return from(addDoc(this.invoiceCollection, {...invoice}))
   }
 
 

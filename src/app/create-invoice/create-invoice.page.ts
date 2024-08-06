@@ -6,10 +6,10 @@ import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { HttpClient } from '@angular/common/http';
 import { InvoiceService } from '../invoice.service';
-import { Firestore } from '@angular/fire/firestore';
+import { doc, Firestore, onSnapshot } from '@angular/fire/firestore';
 import { NotificationService } from '../shared/services/notification.service';
 import { ClientService } from '../shared/services/client.service';
-import { zip, Subscription } from 'rxjs';
+import { AuthService } from '../auth/auth-service.service';
 
 @Component({
   selector: 'app-create-invoice',
@@ -19,7 +19,7 @@ import { zip, Subscription } from 'rxjs';
 export class CreateInvoicePage implements OnInit, OnChanges {
   @ViewChild(IonModal)
   modal!: IonModal;
-
+  authService = inject(AuthService)
   invoice!: InvoiceInterface;
 	currentUser:any;
 	currentClient = '';
@@ -36,7 +36,11 @@ export class CreateInvoicePage implements OnInit, OnChanges {
   isEdit = false;
   
   ngOnInit() {
-    this.invoice === undefined ? this.invoice = {...defaultInvoice, lineItems: {...defaultLineItem}} : console.log('check')
+    console.log('inv init', this.invoice)
+    console.log(this.authService.currentUser.uid)
+    this.invoice === undefined ? this.invoice = {...defaultInvoice, lineItems:[{...defaultLineItem}], uid: this.authService.currentUser.uid} : console.log('check')
+    console.log('inv init after', this.invoice)
+
     this.route.queryParamMap.subscribe(params => {
       if(params.get('clientId') !== null) {
         const clientId = params.get('clientId')
@@ -49,6 +53,8 @@ export class CreateInvoicePage implements OnInit, OnChanges {
             this.notifications.notify(error.code)
           }
         })
+      } else {
+        console.log('no client param')
       }
 
       if(params.get('invoiceId') !== null) {
@@ -64,8 +70,11 @@ export class CreateInvoicePage implements OnInit, OnChanges {
           }
         })
       }
-      
+      else {
+        console.log('no invoice id')
+      }
     })
+    console.log('after all',this.invoice)
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -77,12 +86,7 @@ export class CreateInvoicePage implements OnInit, OnChanges {
 
   // Checks for an existing invoice
   isExistingInvoice() {
-    // if (this.invoice === null) {
-    //   this.message = 'Input is null';
-    // } else {
-    //   this.message = 'Input is not null';
-    // }
-    this.invoice === null ? this.invoice = {...defaultInvoice, lineItems: {...defaultLineItem}} : console.log('there is an existing invoice')
+    this.invoice === undefined ? this.invoice = {...defaultInvoice, lineItems: [{...defaultLineItem}]} : console.log('there is an existing invoice')
   }
 
   // Add a new line Item
@@ -176,14 +180,33 @@ export class CreateInvoicePage implements OnInit, OnChanges {
     });
   }
 
-  saveInvoice = (inv:InvoiceInterface) => {
-    this.invoiceService.saveInvoice(inv).subscribe({
+  saveInvoice = (inv:InvoiceInterface, action:string) => {
+    this.processingInvoice.set(true)
+    this.invoiceService.saveInvoice({...inv, action}).subscribe({
       next: (data) => {
-        this.notifications.notify('Invoice save sucessfully');
-        this.router.navigate(['invoices'])
+        console.log('data', data.id)
+        if(data) {
+          console.log(`the id of the document is ${data.id}`)
+          const unsub = onSnapshot(
+            doc(this.fireStore, "invoices", data.id), 
+            { includeMetadataChanges: true },
+            (doc) => {
+              const invoiceData = doc.data()
+              console.log(`doc looking for changes`, invoiceData)
+              if(invoiceData!['downloadUrl'] !== "" && invoiceData!['downloadUrl'] !== undefined) {
+                console.log(`download url present`)
+                this.notifications.notify('Invoice Created Successfully!')
+                this.processingInvoice.set(false)
+                this.modal.dismiss(null, 'done');
+                this.router.navigate(['/invoices'])
+              }
+            }
+          );
+        }
       },
       error: (error) => {
         this.notifications.notify(error.code)
+        this.processingInvoice.set(false)
       }
     })
   }

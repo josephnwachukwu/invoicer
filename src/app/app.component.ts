@@ -31,7 +31,7 @@ export class AppComponent implements OnInit{
     { title: 'Login', url: '/login', icon: 'log-in' },
     { title: 'Register', url: '/register', icon: 'person-add' },
     // { title: 'New Invoice', url: '/create-invoice', icon: 'add' },
-    { title: 'Pricing', url: '/pricing'}
+    { title: 'Pricing', url: '/pricing', icon: 'receipt'}
     
   ]
 

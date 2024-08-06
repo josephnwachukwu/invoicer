@@ -13,51 +13,59 @@
       <ion-title size="medium">Invoices</ion-title>
     </ion-toolbar>
   </ion-header>
-@if (authService.currentUser.uid) {
+  @if (authService.currentUser.uid) {
   <ion-list>
     @for(invoice of invoiceService.invoices(); track $index) {
-      <!-- <ion-item> -->
-        <ion-card>
-          <ion-card-header>
-            <!-- <ion-card-title>Invoice #: {{invoice.invoiceNo}}</ion-card-title> -->
-            <ion-card-subtitle>Invoice #: {{invoice.invoiceNo}}</ion-card-subtitle>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-list>
-            @for(lineItem of invoice.lineItems; track $index) {
-              <ion-item>
-                <ion-label>{{lineItem.name}}</ion-label>
-              </ion-item>
-            }
-            <ion-item>
-              Total: {{invoice.total | currency: 'USD'}}
-            </ion-item>
-            </ion-list>
-          </ion-card-content>
-          @if(invoice.isPaid) {
-            <ion-button fill="clear" (click)="updateInvoice(invoice)">Mark as unPaid</ion-button>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>Invoice #: {{invoice.invoiceNo}}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          @for(lineItem of invoice.lineItems; track $index) {
+          <ion-item>
+            <ion-label>{{lineItem.name}}</ion-label>
+          </ion-item>
           }
-          @else {
-            <ion-button fill="clear" (click)="updateInvoice(invoice)">Mark as Paid</ion-button>
-          }
-          <ion-button fill="clear" [routerLink]="['/create-invoice']" [queryParams]="{invoiceId: invoice.id}">Edit</ion-button>
-          <ion-button fill="clear" color="danger" (click)="presentAlert(invoice.id)">Delete</ion-button>
-        </ion-card>
-      <!-- </ion-item> -->
+          <ion-item> Total: {{invoice.total | currency: 'USD'}} </ion-item>
+        </ion-list>
+      </ion-card-content>
+      @if(invoice.isPaid) {
+      <ion-button fill="clear" (click)="updateInvoice(invoice)"
+        >Mark as unPaid</ion-button
+      >
+      } @else {
+      <ion-button fill="clear" (click)="updateInvoice(invoice)"
+        >Mark as Paid</ion-button
+      >
+      }
+      <ion-button
+        fill="clear"
+        [routerLink]="['/create-invoice']"
+        [queryParams]="{invoiceId: invoice.id}"
+        >Edit</ion-button
+      >
+      <ion-button fill="clear" color="danger" (click)="presentAlert(invoice.id)"
+        >Delete</ion-button
+      >
+      @if(invoice.downloadUrl !== undefined && invoice.downloadUrl !== '') {
+      <a href="{{invoice.downloadUrl}}">Download PDF</a>
+      }
+    </ion-card>
     }
-    <!-- <ion-item>
-
-    </ion-item> -->
   </ion-list>
-}
+  }
 
-<ion-alert
-  header="Alert!"
-></ion-alert>
-
+  <ion-alert header="Alert!"></ion-alert>
 </ion-content>
 <ion-footer>
   <ion-toolbar color="tertiary">
-    {{invoiceService.invoices().length}} Invoices | Total Amount Billed: {{invoiceTotals | currency : 'USD'}} | Total Amount Paid: {{paidInvoiceTotal | currency: 'USD'}}
+    <ion-title>{{invoiceService.invoices().length}} Invoices</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/create-invoice']">
+        New Invoice
+        <ion-icon slot="start" name="create"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-footer>

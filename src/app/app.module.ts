@@ -9,7 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AngularFireModule } from '@angular/fire/compat';
 import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
 import { connectFirestoreEmulator, getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getAuth, indexedDBLocalPersistence, initializeAuth, provideAuth } from '@angular/fire/auth';
 import { getAnalytics, provideAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider, provideAppCheck } from '@angular/fire/app-check';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
@@ -22,6 +22,7 @@ import { environment } from '../environments/environment';
 import { LoginPageModule } from './auth/login/login.module';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FieldPath, Firestore } from 'firebase/firestore';
+import { Capacitor } from '@capacitor/core';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,7 +37,17 @@ import { FieldPath, Firestore } from 'firebase/firestore';
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, 
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()), 
+    //provideAuth(() => getAuth()), 
+    provideAuth(() => { 
+      if(Capacitor.isNativePlatform()) { 
+        return  initializeAuth(getApp(), {
+          persistence: indexedDBLocalPersistence
+        }
+      )
+      } else { 
+        return getAuth()
+      }
+    }),
     provideAnalytics(() => getAnalytics()), 
     provideFirestore(() => getFirestore()),
     // provideFirestore(() => { 
@@ -66,3 +77,12 @@ import { FieldPath, Firestore } from 'firebase/firestore';
   bootstrap: [AppComponent],
 })
 export class AppModule {}
+
+// async () => {
+//   if (Capacitor.isNativePlatform()) {
+//     return initializeAuth(getApp(), {
+//       persistence: indexedDBLocalPersistence,
+//     });
+//   } else {
+//     return getAuth();
+//   }

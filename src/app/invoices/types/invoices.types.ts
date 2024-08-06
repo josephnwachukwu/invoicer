@@ -54,6 +54,7 @@
 // }
   
 export interface InvoiceInterface {
+	uid?:string
 	lineItems?: any
 	
 	notes?: string
@@ -106,6 +107,9 @@ export interface InvoiceInterface {
 	currentTheme?:string
 	hasBusinessLogo?:boolean
 	logoLocation?:string
+
+	downloadUrl?: string
+	action?: string
 }
 
 export const defaultInvoice = {
@@ -122,7 +126,6 @@ export const defaultInvoice = {
 		hasPurchaseOrderNo: false,
 		purchaseOrderNo: '',
 
-		//lineItems.push(lineItem)
 
 		hasDiscount: false,
 		discount: 0,
