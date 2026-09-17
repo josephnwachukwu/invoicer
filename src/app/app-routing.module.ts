@@ -76,13 +76,13 @@ const routes: Routes = [
     ...canActivate(redirectUnauthorizeToLogin)
   },
   {
+    path: 'pricing',
+    loadChildren: () => import('./pricing/pricing.module').then( m => m.PricingPageModule)
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full'
-  },
-  {
-    path: 'pricing',
-    loadChildren: () => import('./pricing/pricing.module').then( m => m.PricingPageModule)
   },
 ];
 

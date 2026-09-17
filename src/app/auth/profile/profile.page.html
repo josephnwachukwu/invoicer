@@ -13,7 +13,60 @@
 
   @if(user){
   <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="3" id="image-holder">
+                  <ion-avatar (click)="selectPicture()">
+                    <img alt="Profile Picture" [src]="user.photoURL" />
+                  </ion-avatar>
+                  <ion-icon
+                    name="camera-reverse-outline"
+                    id="edit-icon"
+                  ></ion-icon>
+                </ion-col>
+                <ion-col size="9">
+                  <ion-card-title
+                    >{{user.displayName }}
+                    <ion-badge color="primary"
+                      >{{user.tier}}</ion-badge
+                    ></ion-card-title
+                  >
+                  @if(user.businessName) {
+                  <ion-card-subtitle>{{user.businessName}}</ion-card-subtitle>
+                  }
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-header>
 
+          <ion-card-content>
+            @if(user.businessAddress1) { {{user.businessAddress1}} ,}
+            @if(user.businessAddress2 && user.businessAddress2 !== '') {
+            {{user.businessAddress2}} }
+            <br />
+            @if(user.businessCity) { {{user.businessCity}} ,}
+            @if(user.businessState) { {{user.businessState}} ,}
+            @if(user.businessZip) { {{user.businessZip}} }
+          </ion-card-content>
+          <input
+            id="fileUpload"
+            type="file"
+            #upload
+            accept=".jpg,.jpeg,.png"
+            [hidden]="true"
+            (change)="uploadFile(upload)"
+          />
+        </ion-card>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
     <ion-row>
       <ion-col>
         <ion-text>
@@ -24,36 +77,28 @@
 
     <ion-row>
       <ion-col>
-        <ion-item>
-          <ion-avatar slot="start">
-            <img alt="Profile Picture" src="{{user.photoURL}}" />
-          </ion-avatar>
-          <ion-label>{{user.displayName}}</ion-label>
-          <label for="fileUpload">Edit Picture</label>
-        <input id="fileUpload" type="file" #upload accept=".jpg,.jpeg,.png">
-        <ion-button (click)="uploadFile(upload)">Upload Picture</ion-button>
-        </ion-item>
+        <ion-input
+          label="Name"
+          labelPlacement="stacked"
+          fill="outline"
+          placeholder="Enter text"
+          [(ngModel)]="user.displayName"
+          ><ion-icon slot="start" name="person-circle-outline"></ion-icon
+        ></ion-input>
       </ion-col>
       <ion-col>
-        <ion-text color="tertiary">
-          <h3>Tier: {{user.tier}}</h3>
-        </ion-text>
+        <ion-input
+          label="Email"
+          labelPlacement="stacked"
+          fill="outline"
+          placeholder="Enter text"
+          [(ngModel)]="user.email"
+          [disabled]="true"
+          ><ion-icon slot="start" name="mail" aria-hidden="true"></ion-icon
+        ></ion-input>
       </ion-col>
     </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-input label="Name" labelPlacement="stacked" fill="outline" placeholder="Enter text" [(ngModel)]="user.displayName"></ion-input>
-        </ion-item>
-      </ion-col>
-      <ion-col>
-        <ion-item>
-          <ion-input label="Email" labelPlacement="stacked" fill="outline" placeholder="Enter text" [(ngModel)]="user.email" [disabled]="true"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
+    <hr />
     <ion-row>
       <ion-col>
         <ion-text>
@@ -64,57 +109,93 @@
 
     <ion-row>
       <ion-col>
-        <ion-item>
-          <ion-input label="Business Name" labelPlacement="stacked" fill="outline" placeholder="Enter text" [(ngModel)]="user.businessName"></ion-input>
-        </ion-item>
+        <ion-input
+          label="Business Name"
+          labelPlacement="stacked"
+          fill="outline"
+          placeholder="eg. Stark Industries"
+          [(ngModel)]="user.businessName"
+        ></ion-input>
       </ion-col>
       <ion-col>
-        <ion-item>
-          <ion-input label="Business Phone Number" labelPlacement="stacked" fill="outline" placeholder="Enter text" [(ngModel)]="user.businessPhone"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-input label="Address 1" fill="outline" labelPlacement="stacked" placeholder="Enter text" [(ngModel)]="user.businessAddress1"></ion-input>
-        </ion-item>
-      </ion-col>
-      <ion-col>
-        <ion-item>
-          <ion-input label="Address 2" fill="outline" labelPlacement="stacked" placeholder="Enter text" [(ngModel)]="user.businessAddress2"></ion-input>
-        </ion-item>
+        <ion-input
+          label="Business Phone Number"
+          labelPlacement="stacked"
+          fill="outline"
+          placeholder="eg. 718 555-1212"
+          [(ngModel)]="user.businessPhone"
+        >
+          <ion-icon slot="start" name="call-outline"></ion-icon
+        ></ion-input>
       </ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col>
-        <ion-item>
-          <ion-input label="City" fill="outline" labelPlacement="stacked" placeholder="Enter text" [(ngModel)]="user.businessCity"></ion-input>
-        </ion-item>
+        <ion-input
+          label="Address 1"
+          fill="outline"
+          labelPlacement="stacked"
+          placeholder="eg. 123 ABC Lane"
+          [(ngModel)]="user.businessAddress1"
+        ></ion-input>
       </ion-col>
       <ion-col>
-        <ion-item>
-          <ion-select  label="State" fill="outline" labelPlacement="stacked"  placeholder="Select State" [(ngModel)]="user.businessState">
-            @for(state of states; track $index) {
-              <ion-select-option [value]="state.code"> {{state.name}}</ion-select-option>
-            }
-          </ion-select>
-        </ion-item>
+        <ion-input
+          label="Address 2"
+          fill="outline"
+          labelPlacement="stacked"
+          placeholder="eg. Suite 112"
+          [(ngModel)]="user.businessAddress2"
+        ></ion-input>
       </ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col>
-        <ion-item>
-          <ion-input label="Zip" fill="outline" labelPlacement="stacked" placeholder="Enter text" [(ngModel)]="user.businessZip"></ion-input>
-        </ion-item>
+        <ion-input
+          label="City"
+          fill="outline"
+          labelPlacement="stacked"
+          placeholder="eg. New York"
+          [(ngModel)]="user.businessCity"
+        ></ion-input>
       </ion-col>
       <ion-col>
-        <!-- <ion-item>
-          <ion-input label="State" fill="outline" placeholder="Enter text" [(ngModel)]="user.businessState"></ion-input>
-        </ion-item> -->
+        <ion-select
+          label="State"
+          fill="outline"
+          labelPlacement="stacked"
+          placeholder="Select State"
+          [(ngModel)]="user.businessState"
+        >
+          @for(state of states; track $index) {
+          <ion-select-option [value]="state.code">
+            {{state.name}}</ion-select-option
+          >
+          }
+        </ion-select>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-input
+          label="Zip"
+          fill="outline"
+          labelPlacement="stacked"
+          placeholder="eg. 12345"
+          [(ngModel)]="user.businessZip"
+        ></ion-input>
+      </ion-col>
+      <ion-col>
+        <ion-input
+          label="EIN / TIN / SSN"
+          fill="outline"
+          labelPlacement="stacked"
+          placeholder="eg. 12-3456789"
+          [(ngModel)]="user.taxNo"
+        ></ion-input>
       </ion-col>
     </ion-row>
 
@@ -124,23 +205,37 @@
           <ion-item>
             <ion-item>
               <ion-thumbnail slot="start">
-                <img alt="Silhouette of mountains" src="{{user.companyLogoUrl || 'https://ionicframework.com/docs/img/demos/thumbnail.svg'}}" />
+                <img
+                  alt="Silhouette of mountains"
+                  src="{{user.companyLogoUrl || 'https://ionicframework.com/docs/img/demos/thumbnail.svg'}}"
+                />
               </ion-thumbnail>
               <ion-label>Company Logo</ion-label>
             </ion-item>
             <label for="fileUpload2">Edit Picture</label>
-          <input id="fileUpload2" type="file" #upload2 accept=".jpg,.jpeg,.png" [disabled]="!authService.isPremiumMember">
-          <ion-button (click)="uploadCompanyLogo(upload2)" [disabled]="!authService.isPremiumMember">Upload Company Logo</ion-button>
+            <input
+              id="fileUpload2"
+              type="file"
+              #upload2
+              accept=".jpg,.jpeg,.png"
+              [disabled]="!authService.isPremiumMember"
+            />
+            <ion-button
+              (click)="uploadCompanyLogo(upload2)"
+              [disabled]="!authService.isPremiumMember"
+              >Upload Company Logo</ion-button
+            >
           </ion-item>
         </ion-col>
       </ion-col>
     </ion-row>
   </ion-grid>
   }
-
 </ion-content>
 <ion-footer>
-  <ion-toolbar>
-    <ion-button expand="block" (click)="update(user)">Update Profile</ion-button>
+  <ion-toolbar color="tertiary">
+    <ion-button expand="block" color="tertiary" (click)="update(user)"
+      ><ion-icon name="checkbox-outline"></ion-icon> Update Profile</ion-button
+    >
   </ion-toolbar>
 </ion-footer>

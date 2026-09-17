@@ -10,6 +10,8 @@ import { doc, Firestore, onSnapshot } from '@angular/fire/firestore';
 import { NotificationService } from '../shared/services/notification.service';
 import { ClientService } from '../shared/services/client.service';
 import { AuthService } from '../auth/auth-service.service';
+import {MaskitoDirective} from '@maskito/angular';
+import {MaskitoOptions} from '@maskito/core';
 
 @Component({
   selector: 'app-create-invoice',
@@ -34,6 +36,36 @@ export class CreateInvoicePage implements OnInit, OnChanges {
   message = 'Please wait for the invoice to open or check your downloads folder'
   pendingMessage = signal<boolean>(false)
   isEdit = false;
+
+  readonly currencyMask: MaskitoOptions = {
+    mask: /^\d+$/,
+  };
+
+  readonly numberMask: MaskitoOptions = {
+    mask: /^\d+$/,
+  };
+
+  readonly phoneNumberMask: MaskitoOptions = {
+    mask: [
+      '+',
+      '1',
+      ' ',
+      '(',
+      /\d/,
+      /\d/,
+      /\d/,
+      ')',
+      ' ',
+      /\d/,
+      /\d/,
+      /\d/,
+      '-',
+      /\d/,
+      /\d/,
+      /\d/,
+      /\d/,
+    ],
+  };
   
   ngOnInit() {
     console.log('inv init', this.invoice)

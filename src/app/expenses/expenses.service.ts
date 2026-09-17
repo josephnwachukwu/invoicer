@@ -5,6 +5,7 @@ import { Observable, from } from 'rxjs';
 import { ExpenseReport } from './types/expenses.types';
 import { HttpClient } from '@angular/common/http';
 import { NotificationService } from '../shared/services/notification.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -60,16 +61,22 @@ export class ExpensesService {
       var a = document.createElement("a");
       document.body.appendChild(a);
 
-      // Headless invoice creation then place in link and invoke click
-      // 
-      //this.http.get('https://us-central1-invoicer-6022f.cloudfunctions.net/app/saveandupload?url=https://invoicer-6022f.firebaseapp.com/view-expense/' + docRef.id, httpOptions).subscribe((data:any) => {
-        this.http.get('http://localhost:5001/app/saveandupload?url=http://localhost:4200/view-expense/' + docRef.id, httpOptions).subscribe((data:any) => {
+      // Use local emulators in development and the deployed Firebase function in production.
+      const functionBaseUrl = environment.production
+        ? 'https://us-central1-invoicer-6022f.cloudfunctions.net/app'
+        : 'http://localhost:5001/invoicer-6022f/us-central1/app';
+      const appBaseUrl = environment.production
+        ? 'https://invoicer.me'
+        : 'http://localhost:4200';
+      const reportUrl = encodeURIComponent(`${appBaseUrl}/view-expense/${docRef.id}`);
+
+      this.http.get(`${functionBaseUrl}/saveandupload?url=${reportUrl}`, httpOptions).subscribe((data:any) => {
         const file = new Blob([data], { type: 'application/pdf' });
         const downloadURL = URL.createObjectURL(file);
         a.href = downloadURL;
         a.download = fileName;
         a.click();
-      }) ;
+      });
 
     }).then(()=>{
       this.notifications.notify('Invoice processed successfully')

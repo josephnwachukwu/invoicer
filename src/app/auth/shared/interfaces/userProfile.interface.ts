@@ -16,6 +16,7 @@ export interface UserProfile {
   companyLogoUrl?: string;
   hasTutorialsEnabled?: boolean;
   businessType?: string;
+  taxNo?: string;
 }
 
 export const defaultUserProfile = {

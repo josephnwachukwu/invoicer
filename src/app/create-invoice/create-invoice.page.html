@@ -11,399 +11,387 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-list>
-    <ion-item class="has-margin-5">
-      <ion-input
-        label="Invoice No"
-        placeholder="INV0001"
-        fill="outline"
-        [(ngModel)]="invoice.invoiceNo"
-      ></ion-input>
-    </ion-item>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-text><h2>New Invoice</h2></ion-text></ion-col
+      >
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-input
+          label="Invoice No"
+          label-placement="stacked"
+          placeholder="INV0001"
+          fill="outline"
+          [(ngModel)]="invoice.invoiceNo"
+        ></ion-input>
+      </ion-col>
+    </ion-row>
 
-    <ion-item class="has-margin-5">
-      <ion-textarea
-        label="From:"
-        [(ngModel)]="invoice.fromInfo"
-        name="fromInfo"
-        placeholder="name, address, email, phone number"
-        fill="outline"
-      ></ion-textarea>
-    </ion-item>
+    <ion-row>
+      <ion-col>
+        <ion-textarea
+          label="From:"
+          label-placement="stacked"
+          [(ngModel)]="invoice.fromInfo"
+          name="fromInfo"
+          placeholder="name, address, email, phone number"
+          fill="outline"
+          ><ion-icon slot="start" name="business-outline"></ion-icon
+        ></ion-textarea>
+      </ion-col>
+    </ion-row>
 
-    <ion-item class="has-margin-5">
-      <ion-textarea
-        label="Bill To:"
-        placeholder="Type something here"
-        fill="outline"
-        [(ngModel)]="invoice.toInfo"
-        name="toInfo"
-        placeholder="name, address, email, phone number"
-      ></ion-textarea>
-    </ion-item>
+    <ion-row>
+      <ion-col>
+        <ion-textarea
+          label="Bill To:"
+          label-placement="stacked"
+          placeholder="Type something here"
+          fill="outline"
+          [(ngModel)]="invoice.toInfo"
+          name="toInfo"
+          placeholder="name, address, email, phone number"
+          ><ion-icon
+            slot="start"
+            name="business-outline"
+          ></ion-icon></ion-textarea
+      ></ion-col>
+    </ion-row>
 
-    <ion-item>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="8">
-            <ion-input
-              placeholder="Date"
-              fill="outline"
-              [(ngModel)]="invoice.date"
-              name="date"
-            ></ion-input>
-          </ion-col>
-          <ion-col size="4">
-            <ion-select
-              label="Due"
-              placeholder="Please Select Due Date"
-              [(ngModel)]="invoice.due"
-              name="due"
-              fill="outline"
-            >
-              <ion-select-option value="Immediately"
-                >Immediately</ion-select-option
-              >
-              <ion-select-option value="15 Days">15 Days</ion-select-option>
-              <ion-select-option value="30 Days">30 Days</ion-select-option>
-              <ion-select-option value="45 Days">45 Days</ion-select-option>
-              <ion-select-option value="60 Days">60 Days</ion-select-option>
-              <ion-select-option value="90 Days">90 Days</ion-select-option>
-            </ion-select>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-    <ion-item>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6">
-            <strong>Description</strong>
-          </ion-col>
-          <ion-col>
-            <strong>Qty.</strong>
-          </ion-col>
-          <ion-col>
-            <strong>Amt.</strong>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
+    <ion-row>
+      <ion-col size="8">
+        <ion-input
+          label="Date:"
+          label-placement="stacked"
+          placeholder="Date"
+          fill="outline"
+          [(ngModel)]="invoice.date"
+          name="date"
+          ><ion-icon slot="start" name="calendar-number-outline"></ion-icon
+        ></ion-input>
+      </ion-col>
+      <ion-col size="4">
+        <ion-select
+          label="Due"
+          label-placement="stacked"
+          placeholder="Please Select Due Date"
+          [(ngModel)]="invoice.due"
+          name="due"
+          fill="outline"
+        >
+          <ion-select-option value="Immediately">Immediately</ion-select-option>
+          <ion-select-option value="15 Days">15 Days</ion-select-option>
+          <ion-select-option value="30 Days">30 Days</ion-select-option>
+          <ion-select-option value="45 Days">45 Days</ion-select-option>
+          <ion-select-option value="60 Days">60 Days</ion-select-option>
+          <ion-select-option value="90 Days">90 Days</ion-select-option>
+        </ion-select>
+      </ion-col>
+    </ion-row>
+    <hr />
+    <ion-row>
+      <ion-col size="6">
+        <strong>Description</strong>
+      </ion-col>
+      <ion-col>
+        <strong>Qty.</strong>
+      </ion-col>
+      <ion-col>
+        <strong>Amt.</strong>
+      </ion-col>
+    </ion-row>
+
     @for(lineItem of invoice.lineItems; track $index){
-    <ion-item>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6">
-            <ion-input
-              placeholder="Development @ ABC"
-              fill="outline"
-              [(ngModel)]="lineItem.name"
-              name="name"
-            ></ion-input>
-          </ion-col>
-          <ion-col size="3">
-            <ion-input
-              type="number"
-              placeholder="1"
-              fill="outline"
-              [(ngModel)]="lineItem.quantity"
-              (ngModelChange)="calculate(invoice)"
-              name="quantity"
-            ></ion-input>
-          </ion-col>
-          <ion-col size="2">
-            <ion-input
-              type="number"
-              placeholder="$0"
-              fill="outline"
-              [(ngModel)]="lineItem.rate"
-              (ngModelChange)="calculate(invoice)"
-              name="rate"
-            ></ion-input>
-          </ion-col>
-          <ion-col size="1">
-            @if(invoice.lineItems.length > 1) {
-            <ion-button
-              fill="solid"
-              size="small"
-              (click)="removeLineItem($index)"
-            >
-              <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
-            </ion-button>
-            }
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
+
+    <ion-row>
+      <ion-col size="6">
+        <ion-input
+          placeholder="Development @ ABC"
+          fill="outline"
+          [(ngModel)]="lineItem.name"
+          name="name"
+        ></ion-input>
+      </ion-col>
+      <ion-col size="3">
+        <ion-input
+          type="number"
+          placeholder="1"
+          fill="outline"
+          [(ngModel)]="lineItem.quantity"
+          (ngModelChange)="calculate(invoice)"
+          name="quantity"
+        ></ion-input>
+      </ion-col>
+      <ion-col size="2">
+        <ion-input
+          type="number"
+          placeholder="$0"
+          fill="outline"
+          [(ngModel)]="lineItem.rate"
+          [maskito]="currencyMask"
+          (ngModelChange)="calculate(invoice)"
+          name="rate"
+        ></ion-input>
+      </ion-col>
+      <ion-col size="1">
+        @if(invoice.lineItems.length > 1) {
+        <ion-button fill="solid" size="small" (click)="removeLineItem($index)">
+          <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        }
+      </ion-col>
+    </ion-row>
     }
 
-    <ion-item>
-      <ion-button (click)="addLineItem()">+ Line Item</ion-button>
-    </ion-item>
+    <ion-row>
+      <ion-col>
+        <ion-button (click)="addLineItem()">
+          <ion-icon name="add-circle-outline"></ion-icon>
+          Add a Line Item</ion-button
+        ></ion-col
+      >
+    </ion-row>
+    <hr />
+    <ion-row>
+      <ion-col size="6">
+        <ion-toggle
+          [(ngModel)]="invoice.hasTax"
+          (ngModelChange)="calculate(invoice)"
+          >Tax:</ion-toggle
+        >
+      </ion-col>
+      <ion-col size="6">
+        <ion-input
+          type="number"
+          placeholder="8.625"
+          fill="outline"
+          [(ngModel)]="invoice.tax"
+          name="tax"
+          (ngModelChange)="calculate(invoice)"
+          [disabled]="!invoice.hasTax"
+        ></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <ion-toggle
+          [(ngModel)]="invoice.hasShipping"
+          (ngModelChange)="calculate(invoice)"
+          >Shipping:</ion-toggle
+        >
+      </ion-col>
+      <ion-col size="6">
+        <ion-input
+          type="number"
+          placeholder="30"
+          fill="outline"
+          [(ngModel)]="invoice.shipping"
+          name="shipping"
+          (ngModelChange)="calculate(invoice)"
+          [disabled]="!invoice.hasShipping"
+        ></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <ion-toggle
+          [(ngModel)]="invoice.hasDiscount"
+          (ngModelChange)="calculate(invoice)"
+          >Discount:</ion-toggle
+        >
+      </ion-col>
+      <ion-col size="6">
+        <ion-input
+          type="number"
+          placeholder="200"
+          fill="outline"
+          [(ngModel)]="invoice.discount"
+          name="discount"
+          (ngModelChange)="calculate(invoice)"
+          [disabled]="!invoice.hasDiscount"
+        ></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <ion-toggle
+          justify="space-between"
+          [(ngModel)]="invoice.hasPaidPartial"
+          (ngModelChange)="calculate(invoice)"
+          >Partially Paid:</ion-toggle
+        >
+      </ion-col>
+      <ion-col size="6">
+        <ion-input
+          type="number"
+          placeholder="1000"
+          fill="outline"
+          [(ngModel)]="invoice.amountPaid"
+          name="amountPaid"
+          (ngModelChange)="calculate(invoice)"
+          [disabled]="!invoice.hasPaidPartial"
+        ></ion-input>
+      </ion-col>
+    </ion-row>
 
-    <ion-item>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6">
-            <ion-toggle
-              [(ngModel)]="invoice.hasTax"
-              (ngModelChange)="calculate(invoice)"
-              >Tax:</ion-toggle
-            >
-          </ion-col>
-          <ion-col size="6">
-            <ion-input
-              type="number"
-              placeholder="8.625"
-              fill="outline"
-              [(ngModel)]="invoice.tax"
-              name="tax"
-              (ngModelChange)="calculate(invoice)"
-              [disabled]="!invoice.hasTax"
-            ></ion-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">
-            <ion-toggle
-              [(ngModel)]="invoice.hasShipping"
-              (ngModelChange)="calculate(invoice)"
-              >Shipping:</ion-toggle
-            >
-          </ion-col>
-          <ion-col size="6">
-            <ion-input
-              type="number"
-              placeholder="30"
-              fill="outline"
-              [(ngModel)]="invoice.shipping"
-              name="shipping"
-              (ngModelChange)="calculate(invoice)"
-              [disabled]="!invoice.hasShipping"
-            ></ion-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">
-            <ion-toggle
-              [(ngModel)]="invoice.hasDiscount"
-              (ngModelChange)="calculate(invoice)"
-              >Discount:</ion-toggle
-            >
-          </ion-col>
-          <ion-col size="6">
-            <ion-input
-              type="number"
-              placeholder="200"
-              fill="outline"
-              [(ngModel)]="invoice.discount"
-              name="discount"
-              (ngModelChange)="calculate(invoice)"
-              [disabled]="!invoice.hasDiscount"
-            ></ion-input>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="6">
-            <ion-toggle
-              [(ngModel)]="invoice.hasPaidPartial"
-              (ngModelChange)="calculate(invoice)"
-              >Partially Paid:</ion-toggle
-            >
-          </ion-col>
-          <ion-col size="6">
-            <ion-input
-              type="number"
-              placeholder="1000"
-              fill="outline"
-              [(ngModel)]="invoice.amountPaid"
-              name="amountPaid"
-              (ngModelChange)="calculate(invoice)"
-              [disabled]="!invoice.hasPaidPartial"
-            ></ion-input>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-
-    <ion-item class="has-margin-5">
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6"> Subtotal: </ion-col>
-          <ion-col size="6"> {{invoice.subtotal | currency: 'USD'}} </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-    <ion-item class="has-margin-5">
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6">
-            <strong>Total / Amount Due:</strong>
-          </ion-col>
-          <ion-col size="6">
-            <strong>{{invoice.total | currency: 'USD'}}</strong>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-    <ion-item class="has-margin-5">
-      <ion-textarea
-        label="Notes:"
-        placeholder="any relevant information not already covered"
-        fill="outline"
-        [(ngModel)]="invoice.notes"
-      ></ion-textarea>
-    </ion-item>
-    <ion-item class="has-margin-5">
-      <ion-textarea
-        label="Terms:"
-        placeholder="Terms and conditions - late fees, payment methods, delivery schedule"
-        fill="outline"
-        [(ngModel)]="invoice.terms"
-      ></ion-textarea>
-    </ion-item>
-
-    <ion-button id="open-modal" expand="block">Generate Invoice</ion-button>
-  </ion-list>
-  <!-- Modal for Actions -->
-  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar color="tertiary">
-          <ion-buttons slot="start">
-            <ion-button (click)="cancel()">Cancel</ion-button>
-          </ion-buttons>
-          <ion-text class="ion-text-center">
-            <ion-title>Actions</ion-title>
-          </ion-text>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding" class="ion-text-center">
-        <!-- <ion-thumbnail class="ion-text-center">
-          <img src="assets/img/lists.svg" alt="Download Invoice Image" />
-        </ion-thumbnail>
-        <ion-img
-          src="assets/img/lists.svg"
-          alt="Download Invoice Image"
-        ></ion-img> -->
-        <ion-text class="ion-text-center">
-          <p>
-            Generate your invoice and send it out to your client for payment.
-          </p>
+    <ion-row>
+      <ion-col size="6">
+        <ion-text>
+          <h4>Subtotal:</h4>
+        </ion-text></ion-col
+      >
+      <ion-col size="6">
+        <ion-text>
+          <h4>{{invoice.subtotal | currency: 'USD'}}</h4>
         </ion-text>
-        <!-- <ion-card>
-          <ion-card-header>
-            <ion-card-title>Download Invoice</ion-card-title>
-          </ion-card-header>
+      </ion-col>
+    </ion-row>
 
-          <ion-card-content>
-            Download a local copy of your Invoice in PDF format.
-          </ion-card-content>
+    <ion-row>
+      <ion-col size="6">
+        <ion-text>
+          <h3>Total / Amount Due:</h3>
+        </ion-text>
+      </ion-col>
+      <ion-col size="6">
+        <ion-text>
+          <h3>{{invoice.total | currency: 'USD'}}</h3>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+    <hr />
+    <ion-row>
+      <ion-col>
+        <ion-textarea
+          label="Notes:"
+          label-placement="stacked"
+          placeholder="any relevant information not already covered"
+          fill="outline"
+          [(ngModel)]="invoice.notes"
+        ></ion-textarea
+      ></ion-col>
+    </ion-row>
 
-          @if(!this.processingInvoice()) {
-          <ion-button
-            (click)="downloadInvoice()"
-            color="tertiary"
-            expand="block"
-            fill="outline"
-            >Download Invoice</ion-button
-          >
-          } @else {
-          <ion-button
-            expand="block"
-            [disabled]="true"
-            color="tertiary"
-            fill="outline"
-            ><ion-spinner name="crescent"></ion-spinner> Processing, Please
-            Wait...</ion-button
-          >
-          } @if(this.pendingMessage()){
-          <ion-text> {{this.message}} </ion-text>
-          }
-        </ion-card> -->
-
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Save Invoice</ion-card-title>
-          </ion-card-header>
-
-          <ion-card-content> Save your Invoice. </ion-card-content>
-
-          @if(!this.processingInvoice()) {
-          <ion-button
-            (click)="saveInvoice(invoice, 'download')"
-            color="tertiary"
-            expand="block"
-            fill="outline"
-            >Save Invoice</ion-button
-          >
-          } @else {
-          <ion-button
-            expand="block"
-            [disabled]="true"
-            color="tertiary"
-            fill="outline"
-            ><ion-spinner name="crescent"></ion-spinner> Processing, Please
-            Wait...</ion-button
-          >
-          } @if(this.pendingMessage()){
-          <ion-text> {{this.message}} </ion-text>
-          }
-        </ion-card>
-
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Email Invoice</ion-card-title>
-          </ion-card-header>
-
-          <ion-card-content>
-            Email a copy of your Invoice directly to your client.
-            <ion-chip color="success">Premium</ion-chip>
-            <hr />
-            <ion-list>
-              <ion-item>
-                <ion-input
-                  fill="outline"
-                  placeholder="Recipient name"
-                  [(ngModel)]="invoice.recipientName"
-                >
-                </ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-input
-                  fill="outline"
-                  type="email"
-                  placeholder="Recipient email"
-                  [(ngModel)]="invoice.recipientEmail"
-                >
-                </ion-input>
-              </ion-item>
-            </ion-list>
-          </ion-card-content>
-
-          @if(!this.processingInvoice()) {
-          <ion-button
-            (click)="saveInvoice(invoice, 'email')"
-            color="tertiary"
-            expand="block"
-            fill="outline"
-            [disabled]="true"
-            >Email Invoice</ion-button
-          >
-          } @else {
-          <ion-button
-            expand="block"
-            [disabled]="true"
-            color="tertiary"
-            fill="outline"
-            ><ion-spinner name="crescent"></ion-spinner> Processing, Please
-            Wait...</ion-button
-          >
-          } @if(this.pendingMessage()){
-          <ion-text> {{this.message}} </ion-text>
-          }
-        </ion-card>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
+    <ion-row>
+      <ion-col>
+        <ion-textarea
+          label="Terms:"
+          label-placement="stacked"
+          placeholder="Terms and conditions - late fees, payment methods, delivery schedule"
+          fill="outline"
+          [(ngModel)]="invoice.terms"
+        ></ion-textarea
+      ></ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+<ion-footer>
+  <ion-toolbar color="tertiary">
+    <ion-button id="open-modal" expand="block">Generate Invoice</ion-button>
+  </ion-toolbar>
+</ion-footer>
+
+<!-- Modal for Actions -->
+<ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="tertiary">
+        <ion-buttons slot="start">
+          <ion-button (click)="cancel()">Cancel</ion-button>
+        </ion-buttons>
+        <ion-text class="ion-text-center">
+          <ion-title>Actions</ion-title>
+        </ion-text>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding" class="ion-text-center">
+      <ion-text class="ion-text-center">
+        <p>Generate your invoice and send it out to your client for payment.</p>
+      </ion-text>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Save Invoice</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content> Save your Invoice </ion-card-content>
+
+        @if(!this.processingInvoice()) {
+        <ion-button
+          (click)="saveInvoice(invoice, 'download')"
+          color="tertiary"
+          expand="block"
+          fill="outline"
+          >Save Invoice</ion-button
+        >
+        } @else {
+        <ion-button
+          expand="block"
+          [disabled]="true"
+          color="tertiary"
+          fill="outline"
+          ><ion-spinner name="crescent"></ion-spinner> Processing, Please
+          Wait...</ion-button
+        >
+        } @if(this.pendingMessage()){
+        <ion-text> {{this.message}} </ion-text>
+        }
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Email Invoice</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          Email a copy of your Invoice directly to your client
+          <ion-chip color="success">Premium</ion-chip>
+          <hr />
+          <ion-list>
+            <ion-item>
+              <ion-input
+                fill="outline"
+                placeholder="Recipient name"
+                [(ngModel)]="invoice.recipientName"
+              >
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input
+                fill="outline"
+                type="email"
+                placeholder="Recipient email"
+                [(ngModel)]="invoice.recipientEmail"
+              >
+              </ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+
+        @if(!this.processingInvoice()) {
+        <ion-button
+          (click)="saveInvoice(invoice, 'email')"
+          color="tertiary"
+          expand="block"
+          fill="outline"
+          [disabled]="true"
+          >Email Invoice</ion-button
+        >
+        } @else {
+        <ion-button
+          expand="block"
+          [disabled]="true"
+          color="tertiary"
+          fill="outline"
+          ><ion-spinner name="crescent"></ion-spinner> Processing, Please
+          Wait...</ion-button
+        >
+        } @if(this.pendingMessage()){
+        <ion-text> {{this.message}} </ion-text>
+        }
+      </ion-card>
+    </ion-content>
+  </ng-template>
+</ion-modal>

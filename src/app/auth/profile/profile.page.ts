@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, AfterViewInit, signal } from '@angular/core';
+import { Component, OnInit, inject, AfterViewInit, signal, ViewChild, ElementRef } from '@angular/core';
 import { AuthService } from '../auth-service.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ import { UtilsService, SelectState } from 'src/app/shared/services/utils.service
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit, AfterViewInit {
+  @ViewChild('upload') uploadBtn!:ElementRef<HTMLInputElement>
   authService = inject(AuthService);
   notifications = inject(NotificationService);
   router = inject(Router);
@@ -94,6 +95,11 @@ export class ProfilePage implements OnInit, AfterViewInit {
            });
         }
     }
+  }
+
+  selectPicture = () => {
+    let el: HTMLElement = this.uploadBtn.nativeElement;
+    el.click();
   }
 
 }

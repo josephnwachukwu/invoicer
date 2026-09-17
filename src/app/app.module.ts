@@ -28,7 +28,7 @@ import { Capacitor } from '@capacitor/core';
   declarations: [AppComponent],
   imports: [
     BrowserModule, 
-    IonicModule.forRoot(), 
+    IonicModule.forRoot({ mode: 'md'}), 
     AppRoutingModule,
     AuthModule,
     LoginPageModule,

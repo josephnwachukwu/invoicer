@@ -31,40 +31,39 @@
         </ion-list>
       </ion-card-content>
       @if(invoice.isPaid) {
-      <ion-button fill="clear" (click)="updateInvoice(invoice)"
-        >Mark as unPaid</ion-button
+      <ion-button fill="clear" color="success" (click)="updateInvoice(invoice)">
+        <ion-icon name="checkmark-outline"></ion-icon> Paid</ion-button
       >
       } @else {
-      <ion-button fill="clear" (click)="updateInvoice(invoice)"
-        >Mark as Paid</ion-button
-      >
+      <ion-button fill="clear" color="warning" (click)="updateInvoice(invoice)"
+        ><ion-icon name="alert-circle-outline"></ion-icon> Unpaid
+      </ion-button>
       }
       <ion-button
         fill="clear"
         [routerLink]="['/create-invoice']"
         [queryParams]="{invoiceId: invoice.id}"
-        >Edit</ion-button
-      >
+        ><ion-icon name="create-outline"></ion-icon> Edit
+      </ion-button>
       <ion-button fill="clear" color="danger" (click)="presentAlert(invoice.id)"
-        >Delete</ion-button
+        ><ion-icon name="trash-outline"></ion-icon>Delete</ion-button
       >
       @if(invoice.downloadUrl !== undefined && invoice.downloadUrl !== '') {
-      <a href="{{invoice.downloadUrl}}">Download PDF</a>
+      <ion-button fill="clear" href="{{invoice.downloadUrl}}"
+        ><ion-icon name="document-attach-outline"></ion-icon> PDF</ion-button
+      >
       }
     </ion-card>
     }
   </ion-list>
   }
-
-  <ion-alert header="Alert!"></ion-alert>
 </ion-content>
 <ion-footer>
   <ion-toolbar color="tertiary">
     <ion-title>{{invoiceService.invoices().length}} Invoices</ion-title>
     <ion-buttons slot="end">
       <ion-button [routerLink]="['/create-invoice']">
-        New Invoice
-        <ion-icon slot="start" name="create"></ion-icon>
+        <ion-icon name="add-circle-outline"></ion-icon> New Invoice
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

@@ -13,7 +13,9 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <h1>Welcome {{authService.currentUser?.displayName}}</h1>
+        <p class="eyebrow">INVOICER INTELLIGENCE</p>
+        <h1>Welcome {{authService.currentUser?.displayName || 'back'}}</h1>
+        <p class="dashboard-lede">A clearer view of what you have billed, collected, and should act on next.</p>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -37,7 +39,7 @@
                     <ul class="chart-details">
                       <li>Invoiced: <strong>{{invoiceTotals | currency: 'USD'}}</strong></li>
                       <li>Received: <strong>{{paidInvoiceTotal | currency: 'USD'}}</strong></li>
-                      <li>OutStanding: <strong>{{(invoiceTotals - paidInvoiceTotal) | currency: 'USD'}}</strong></li>
+                      <li>Outstanding: <strong>{{outstandingTotal | currency: 'USD'}}</strong></li>
                     </ul>
                   </ion-col>
                 </ion-row>
@@ -77,11 +79,19 @@
       <ion-col size-sm="12" size-lg="6">
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Action Items</ion-card-title>
+            <p class="eyebrow">VISUAL INTELLIGENCE</p>
+            <ion-card-title>What needs attention</ion-card-title>
           </ion-card-header>
         
           <ion-card-content>
-            
+            <div class="insight-score">
+              <strong>{{collectionRate}}%</strong>
+              <span>collection rate</span>
+            </div>
+            <p>{{intelligenceSummary}}</p>
+            @if(unpaidInvoiceCount > 0) {
+              <ion-button fill="clear" size="small" [routerLink]="['/invoices']">Review outstanding invoices</ion-button>
+            }
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -102,6 +112,20 @@
             </ion-list>
           </ion-card-content>
           <ion-button fill="clear" [routerLink]="['/clients']">More Clients</ion-button>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-card class="epoch-card">
+          <ion-card-header>
+            <p class="eyebrow">CONNECTED WORKFLOW</p>
+            <ion-card-title>Take invoicing further with Epoch</ion-card-title>
+            <ion-card-subtitle>Time tracking, projects, approvals, expenses, and business intelligence in one workspace.</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-button [href]="epochInvoicesUrl" target="_blank" rel="noopener" color="light">Open Epoch</ion-button>
+          </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>

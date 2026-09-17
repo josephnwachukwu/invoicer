@@ -12,34 +12,49 @@
   </ion-header>
   <ion-list>
     @for(client of clientService.clients(); track $index) {
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>{{client.name}}</ion-card-title>
-        </ion-card-header>
-      
-        <ion-card-content>
-          <p>
-            {{client.address1 + ' ' + client.address2}} <br />
-            {{client.city + ', ' + client.state + ', ' + client.zipcode }} <br />
-            {{client.contactName}} <br />
-            {{client.email}} {{client.phoneNumber || ''}}
-          </p>
-        </ion-card-content>
-      
-        <ion-button fill="clear">Edit</ion-button>
-        <ion-button color="danger" fill="clear" (click)="presentAlert(client.id);">Delete</ion-button>
-        <ion-button color="tertiary" fill="clear" [routerLink]="['/create-invoice']" [queryParams]="{ clientId: client.id}">Create Invoice</ion-button>
-      </ion-card>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{client.name}}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p>
+          {{client.address1 + ' ' + client.address2}} <br />
+          {{client.city + ', ' + client.state + ', ' + client.zipcode }} <br />
+          {{client.contactName}} <br />
+          {{client.email}} {{client.phoneNumber || ''}}
+        </p>
+      </ion-card-content>
+      <ion-button color="danger" fill="clear" (click)="presentAlert(client.id);"
+        ><ion-icon name="trash-outline"></ion-icon>Delete</ion-button
+      >
+      <ion-button
+        color="tertiary"
+        fill="clear"
+        [routerLink]="['/create-invoice']"
+        [queryParams]="{ clientId: client.id}"
+        ><ion-icon name="add-circle-outline"></ion-icon>New Invoice</ion-button
+      >
+      <ion-button
+        color="tertiary"
+        fill="clear"
+        [routerLink]="['/create-expense-report']"
+        [queryParams]="{ clientId: client.id}"
+        ><ion-icon name="add-circle-outline"></ion-icon>New Expense
+        Report</ion-button
+      >
+    </ion-card>
+    } @if(clientService.clients().length === 0){
+    <ion-item
+      >Sorry there are no clients available. Please add a client.</ion-item
+    >
     }
-
-      <ion-button id="add-modal" color="tertiary" expand="block">Add new client</ion-button>
-
   </ion-list>
 
   <ion-modal trigger="add-modal">
     <ng-template>
       <ion-header>
-        <ion-toolbar color="tertiary" >
+        <ion-toolbar color="tertiary">
           <ion-buttons slot="start">
             <ion-button (click)="cancel()">Cancel</ion-button>
           </ion-buttons>
@@ -48,57 +63,123 @@
       <ion-content class="ion-padding">
         <ion-list>
           <form [formGroup]="clientForm">
-            <ion-input label="Client or Business Name" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="ABC Company" formControlName="name"></ion-input>
-            <br/>
-          
-            <ion-input label="Address 1" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="124 West Bubble" formControlName="address1"></ion-input>
-            <br/>
-          
-            <ion-input label="Address 2" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="Suite 510" formControlName="address2"></ion-input>
-            <br/>
-          
-            <ion-input label="City" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="Sommerville" formControlName="city"></ion-input>
-            <br/>
-            <ion-select label="State" fill="outline" color="tertiary" labelPlacement="stacked"  placeholder="Select State" formControlName="state">
+            <ion-input
+              label="Client or Business Name"
+              fill="outline"
+              color="tertiary"
+              labelPlacement="stacked"
+              placeholder="ABC Company"
+              formControlName="name"
+            ></ion-input>
+            <br />
+
+            <ion-input
+              label="Address 1"
+              fill="outline"
+              color="tertiary"
+              labelPlacement="stacked"
+              placeholder="124 West Bubble"
+              formControlName="address1"
+            ></ion-input>
+            <br />
+
+            <ion-input
+              label="Address 2"
+              fill="outline"
+              color="tertiary"
+              labelPlacement="stacked"
+              placeholder="Suite 510"
+              formControlName="address2"
+            ></ion-input>
+            <br />
+
+            <ion-input
+              label="City"
+              fill="outline"
+              color="tertiary"
+              labelPlacement="stacked"
+              placeholder="Sommerville"
+              formControlName="city"
+            ></ion-input>
+            <br />
+            <ion-select
+              label="State"
+              fill="outline"
+              color="tertiary"
+              labelPlacement="stacked"
+              placeholder="Select State"
+              formControlName="state"
+            >
               @for(state of states; track $index) {
-                <ion-select-option [value]="state.code"> {{state.name}}</ion-select-option>
+              <ion-select-option [value]="state.code">
+                {{state.name}}</ion-select-option
+              >
               }
             </ion-select>
-            <br/>
-            <ion-input label="Zip Code" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="12345" formControlName="zipcode"></ion-input>
-            <br/>
-          
-            <ion-input type="email" label="Email" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="email@company.com" formControlName="email"></ion-input>
-            <br/>
-          
-            <ion-input label="Phone Number" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="718 555 1212" formControlName="phoneNumber"></ion-input>
-            <br/>
-          
-            <ion-input label="Contact" fill="outline" color="tertiary" labelPlacement="stacked" placeholder="Manager Name" formControlName="contactName"></ion-input>
-            <br/>
-            <ion-button expand="block" color="tertiary" (click)="addClient(clientForm.value)" [disabled]="!clientForm.valid">Add Client</ion-button>
+            <br />
+            <ion-input
+              label="Zip Code"
+              fill="outline"
+              color="tertiary"
+              labelPlacement="stacked"
+              placeholder="12345"
+              formControlName="zipcode"
+            ></ion-input>
+            <br />
+
+            <ion-input
+              type="email"
+              label="Email"
+              fill="outline"
+              color="tertiary"
+              labelPlacement="stacked"
+              placeholder="email@company.com"
+              formControlName="email"
+            ></ion-input>
+            <br />
+
+            <ion-input
+              label="Phone Number"
+              fill="outline"
+              color="tertiary"
+              labelPlacement="stacked"
+              placeholder="718 555 1212"
+              formControlName="phoneNumber"
+            ></ion-input>
+            <br />
+
+            <ion-input
+              label="Contact"
+              fill="outline"
+              color="tertiary"
+              labelPlacement="stacked"
+              placeholder="Manager Name"
+              formControlName="contactName"
+            ></ion-input>
+            <br />
+            <ion-button
+              expand="block"
+              color="tertiary"
+              (click)="addClient(clientForm.value)"
+              [disabled]="!clientForm.valid"
+              >Add Client</ion-button
+            >
           </form>
         </ion-list>
-        
       </ion-content>
     </ng-template>
   </ion-modal>
 
-  <ion-alert
-  header="Alert!"
-></ion-alert>
-
+  <ion-alert header="Alert!"></ion-alert>
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
-    <ion-text>
-      Clients: {{this.clientService.clients().length}}
-    </ion-text>
+  <ion-toolbar color="tertiary">
+    <ion-title> Clients: {{this.clientService.clients().length}} </ion-title>
+    <ion-buttons slot="end">
+      <ion-button id="add-modal"
+        ><ion-icon name="add-circle-outline"></ion-icon> New Client</ion-button
+      >
+    </ion-buttons>
   </ion-toolbar>
 </ion-footer>
-
-
-
-  
-

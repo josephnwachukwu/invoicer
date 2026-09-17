@@ -24,6 +24,7 @@ import { BaseChartDirective } from 'ng2-charts';
   styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit, AfterViewInit {
+  readonly epochInvoicesUrl = 'https://epoch-time.io/invoices';
   @ViewChild('donutChart', { static: false }) donutChartContainer!: ElementRef;
   authService = inject(AuthService)
   invoiceService = inject(InvoiceService)
@@ -33,7 +34,25 @@ export class DashboardPage implements OnInit, AfterViewInit {
   paidInvoiceTotal = 0
   chartDataLoaded = false
 
-  cfg = {
+  get outstandingTotal(): number {
+    return Math.max(0, (this.invoiceTotals || 0) - this.paidInvoiceTotal);
+  }
+
+  get collectionRate(): number {
+    return this.invoiceTotals > 0 ? Math.round((this.paidInvoiceTotal / this.invoiceTotals) * 100) : 0;
+  }
+
+  get unpaidInvoiceCount(): number {
+    return this.invoiceService.invoices().filter((invoice: InvoiceInterface) => !invoice.isPaid).length;
+  }
+
+  get intelligenceSummary(): string {
+    if (!this.invoiceService.invoices().length) return 'Create your first invoice to unlock cash-flow insights.';
+    if (!this.outstandingTotal) return 'Everything is collected. Your invoice balance is clear.';
+    return `${this.unpaidInvoiceCount} invoice${this.unpaidInvoiceCount === 1 ? '' : 's'} account for ${this.outstandingTotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} outstanding.`;
+  }
+
+  cfg: any = {
     type: 'doughnut',
     data: {
       datasets: [{
@@ -91,7 +110,7 @@ export class DashboardPage implements OnInit, AfterViewInit {
         `Outstanding: $ ${(this.invoiceTotals - this.paidInvoiceTotal).toFixed(2)}`
       ]
       this.cfg.data.labels = labels
-      this.cfg.data.datasets.push(dataArray);
+      this.cfg.data.datasets = [dataArray];
       this.chartDataLoaded = true;
     })
 

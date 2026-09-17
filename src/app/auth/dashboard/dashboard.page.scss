@@ -9,3 +9,52 @@
     width:256px;
     height:256px;
 }
+
+.eyebrow {
+    color: var(--ion-color-tertiary-shade);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    margin: 0 0 0.35rem;
+}
+
+.dashboard-lede {
+    color: var(--ion-color-medium-shade);
+    margin-top: 0;
+}
+
+.insight-score {
+    align-items: baseline;
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+
+    strong {
+        color: var(--ion-color-tertiary-shade);
+        font-size: 2.4rem;
+        line-height: 1;
+    }
+
+    span {
+        color: var(--ion-color-medium-shade);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+}
+
+.epoch-card {
+    --background: linear-gradient(135deg, #13253d, #0d7a6a);
+    color: #fff;
+
+    .eyebrow,
+    ion-card-title,
+    ion-card-subtitle {
+        color: #fff;
+    }
+
+    ion-card-subtitle {
+        max-width: 42rem;
+        opacity: 0.82;
+    }
+}

@@ -1,0 +1,24 @@
+ion-footer {
+    ion-icon {
+      margin-right: 5px;  
+    } 
+}
+
+ion-card {
+    ion-grid {
+        margin-left:0;
+        margin-right:0;
+    }
+    ion-badge {
+        margin-left:5px;
+    }
+    #image-holder{
+        position: relative;
+        #edit-icon {
+            position:absolute;
+            right:5px;
+            bottom:2px;
+        }
+    }
+    
+}
