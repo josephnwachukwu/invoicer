@@ -1,17 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { ExpensesPage } from './expenses.page';
+import { ExpensesPageModule } from './expenses.module';
+import { ExpensesService } from './expenses.service';
+import { NotificationService } from '../shared/services/notification.service';
+import { provideRouter } from '@angular/router';
 
 describe('ExpensesPage', () => {
-  let component: ExpensesPage;
-  let fixture: ComponentFixture<ExpensesPage>;
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ExpensesPage);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
+  it('loads expense reports', async () => {
+    await TestBed.configureTestingModule({
+      imports: [ExpensesPageModule],
+      providers: [
+        provideRouter([]),
+        { provide: ExpensesService, useValue: { getExpenses: () => of([]), expensesList: { set: jasmine.createSpy() } } },
+        { provide: NotificationService, useValue: { notify: jasmine.createSpy() } },
+      ],
+    }).compileComponents();
+    const component = TestBed.createComponent(ExpensesPage).componentInstance;
+    component.ngAfterViewInit();
     expect(component).toBeTruthy();
   });
 });

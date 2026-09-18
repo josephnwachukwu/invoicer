@@ -1,68 +1,44 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { AuthService } from '../../auth/auth-service.service';
-import { Firestore, collection, collectionData, query, where, deleteDoc, doc, addDoc, updateDoc, docData } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, docData, query, serverTimestamp, updateDoc, where } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { Client } from '../../client.interface';
+import { omitUndefined } from '../utils/firestore-data';
 
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ClientService {
-  authService = inject(AuthService)
-  fireStore = inject(Firestore)
-  clientsCollection = collection(this.fireStore, 'clients')
-  clients = signal<any[]>([])
-  constructor() { }
+  private readonly authService = inject(AuthService);
+  private readonly firestore = inject(Firestore);
+  private readonly clientsCollection = collection(this.firestore, 'clients');
+  readonly clients = signal<Client[]>([]);
 
-  /**
-   * Gets a list of clients by User Id
-   * @returns A list of clients
-   */
-  getClients = (): Observable<Client[]> => {
-    const user = this.authService.currentUser;
-    const q = query(this.clientsCollection, where('uid', '==', user.uid))
-    return collectionData(q, { idField: 'id'})
-  }
-  /**
-   * Adds a new client
-   * @param client 
-   * @returns 
-   */
-  add = (client:Client): Observable<any> => {
-    const promise = addDoc(this.clientsCollection, {...client})
-    return from(promise)
+  getClients(): Observable<Client[]> {
+    const uid = this.requireUid();
+    return collectionData(query(this.clientsCollection, where('ownerId', '==', uid)), { idField: 'id' }) as Observable<Client[]>;
   }
 
-  /**
-   * Deletes a client
-   * @param id 
-   * @returns 
-   */
-  delete = (id:string):Observable<any> => {
-    const docref = doc(this.fireStore, `clients/${id}`)
-    return from(deleteDoc(docref))
+  add(client: Client): Observable<any> {
+    const uid = this.requireUid();
+    return from(addDoc(this.clientsCollection, omitUndefined({ ...client, ownerId: uid, uid, archived: false, createdAt: serverTimestamp(), updatedAt: serverTimestamp() })));
   }
 
-  /**
-   * Updates a client
-   * @param client 
-   * @returns 
-   */
-  update = (client: Client):Observable<any> => {
-    const docref = doc(this.fireStore, `clients/${client.id}`)
-    const promise = updateDoc(docref, {...client})
-    return from(promise) 
+  delete(id: string): Observable<void> {
+    return from(updateDoc(doc(this.firestore, 'clients', id), { archived: true, updatedAt: serverTimestamp() }));
   }
 
-  /**
-   * Gets a Specific client by Id
-   * @param id 
-   * @returns an Observable with client data
-   */
-  getClientById = (id:string):Observable<Client> => {
-    const clientRef = doc(this.fireStore, `clients/${id}`)
-    const promise = docData(clientRef, {idField: 'id'})
-    return promise as Observable<Client>
+  update(client: Client): Observable<void> {
+    const { id, ownerId: _ownerId, uid: _uid, ...changes } = client;
+    if (!id) throw new Error('Client ID is required.');
+    return from(updateDoc(doc(this.firestore, 'clients', id), omitUndefined({ ...changes, updatedAt: serverTimestamp() })));
+  }
+
+  getClientById(id: string): Observable<Client> {
+    return docData(doc(this.firestore, 'clients', id), { idField: 'id' }) as Observable<Client>;
+  }
+
+  private requireUid(): string {
+    const uid = this.authService.currentUser?.uid;
+    if (!uid) throw new Error('Authentication required.');
+    return uid;
   }
 }

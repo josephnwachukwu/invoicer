@@ -21,13 +21,15 @@ const routes: Routes = [
   },
   {
     path: 'view-invoice',
-    loadChildren: () => import('./view-invoice/view-invoice.module').then( m => m.ViewInvoicePageModule)
+    redirectTo: 'invoices',
+    pathMatch: 'full'
   },
   {
     path: '',
     loadChildren: () => import('./auth/login/login.module').then( m => m.LoginPageModule),
     ...canActivate(redirectLoggedInToHome)
   },
+  { path: 'login', redirectTo: '', pathMatch: 'full' },
   {
     path: 'register',
     loadChildren: () => import('./auth/register/register.module').then( m => m.RegisterPageModule)
@@ -49,8 +51,8 @@ const routes: Routes = [
   },
   {
     path: 'projects',
-    loadChildren: () => import('./projects/projects.module').then( m => m.ProjectsPageModule),
-    ...canActivate(redirectUnauthorizeToLogin)
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
   },
   {
     path: 'expenses',

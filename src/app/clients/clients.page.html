@@ -1,5 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start"><ion-menu-button aria-label="Open menu"></ion-menu-button></ion-buttons>
     <ion-title>clients</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -25,7 +26,7 @@
           {{client.email}} {{client.phoneNumber || ''}}
         </p>
       </ion-card-content>
-      <ion-button color="danger" fill="clear" (click)="presentAlert(client.id);"
+      <ion-button color="danger" fill="clear" (click)="client.id && presentAlert(client.id);"
         ><ion-icon name="trash-outline"></ion-icon>Delete</ion-button
       >
       <ion-button

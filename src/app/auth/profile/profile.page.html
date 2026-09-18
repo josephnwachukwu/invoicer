@@ -1,5 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start"><ion-menu-button aria-label="Open menu"></ion-menu-button></ion-buttons>
     <ion-title>profile</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -218,7 +219,8 @@
               type="file"
               #upload2
               accept=".jpg,.jpeg,.png"
-              [disabled]="!authService.isPremiumMember"
+            accept="image/png,image/jpeg,image/webp"
+            [disabled]="!authService.isPremiumMember"
             />
             <ion-button
               (click)="uploadCompanyLogo(upload2)"
@@ -231,11 +233,21 @@
     </ion-row>
   </ion-grid>
   }
+
+  <ion-card color="danger">
+    <ion-card-header><ion-card-title>Delete account</ion-card-title></ion-card-header>
+    <ion-card-content>
+      Permanently remove your Invoicer account and associated data.
+      <ion-button color="light" fill="outline" expand="block" (click)="confirmAccountDeletion()">Delete account</ion-button>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
 <ion-footer>
   <ion-toolbar color="tertiary">
+    @if (user) {
     <ion-button expand="block" color="tertiary" (click)="update(user)"
       ><ion-icon name="checkbox-outline"></ion-icon> Update Profile</ion-button
     >
+    }
   </ion-toolbar>
 </ion-footer>

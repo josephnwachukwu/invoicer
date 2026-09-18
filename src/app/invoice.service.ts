@@ -1,81 +1,87 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { AuthService } from './auth/auth-service.service';
-import  { Firestore, collection, collectionData, query, where, deleteDoc, doc, setDoc, addDoc, docData } from '@angular/fire/firestore';
-import { Observable, from } from 'rxjs';
+import { Firestore, addDoc, collection, collectionData, deleteDoc, doc, docData, query, serverTimestamp, updateDoc, where } from '@angular/fire/firestore';
+import { Observable, from, throwError } from 'rxjs';
 import { Invoice } from './models/invoice.model';
 import { InvoiceInterface } from './invoices/types/invoices.types';
+import { AnalyticsService } from './shared/services/analytics.service';
+import { omitUndefined } from './shared/utils/firestore-data';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class InvoiceService {
-  authService = inject(AuthService)
-  fireStore = inject(Firestore)
-  invoiceCollection = collection(this.fireStore, 'invoices')
-  invoices = signal<any[]>([])
+  private readonly authService = inject(AuthService);
+  private readonly firestore = inject(Firestore);
+  private readonly analytics = inject(AnalyticsService);
+  private readonly invoiceCollection = collection(this.firestore, 'invoices');
+  readonly invoices = signal<InvoiceInterface[]>([]);
 
-  /**
-   * 
-   * @returns 
-   */
-  getInvoices = (): Observable<any[]> => {
-    const user = this.authService.currentUser;
-    const q = query(this.invoiceCollection, where("uid", '==', user.uid))
-    return collectionData(q, { idField: 'id' })
-  } 
-
-  /**
-   * 
-   * @param invoiceId 
-   * @returns 
-   */
-  deleteInvoice = (invoiceId:string): Observable<void> => {
-    const docref = doc(this.fireStore, 'invoices/' + invoiceId)
-    const promise = deleteDoc(docref)
-    return from(promise)
+  getInvoices(): Observable<InvoiceInterface[]> {
+    const uid = this.requireUid();
+    return collectionData(query(this.invoiceCollection, where('ownerId', '==', uid)), { idField: 'id' }) as Observable<InvoiceInterface[]>;
   }
 
-  updateInvoice = (invoiceId:string, data: InvoiceInterface): Observable<void> => {
-    const docref = doc(this.fireStore, 'invoices/' + invoiceId)
-    const promise = setDoc(docref, data)
-    return from(promise)
+  deleteInvoice(invoiceId: string): Observable<void> {
+    return from(deleteDoc(doc(this.firestore, 'invoices', invoiceId)));
   }
 
-  createInvoice = (invoice:InvoiceInterface) => {
-    const user = this.authService.currentUser;
-    const itemList = invoice.lineItems.map((obj:any)=> {return Object.assign({}, obj)})
-    if(user && user.uid) {
-      const payload = {
-        ...invoice,
-        uid: user.uid,
-        lineItems: itemList
-      }
-      return addDoc(collection(this.fireStore, 'invoices'), {...payload})
-    }
-    else {
-      const payload = {
-        ...invoice,
-        uid: 'tempUser',
-        lineItems: itemList
-      }
-      return addDoc(collection(this.fireStore, 'invoices'), {...payload})
-    }
+  updateInvoice(invoiceId: string, data: InvoiceInterface): Observable<void> {
+    const { id: _id, ownerId: _ownerId, ...changes } = data;
+    return from(updateDoc(doc(this.firestore, 'invoices', invoiceId), omitUndefined({ ...changes, updatedAt: serverTimestamp() })));
   }
 
-  /**
-   * Gets a Specific Invoice by Id
-   * @param id 
-   * @returns an Observable with Invoice data
-   */
-  getInvoiceById = (id:any):Observable<Invoice> => {
-    const invoiceRef = doc(this.fireStore, `invoices/${id}`)
-    const promise = docData(invoiceRef, {idField: 'id'})
-    return promise as Observable<Invoice>
+  createInvoice(invoice: InvoiceInterface): Promise<any> {
+    const uid = this.requireUid();
+    const hostedToken = invoice.hostedToken || crypto.randomUUID();
+    const payload = this.normalize(invoice, uid, hostedToken);
+    return addDoc(this.invoiceCollection, payload).then(result => {
+      this.analytics.track('invoice_created', { document_type: payload.documentType, theme: payload.theme });
+      this.analytics.trackFirstInvoice(uid);
+      return result;
+    });
   }
 
-  saveInvoice = (invoice:InvoiceInterface): Observable<any> => {
-    return from(addDoc(this.invoiceCollection, {...invoice}))
+  getInvoiceById(id: string): Observable<Invoice> {
+    return docData(doc(this.firestore, 'invoices', id), { idField: 'id' }) as Observable<Invoice>;
   }
 
+  saveInvoice(invoice: InvoiceInterface): Observable<any> {
+    return from(this.createInvoice(invoice));
+  }
 
+  private normalize(invoice: InvoiceInterface, uid: string, hostedToken: string) {
+    const { id: _id, ...invoiceData } = invoice;
+    const lineItems = (invoice.lineItems || []).slice(0, 200).map((item: any) => ({
+      name: String(item.name || ''),
+      quantity: Number(item.quantity) || 0,
+      rate: Number(item.rate) || 0,
+      amount: Number(item.amount) || 0,
+    }));
+    return omitUndefined({
+      ...invoiceData,
+      schemaVersion: 2,
+      documentType: invoice.documentType || 'invoice',
+      status: invoice.status || 'draft',
+      ownerId: uid,
+      uid,
+      currency: invoice.currency || 'USD',
+      locale: invoice.locale || 'en-US',
+      theme: invoice.theme || invoice.currentTheme || 'classic',
+      lineItems,
+      attachments: invoice.attachments || [],
+      teamMemberIds: invoice.teamMemberIds || [],
+      publicAccess: { enabled: true, shareToken: hostedToken },
+      hostedToken,
+      companyLogo: invoice.companyLogo || '',
+      branding: invoice.branding || { accentColor: '#2563eb', hideInvoicerBranding: false },
+      analytics: invoice.analytics || { viewCount: 0, firstViewedAt: '', lastViewedAt: '', paidAt: '' },
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  private requireUid(): string {
+    const uid = this.authService.currentUser?.uid;
+    if (!uid) throw new Error('Authentication required.');
+    return uid;
+  }
 }

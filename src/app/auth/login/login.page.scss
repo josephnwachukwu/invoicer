@@ -1,4 +1,59 @@
-:host {
-    background: rgb(23,111,205);
-    background: linear-gradient(97deg, rgba(23,111,205,1) 0%, rgba(80,55,221,1) 33%, rgba(209,65,232,1) 64%, rgba(250,129,40,1) 100%);
+:host { --auth-ink: #172033; }
+
+.auth-toolbar {
+  --background: rgba(255, 255, 255, .9);
+  --border-color: rgba(23, 32, 51, .08);
+  --color: var(--auth-ink);
+  backdrop-filter: blur(18px);
+}
+
+.auth-toolbar ion-title { font-size: 1rem; font-weight: 750; letter-spacing: -.02em; }
+
+.auth-page-bg {
+  --background:
+    radial-gradient(circle at 92% 2%, rgba(21, 94, 239, .15), transparent 32%),
+    radial-gradient(circle at 2% 78%, rgba(18, 183, 140, .10), transparent 30%),
+    #f6f8fc;
+}
+
+.auth-shell {
+  width: min(100%, 520px);
+  min-height: 100%;
+  margin: 0 auto;
+  padding: clamp(2rem, 7vh, 5rem) 1.25rem calc(2rem + env(safe-area-inset-bottom));
+}
+
+.auth-intro { margin: 0 4px 1.75rem; }
+.brand-icon { width: 58px; height: 58px; border-radius: 15px; box-shadow: 0 12px 32px rgba(21, 94, 239, .18); }
+.eyebrow { margin: 1.5rem 0 .7rem; color: #087f6d; font-size: .72rem; font-weight: 800; letter-spacing: .15em; }
+h1 { margin: 0; color: var(--auth-ink); font-size: clamp(2.4rem, 11vw, 3.7rem); line-height: .98; letter-spacing: -.055em; font-weight: 780; }
+.intro-copy { max-width: 400px; margin: 1rem 0 0; color: #586174; font-size: 1rem; line-height: 1.55; }
+
+.auth-card {
+  margin: 0;
+  border: 1px solid rgba(23, 32, 51, .08);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 20px 60px rgba(28, 39, 64, .11);
+}
+
+.auth-card ion-card-content { padding: 1.35rem; }
+.field-group + .field-group { margin-top: 1rem; }
+ion-input { --border-color: #cbd3e1; --border-color-focused: #155eef; --border-radius: 12px; --highlight-color-focused: #155eef; --padding-start: 14px; min-height: 58px; }
+ion-input.ng-untouched { --highlight-color-invalid: #cbd3e1; }
+.submit-button { --border-radius: 12px; min-height: 52px; margin: 1.25rem 0 0; font-weight: 750; letter-spacing: -.01em; }
+.submit-button::part(native) { box-shadow: 0 10px 24px rgba(21, 94, 239, .2); }
+
+.auth-links { display: grid; gap: .9rem; margin-top: 1.3rem; text-align: center; color: #667085; font-size: .93rem; }
+.auth-links a { color: #155eef; font-weight: 700; text-decoration: none; }
+.privacy-note { margin: 1.25rem 1rem 0; color: #747d8f; font-size: .78rem; line-height: 1.5; text-align: center; }
+
+@media (prefers-color-scheme: dark) {
+  :host { --auth-ink: #f4f7fb; }
+  .auth-toolbar { --background: rgba(12, 18, 29, .9); --border-color: rgba(255, 255, 255, .08); }
+  .auth-page-bg { --background: radial-gradient(circle at 92% 2%, rgba(55, 118, 255, .2), transparent 34%), #0c121d; }
+  .intro-copy, .auth-links { color: #aab4c5; }
+  .auth-card { background: rgba(18, 26, 40, .96); border-color: rgba(255, 255, 255, .09); box-shadow: 0 24px 64px rgba(0, 0, 0, .32); }
+  .privacy-note { color: #8791a3; }
+  ion-input { --border-color: #445066; }
 }

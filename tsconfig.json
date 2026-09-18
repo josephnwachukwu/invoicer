@@ -23,6 +23,7 @@
       "dom"
     ],
     "useDefineForClassFields": false,
+    "skipLibCheck": true,
     // "resolveJsonModule": true
   },
   "angularCompilerOptions": {

@@ -1,88 +1,49 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { AuthService } from '../auth/auth-service.service';
-import { Firestore, collection, collectionData, query, where, deleteDoc, doc, addDoc, updateDoc, docData } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, docData, query, serverTimestamp, updateDoc, where } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { ExpenseReport } from './types/expenses.types';
-import { HttpClient } from '@angular/common/http';
-import { NotificationService } from '../shared/services/notification.service';
-import { environment } from '../../environments/environment';
+import { omitUndefined } from '../shared/utils/firestore-data';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ExpensesService {
-  authService = inject(AuthService)
-  fireStore = inject(Firestore)
-  http = inject(HttpClient)
-  notifications = inject(NotificationService)
-  expensesCollection = collection(this.fireStore, 'expenses')
-  expensesList = signal<ExpenseReport[]>([])
+  private readonly authService = inject(AuthService);
+  private readonly firestore = inject(Firestore);
+  private readonly expensesCollection = collection(this.firestore, 'expenses');
+  readonly expensesList = signal<ExpenseReport[]>([]);
 
-  constructor() { }
-
-  getExpenses = ():Observable<ExpenseReport[]> => {
-    const user = this.authService.currentUser
-    const q = query(this.expensesCollection, where('uid', '==', user.uid))
-    return collectionData(q, { idField: 'id'})
+  getExpenses(): Observable<ExpenseReport[]> {
+    const uid = this.requireUid();
+    return collectionData(query(this.expensesCollection, where('uid', '==', uid)), { idField: 'id' }) as Observable<ExpenseReport[]>;
   }
 
-  add = (expenseReport: ExpenseReport): Observable<any> => {
-    return from(addDoc(this.expensesCollection, {...expenseReport}))
+  add(expenseReport: ExpenseReport): Observable<any> {
+    const uid = this.requireUid();
+    const { id: _id, ...report } = expenseReport;
+    return from(addDoc(this.expensesCollection, omitUndefined({ ...report, uid, ownerId: uid, createdAt: serverTimestamp(), updatedAt: serverTimestamp() })));
   }
 
-  delete = (id:string): Observable<any> => {
-    const docRef = doc(this.fireStore, `expenses/${id}`)
-    return from(deleteDoc(docRef))
+  delete(id: string): Observable<void> {
+    return from(updateDoc(doc(this.firestore, 'expenses', id), { archived: true, updatedAt: serverTimestamp() }));
   }
 
-  update = (expenseReport: ExpenseReport): Observable<any> => {
-    const docRef = doc(this.fireStore, `expenses/${expenseReport.id}`)
-    return from(updateDoc(docRef, {...expenseReport}))
+  update(expenseReport: ExpenseReport): Observable<void> {
+    const { id, uid: _uid, ownerId: _ownerId, ...changes } = expenseReport;
+    if (!id) throw new Error('Expense report ID is required.');
+    return from(updateDoc(doc(this.firestore, 'expenses', id), omitUndefined({ ...changes, updatedAt: serverTimestamp() })));
   }
 
-  getExpenseReportById = (id:string): Observable<ExpenseReport> => {
-    const expenseRef = doc(this.fireStore, `expenses/${id}`)
-    return from(docData(expenseRef, {idField: 'id'})) as Observable<ExpenseReport>
+  getExpenseReportById(id: string): Observable<ExpenseReport> {
+    return docData(doc(this.firestore, 'expenses', id), { idField: 'id' }) as Observable<ExpenseReport>;
   }
 
-  downloadExpenseReport = (expenseReport:ExpenseReport) => {
-    //this.processingInvoice.set(true)
-    // Blob type is required
-    const httpOptions = {
-      responseType: 'blob' as 'json'
-    };
-
-    // save the invoice
-    addDoc(this.expensesCollection, {...expenseReport}).then((docRef:any) => {
-      console.log('data', docRef.id)
-
-      const stamp = Date.now().toString();
-      var fileName = "expense-report-" + stamp + ".pdf";
-      var a = document.createElement("a");
-      document.body.appendChild(a);
-
-      // Use local emulators in development and the deployed Firebase function in production.
-      const functionBaseUrl = environment.production
-        ? 'https://us-central1-invoicer-6022f.cloudfunctions.net/app'
-        : 'http://localhost:5001/invoicer-6022f/us-central1/app';
-      const appBaseUrl = environment.production
-        ? 'https://invoicer.me'
-        : 'http://localhost:4200';
-      const reportUrl = encodeURIComponent(`${appBaseUrl}/view-expense/${docRef.id}`);
-
-      this.http.get(`${functionBaseUrl}/saveandupload?url=${reportUrl}`, httpOptions).subscribe((data:any) => {
-        const file = new Blob([data], { type: 'application/pdf' });
-        const downloadURL = URL.createObjectURL(file);
-        a.href = downloadURL;
-        a.download = fileName;
-        a.click();
-      });
-
-    }).then(()=>{
-      this.notifications.notify('Invoice processed successfully')
-      //this.processingInvoice.set(false)
-    });
+  downloadExpenseReport(expenseReport: ExpenseReport): Observable<any> {
+    return this.add({ ...expenseReport, currentAction: 'download' });
   }
 
-
+  private requireUid(): string {
+    const uid = this.authService.currentUser?.uid;
+    if (!uid) throw new Error('Authentication required.');
+    return uid;
+  }
 }

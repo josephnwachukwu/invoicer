@@ -5,6 +5,10 @@
 export interface ExpenseReport {
     id?: string; // Document ID
     uid?: string; // Firebase User ID
+    ownerId?: string;
+    archived?: boolean;
+    createdAt?: unknown;
+    updatedAt?: unknown;
     employeeName?: string;
     name?: string;
     description?: string;

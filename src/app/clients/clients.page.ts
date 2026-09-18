@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, inject, AfterViewInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators} from '@angular/forms';
 import { Firestore } from '@angular/fire/firestore';
 import { ClientService } from '../shared/services/client.service';
@@ -12,10 +12,11 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-clients',
+  standalone: false,
   templateUrl: './clients.page.html',
   styleUrls: ['./clients.page.scss'],
 })
-export class ClientsPage implements OnInit, AfterViewInit {
+export class ClientsPage implements AfterViewInit {
   @ViewChild(IonModal) modal!: IonModal;
   firestore = inject(Firestore)
   formBuilder = inject(FormBuilder)
@@ -42,9 +43,7 @@ export class ClientsPage implements OnInit, AfterViewInit {
     {
       text: 'Cancel',
       role: 'cancel',
-      handler: () => {
-        console.log('Alert canceled');
-      },
+      handler: () => undefined,
     },
     {
       text: 'OK',
@@ -72,10 +71,6 @@ export class ClientsPage implements OnInit, AfterViewInit {
     });
 
     await alert.present();
-  }
-
-  ngOnInit() {
-    console.log('Clients')
   }
 
   ngAfterViewInit() {

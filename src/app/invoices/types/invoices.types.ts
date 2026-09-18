@@ -54,6 +54,10 @@
 // }
   
 export interface InvoiceInterface {
+	schemaVersion?: 2
+	documentType?: 'invoice' | 'estimate'
+	status?: 'draft' | 'sent' | 'viewed' | 'partially_paid' | 'paid' | 'overdue' | 'void'
+	ownerId?: string
 	uid?:string
 	lineItems?: any
 	
@@ -105,14 +109,33 @@ export interface InvoiceInterface {
 	id?:any;
 
 	currentTheme?:string
+	theme?: string
 	hasBusinessLogo?:boolean
 	logoLocation?:string
+	companyLogo?: string
+	companyLogoName?: string
+	currency?: string
+	locale?: string
+	dueDate?: string
+	attachments?: unknown[]
+	teamMemberIds?: string[]
+	workspaceId?: string
+	hostedToken?: string
+	publicAccess?: { enabled: boolean; shareToken: string }
+	branding?: { accentColor: string; hideInvoicerBranding: boolean }
+	analytics?: { viewCount: number; firstViewedAt: string; lastViewedAt: string; paidAt: string }
+	createdAt?: unknown
+	updatedAt?: unknown
 
 	downloadUrl?: string
 	action?: string
 }
 
 export const defaultInvoice = {
+		schemaVersion: 2 as const,
+		documentType: 'invoice' as const,
+		status: 'draft' as const,
+		ownerId: '',
 		
 		notes: '',
 		terms: '',
@@ -146,6 +169,20 @@ export const defaultInvoice = {
 		date: new Date().toDateString(),
 		isPaid: false,
 		hasBusinessLogo: false,
+		theme: 'classic',
+		currentTheme: 'classic',
+		companyLogo: '',
+		companyLogoName: '',
+		currency: 'USD',
+		locale: 'en-US',
+		dueDate: '',
+		attachments: [],
+		teamMemberIds: [],
+		workspaceId: '',
+		hostedToken: '',
+		publicAccess: { enabled: true, shareToken: '' },
+		branding: { accentColor: '#2563eb', hideInvoicerBranding: false },
+		analytics: { viewCount: 0, firstViewedAt: '', lastViewedAt: '', paidAt: '' },
 }
 
 export interface LineItem {

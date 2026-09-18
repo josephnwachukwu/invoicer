@@ -1,17 +1,19 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthService } from './auth/auth-service.service';
 import { NotificationService } from './shared/services/notification.service';
 import { Router } from '@angular/router';
+import { ConnectivityService } from './shared/services/connectivity.service';
 @Component({
   selector: 'app-root',
+  standalone: false,
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
-export class AppComponent implements OnInit{
+export class AppComponent {
   authService = inject(AuthService)
   notificationService = inject(NotificationService)
   router = inject(Router)
-  isToastOpen = false;
+  connectivity = inject(ConnectivityService)
 
   
   public authenticatedPages = [
@@ -36,9 +38,7 @@ export class AppComponent implements OnInit{
   ]
 
 
-  ngOnInit(): void {
-    console.log('welcome')
+  signOut(): void {
+    this.authService.signOut().subscribe(() => this.router.navigate(['/']));
   }
-
-
 }

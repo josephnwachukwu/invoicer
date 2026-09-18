@@ -19,6 +19,8 @@ export const environment = {
 	recaptcha: {
 		siteKey: '6LdXiBEoAAAAAEbiPCVmOtL4WgdxWEG654XCt-Js',
 	},
+	functionBaseUrl: 'http://127.0.0.1:5001/invoicer-6022f/us-central1/appV2',
+	appBaseUrl: 'http://localhost:4200',
 };
 
 // {"projectId":"invoicer-6022f","

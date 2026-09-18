@@ -10,4 +10,8 @@ export interface Client {
     email?:string;
     phoneNumber?:string;
     uid?:string;
+    ownerId?: string;
+    archived?: boolean;
+    createdAt?: unknown;
+    updatedAt?: unknown;
 }

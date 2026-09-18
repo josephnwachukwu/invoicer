@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-folder',
+  standalone: false,
   templateUrl: './folder.page.html',
   styleUrls: ['./folder.page.scss'],
 })

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators} from '@angular/forms';
 import { AuthService } from '../auth-service.service';
 import { Router } from '@angular/router';
@@ -7,10 +7,11 @@ import { UserRegistrationInterface } from '../shared/interfaces/userRegistration
 
 @Component({
   selector: 'app-register',
+  standalone: false,
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
 })
-export class RegisterPage implements OnInit {
+export class RegisterPage {
   authService = inject(AuthService)
   router = inject(Router)
   formBuilder = inject(FormBuilder)
@@ -23,10 +24,6 @@ export class RegisterPage implements OnInit {
     agreeToTos: [false, Validators.requiredTrue]
   })
 
-  ngOnInit() {
-    console.log('register page')
-  }
-
   register = () => {
     this.authService.emailSignUp(this.registerForm.value as UserRegistrationInterface)
     .subscribe({
@@ -34,7 +31,6 @@ export class RegisterPage implements OnInit {
       this.router.navigate(['/dashboard'])
     },
     error: (error) => {
-      console.error(error.code)
       this.notificationService.notify(error.code)
   }})
   }

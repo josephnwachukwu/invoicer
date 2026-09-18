@@ -10,7 +10,9 @@ export const environment = {
 	  appId: "1:423715641676:web:b424e1671413e2644d17e9",
 	  measurementId: "G-N9Q1D1V2YF"
 	},
-	recaptcha: {
-		siteKey: '6LdXiBEoAAAAAEbiPCVmOtL4WgdxWEG654XCt-Js',
-	},
-};
+		recaptcha: {
+			siteKey: '6LdXiBEoAAAAAEbiPCVmOtL4WgdxWEG654XCt-Js',
+		},
+		functionBaseUrl: 'https://us-central1-invoicer-6022f.cloudfunctions.net/appV2',
+		appBaseUrl: 'https://invoicer.me',
+	};

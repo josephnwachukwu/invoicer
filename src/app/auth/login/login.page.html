@@ -1,49 +1,41 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Login</ion-title>
+  <ion-toolbar class="auth-toolbar">
+    <ion-buttons slot="start"><ion-menu-button aria-label="Open menu"></ion-menu-button></ion-buttons>
+    <ion-title>Invoicer</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="auth-page-bg">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <!-- <ion-title size="large">login</ion-title> -->
-    </ion-toolbar>
-  </ion-header>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-card>
-          <img alt="Login Image" src="/assets/img/kit1-1-night.svg" />
-          <ion-card-header>
-            <ion-card-subtitle>Sign In</ion-card-subtitle>
-          </ion-card-header>
-        
-          <ion-card-content>
-            <form [formGroup]="loginForm">
-              <ion-input label="Username" labelPlacement="stacked" fill="outline" placeholder="joeystark@invoicer.me" formControlName="email"></ion-input>
+  <main class="auth-shell">
+    <section class="auth-intro" aria-labelledby="login-heading">
+      <img class="brand-icon" src="assets/icons/icon-192.webp" alt="" />
+      <p class="eyebrow">INVOICER FOR MOBILE</p>
+      <h1 id="login-heading">Welcome back.</h1>
+      <p class="intro-copy">Create, send, and track professional invoices wherever your work takes you.</p>
+    </section>
 
-              <br/>
-              <br/>
+    <ion-card class="auth-card">
+      <ion-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+          <div class="field-group">
+            <ion-input type="email" autocomplete="email" inputmode="email" label="Email address" labelPlacement="stacked" fill="outline" placeholder="you@company.com" formControlName="email"></ion-input>
+          </div>
+          <div class="field-group">
+            <ion-input type="password" autocomplete="current-password" labelPlacement="stacked" label="Password" fill="outline" formControlName="password">
+              <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+            </ion-input>
+          </div>
+          <ion-button class="submit-button" type="submit" expand="block" [disabled]="loginForm.invalid">
+            Sign in securely
+          </ion-button>
+        </form>
 
-              <ion-input color="tertiary" type="password" labelPlacement="stacked" label="Password" fill="outline" formControlName="password">
-                <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-              </ion-input>
-
-            <br/>
-            <br/>
-          
-            <ion-button color="tertiary" expand="block" (click)="login()" [disabled]="!loginForm.valid">
-              Sign In
-            </ion-button>
-          </form>
-            <ion-text class="ion-text-center">
-              <p>Don't have an account? <a [routerLink]="['/register']">Click here</a>.</p>
-              <p><a [routerLink]="['/forgotpassword']">Forgot Password? </a></p>
-            </ion-text>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+        <nav class="auth-links" aria-label="Account help">
+          <a routerLink="/forgotpassword">Forgot password?</a>
+          <span>New to Invoicer? <a routerLink="/register">Create an account</a></span>
+        </nav>
+      </ion-card-content>
+    </ion-card>
+    <p class="privacy-note">Your invoice data is protected by Firebase Authentication and owner-scoped access controls.</p>
+  </main>
 </ion-content>

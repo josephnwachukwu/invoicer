@@ -17,9 +17,11 @@ export interface UserProfile {
   hasTutorialsEnabled?: boolean;
   businessType?: string;
   taxNo?: string;
+  createdAt?: unknown;
+  updatedAt?: unknown;
 }
 
-export const defaultUserProfile = {
+export const defaultUserProfile: UserProfile = {
   tier: 'basic',
   hasTutorialsEnabled: true,
   businessType: 'Independedent Contractor',

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, AfterViewInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, AfterViewInit } from '@angular/core';
 import { InvoiceService } from '../invoice.service';
 import { NotificationService } from '../shared/services/notification.service';
 import { InvoiceInterface } from './types/invoices.types';
@@ -6,28 +6,29 @@ import { InvoiceInterface } from './types/invoices.types';
 import { AuthService } from '../auth/auth-service.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-invoices',
+  standalone: false,
   templateUrl: './invoices.page.html',
   styleUrls: ['./invoices.page.scss'],
 })
-export class InvoicesPage implements OnInit, AfterViewInit {
+export class InvoicesPage implements AfterViewInit {
   invoiceService = inject(InvoiceService)
   notifications = inject(NotificationService)
   authService = inject(AuthService)
   invoiceTotals!:number;
   router = inject(Router)
   alertController = inject(AlertController)
+  private readonly destroyRef = inject(DestroyRef)
   paidInvoiceTotal = 0
   searchTerm:string = '';
   alertButtons = () => [
     {
       text: 'Cancel',
       role: 'cancel',
-      handler: () => {
-        console.log('Alert canceled');
-      },
+      handler: () => undefined,
     },
     {
       text: 'OK',
@@ -58,12 +59,8 @@ export class InvoicesPage implements OnInit, AfterViewInit {
   }
   
 
-  ngOnInit():void {
-    console.log('invoices')
-  }
-
   ngAfterViewInit():void {
-    this.invoiceService.getInvoices().subscribe((data) => {
+    this.invoiceService.getInvoices().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data) => {
       this.invoiceService.invoices.set(data);
       this.invoiceTotals = this.invoiceService.invoices().reduce((acc:number, inv:InvoiceInterface) => acc + inv.total!, 0)
       this.paidInvoiceTotal = this.invoiceService.invoices().filter((inv:InvoiceInterface)=>inv.isPaid).reduce((acc:number, inv:InvoiceInterface) => acc + inv.total!, 0)
@@ -76,7 +73,7 @@ export class InvoicesPage implements OnInit, AfterViewInit {
    */
   deleteInvoice = (id:string):void => {
     this.invoiceService.deleteInvoice(id).subscribe({
-      next: () => {this.invoiceService.deleteInvoice(id)},
+      next: () => this.notifications.notify('Invoice deleted successfully'),
       error: (error) => {this.notifications.notify(error.code)}
     })
   }

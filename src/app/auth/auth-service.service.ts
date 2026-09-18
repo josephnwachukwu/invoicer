@@ -1,115 +1,114 @@
-import { inject, Injectable, signal } from '@angular/core';
-import { 
-  Auth, 
-  authState,
-  signInWithEmailAndPassword, 
-  signOut, 
-  sendPasswordResetEmail,  
-  getAuth,
-  createUserWithEmailAndPassword,
-  updateCurrentUser,
-  updateProfile,
-  updatePassword,
-  user, 
-  UserInfo,
-  onAuthStateChanged,
-} from '@angular/fire/auth'
-import { Observable, from } from 'rxjs';
-import { Firestore, collection, addDoc, setDoc, collectionData, collectionGroup, DocumentReference, query, where, doc } from '@angular/fire/firestore';
-import { Router } from '@angular/router';
-import { NotificationService } from '../shared/services/notification.service';
-import { UserInterface } from './shared/interfaces/firebaseUser.interface';
+import { Injectable, inject, signal } from '@angular/core';
+import { Auth, User, createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateProfile } from '@angular/fire/auth';
+import { Firestore, doc, docData, serverTimestamp, setDoc, updateDoc } from '@angular/fire/firestore';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, firstValueFrom, from, of, switchMap, tap } from 'rxjs';
 import { UserLoginInterface } from './shared/interfaces/userLogin.interface';
 import { UserRegistrationInterface } from './shared/interfaces/userRegistration.interface';
-import { UserProfile } from './shared/interfaces/userProfile.interface';
-@Injectable({
-  providedIn: 'root'
-})
+import { UserProfile, defaultUserProfile } from './shared/interfaces/userProfile.interface';
+import { environment } from '../../environments/environment';
+import { AnalyticsService } from '../shared/services/analytics.service';
+
+@Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly auth = inject(Auth);
+  private readonly firestore = inject(Firestore);
+  private readonly http = inject(HttpClient);
+  private readonly analytics = inject(AnalyticsService);
 
-  auth = inject(Auth)
-  firestore = inject(Firestore)
-  router = inject(Router)
-  user$ = user(this.auth)
-  notifications = inject(NotificationService)
-  currentUserSignal = signal<Partial<UserInterface> | null | undefined>(undefined)
-  currentUser!: any
-  usersCollection = collection(this.firestore, 'users')
-  isPremiumMember!:boolean
+  readonly currentUserSignal = signal<UserProfile | null | undefined>(undefined);
+  readonly firebaseUserSignal = signal<User | null | undefined>(undefined);
+  readonly ready = signal(false);
 
-  constructor(){
-    this.auth.onAuthStateChanged(user => {
-      if(user){
-        const {uid, email, displayName, photoURL} = user!
-        //this.currentUserSignal.set({uid, email, photoURL})
-        this.currentUser = user
-        this.getUser().subscribe((data:UserProfile[]) => {
-         this.currentUserSignal.set({...data[0]})
-         this.isPremiumMember = (data[0].tier === 'premium') ? true : false
-        })
+  constructor() {
+    onAuthStateChanged(this.auth, async user => {
+      this.firebaseUserSignal.set(user);
+      if (!user) {
+        this.currentUserSignal.set(null);
+        this.ready.set(true);
+        return;
       }
-    })
+      try {
+        const token = await user.getIdToken();
+        const profile = await firstValueFrom(this.http.post<UserProfile>(`${environment.functionBaseUrl}/profile/ensure`, {}, {
+          headers: new HttpHeaders({ Authorization: `Bearer ${token}` }),
+        }));
+        this.currentUserSignal.set(profile || this.profileFromAuth(user));
+      } catch {
+        this.currentUserSignal.set(this.profileFromAuth(user));
+      } finally {
+        this.ready.set(true);
+      }
+    });
   }
 
+  get currentUser(): User | null { return this.auth.currentUser; }
+  get isPremiumMember(): boolean { return this.currentUserSignal()?.tier === 'premium'; }
 
-
-  /** 
-   * Logs user into firebase account
-   * @param credentials email and password
-  */
-  emailSignIn = (credentials:UserLoginInterface):Observable<void> => {
-    const promise = signInWithEmailAndPassword(this.auth, credentials.email, credentials.password)
-     .then(() => {})
-     return from(promise)
+  emailSignIn(credentials: UserLoginInterface): Observable<void> {
+    return from(signInWithEmailAndPassword(this.auth, credentials.email, credentials.password)).pipe(
+      tap(() => this.analytics.track('login', { method: 'password' })),
+      switchMap(() => of(undefined)),
+    );
   }
 
-  /**
-   * Registers a user with a new firebase account
-   * @param credentials username email and password
-   */
-  emailSignUp = (credentials:UserRegistrationInterface):Observable<void> => {
-    const promise = createUserWithEmailAndPassword(this.auth, credentials.email, credentials.password)
-    .then(data => {
-      console.log('new user data',data)
-      this.createUser({...data.user, displayName: credentials.username})
-    })
-    return from(promise)
+  emailSignUp(credentials: UserRegistrationInterface): Observable<void> {
+    return from(createUserWithEmailAndPassword(this.auth, credentials.email, credentials.password).then(async result => {
+      await updateProfile(result.user, { displayName: credentials.username });
+      const profile: UserProfile = {
+        ...defaultUserProfile,
+        id: result.user.uid,
+        uid: result.user.uid,
+        email: result.user.email || credentials.email,
+        displayName: credentials.username,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      };
+      await setDoc(doc(this.firestore, 'users', result.user.uid), profile);
+      this.currentUserSignal.set(profile);
+      this.analytics.track('sign_up', { method: 'password' });
+    }));
   }
 
-  /*
-   * Signs User out of Firebase
-  */
-  signOut = ():Observable<void> => {
-    const promise = signOut(this.auth)
-    return from(promise)
+  sendPasswordReset(email: string): Observable<void> {
+    return from(sendPasswordResetEmail(this.auth, email));
   }
 
-  /*
-   * Updates the User Profile
-  */
-  updateUserProfile = (user:any) => {
-    updateProfile(user, {displayName: 'new user', photoURL: ''})
-    .then((data) => {
-      this.notifications.notify('Credentials Updated')
-    })
-  }
-  
-
-  createUser = (newUser:any) => {
-    const userPayload = {
-      uid: newUser.uid,
-      email: newUser.email,
-      displayName: newUser.displayName,
-      photoURL: 'https://ionicframework.com/docs/img/demos/avatar.svg'
-    }
-    const docRef = addDoc(collection(this.firestore, 'users'), {...userPayload}).then((data)=>{
-      console.log(data)
-    })
+  signOut(): Observable<void> {
+    return from(signOut(this.auth)).pipe(tap(() => {
+      this.currentUserSignal.set(null);
+      this.firebaseUserSignal.set(null);
+    }));
   }
 
-  getUser = ():Observable<UserProfile[]> => {
-    const q = query(this.usersCollection, where('uid', '==', this.currentUser.uid))
-    return collectionData(q, {idField: 'id'})
+  updateUserProfile(profile: Partial<UserProfile>): Observable<void> {
+    const user = this.auth.currentUser;
+    if (!user) throw new Error('Authentication required.');
+    return from(Promise.all([
+      updateProfile(user, { displayName: profile.displayName ?? user.displayName, photoURL: profile.photoURL ?? user.photoURL }),
+      updateDoc(doc(this.firestore, 'users', user.uid), { ...profile, updatedAt: serverTimestamp() }),
+    ]).then(() => undefined));
   }
 
+  profile$(uid?: string): Observable<UserProfile | undefined> {
+    const userId = uid || this.auth.currentUser?.uid;
+    if (!userId) return of(undefined);
+    return docData(doc(this.firestore, 'users', userId), { idField: 'id' }) as Observable<UserProfile>;
+  }
+
+  deleteAccount(): Observable<void> {
+    const user = this.auth.currentUser;
+    if (!user) throw new Error('Authentication required.');
+    return from(user.getIdToken()).pipe(
+      switchMap(token => this.http.delete<void>(`${environment.functionBaseUrl}/account`, { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) })),
+      tap(() => {
+        this.currentUserSignal.set(null);
+        this.firebaseUserSignal.set(null);
+      }),
+    );
+  }
+
+  private profileFromAuth(user: User): UserProfile {
+    return { id: user.uid, uid: user.uid, email: user.email || '', displayName: user.displayName || '', photoURL: user.photoURL || defaultUserProfile.photoURL, tier: 'basic' };
+  }
 }

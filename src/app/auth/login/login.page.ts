@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators} from '@angular/forms';
 import { AuthService } from '../auth-service.service';
 import { Router } from '@angular/router';
@@ -8,10 +8,11 @@ import { UserLoginInterface } from '../shared/interfaces/userLogin.interface';
 
 @Component({
   selector: 'app-login',
+  standalone: false,
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
   authService = inject(AuthService)
   router = inject(Router)
   notifications = inject(NotificationService)
@@ -22,17 +23,12 @@ export class LoginPage implements OnInit {
     password: ['', Validators.required],
   })
 
-  ngOnInit() {
-    console.log('login page')
-  }
-
   login = () => {
     this.authService.emailSignIn(this.loginForm.value as UserLoginInterface).subscribe({
       next: (data) =>{
         this.router.navigate(['/dashboard'])
       },
       error: (error) => {
-        console.error(error.code);
         this.notifications.notify(error.code)
       }
     })

@@ -1,5 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start"><ion-menu-button aria-label="Open menu"></ion-menu-button></ion-buttons>
     <ion-title>Invoices</ion-title>
   </ion-toolbar>
   <ion-toolbar color="tertiary">
@@ -13,7 +14,7 @@
       <ion-title size="medium">Invoices</ion-title>
     </ion-toolbar>
   </ion-header>
-  @if (authService.currentUser.uid) {
+  @if (authService.currentUser?.uid) {
   <ion-list>
     @for(invoice of invoiceService.invoices(); track $index) {
     <ion-card>
